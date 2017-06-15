@@ -7,36 +7,43 @@ public abstract class Task<T> {
 
   private static final long SLEEP = 10000L;
 
-  private HandlerThread thread;
+  private Handler handler;
   private TaskCallback<T> callback;
   private int executions;
+  private Runnable runnable = new Runnable() {
+    @Override
+    public void run() {
+      executions++;
+      executeJob();
+    }
+  };
 
-  public Task(String threadName) {
-    thread = new HandlerThread(threadName);
+  public Task(String name) {
+    HandlerThread thread = new HandlerThread(name);
     thread.start();
+    handler = new Handler(thread.getLooper());
   }
 
-  public abstract void executeJob();
+  protected abstract void executeJob();
 
   protected void success(T result) {
+    Tasks.cancel(getClass());
     if(callback != null) {
       callback.onSuccess(result);
     }
   }
 
   protected void fail() {
-    exec(callback);
+    execute(callback);
   }
 
-  public void exec(TaskCallback<T> callback) {
+  void execute(TaskCallback<T> callback) {
     this.callback = callback;
-    new Handler(thread.getLooper()).postDelayed(new Runnable() {
-      @Override
-      public void run() {
-        executions++;
-        executeJob();
-      }
-    }, SLEEP * executions);
+    handler.postDelayed(runnable, SLEEP * executions);
+  }
+
+  void cancel() {
+    handler.removeCallbacks(runnable);
   }
 
   public interface TaskCallback<T> {

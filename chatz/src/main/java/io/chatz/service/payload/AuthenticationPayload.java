@@ -1,4 +1,7 @@
-package io.chatz.model;
+package io.chatz.service.payload;
+
+import io.chatz.model.Device;
+import io.chatz.model.User;
 
 public class AuthenticationPayload {
 

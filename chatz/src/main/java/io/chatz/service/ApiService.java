@@ -1,10 +1,11 @@
 package io.chatz.service;
 
-import io.chatz.model.AuthenticationPayload;
-import io.chatz.model.Device;
 import io.chatz.model.User;
+import io.chatz.service.payload.AuthenticationPayload;
+import io.chatz.model.Device;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 
@@ -14,9 +15,9 @@ public interface ApiService {
   Call<String> authenticateUser(@Body AuthenticationPayload payload);
 
   @PUT("/users")
-  Call<String> updateUser(@Body User user);
+  Call<Void> updateUser(@Header("X-Token") String apiToken, @Body User user);
 
-  @PUT("/devices")
-  Call<String> updateDevice(@Body Device device);
+  @PUT("/users/devices")
+  Call<Void> updateDevice(@Header("X-Token") String apiToken, @Body Device device);
 
 }
