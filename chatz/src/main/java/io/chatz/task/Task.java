@@ -3,12 +3,14 @@ package io.chatz.task;
 import android.os.Handler;
 import android.os.HandlerThread;
 
+import io.chatz.util.Callback;
+
 public abstract class Task<T> {
 
   private static final long SLEEP = 10000L;
 
   private Handler handler;
-  private TaskCallback<T> callback;
+  private Callback<T> callback;
   private int executions;
   private Runnable runnable = new Runnable() {
     @Override
@@ -37,18 +39,12 @@ public abstract class Task<T> {
     execute(callback);
   }
 
-  void execute(TaskCallback<T> callback) {
+  void execute(Callback<T> callback) {
     this.callback = callback;
     handler.postDelayed(runnable, SLEEP * executions);
   }
 
   void cancel() {
     handler.removeCallbacks(runnable);
-  }
-
-  public interface TaskCallback<T> {
-
-    void onSuccess(T result);
-
   }
 }

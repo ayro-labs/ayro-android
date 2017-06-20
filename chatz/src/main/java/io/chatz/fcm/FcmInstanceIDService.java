@@ -11,7 +11,7 @@ public class FcmInstanceIDService extends FirebaseInstanceIdService {
   public void onTokenRefresh() {
     super.onTokenRefresh();
     Chatz chatz = Chatz.getInstance(this);
-    if(ChatzStatus.LOGGED_IN.equals(chatz.getStatus())) {
+    if(chatz.getSettings().isMessagingServiceEnabled() && ChatzStatus.LOGGED_IN.equals(chatz.getStatus())) {
       Chatz.getInstance(this).connectToFirebase();
     }
   }

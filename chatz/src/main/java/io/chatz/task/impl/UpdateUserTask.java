@@ -48,6 +48,6 @@ public class UpdateUserTask extends Task<Void> {
   @Override
   protected void fail() {
     super.fail();
-    Log.d(Constants.TAG, "Could not update user, retrying soon...");
+    Log.e(Constants.TAG, "Could not update user, retrying soon...");
   }
 }

@@ -4,14 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import io.chatz.exception.ChatzException;
 import io.chatz.model.Device;
 import io.chatz.model.User;
 import io.chatz.task.impl.FirebaseConnectionTask;
 import io.chatz.task.impl.LoginTask;
-import io.chatz.task.Task;
 import io.chatz.task.Tasks;
 import io.chatz.task.impl.UpdateUserTask;
 import io.chatz.ui.activity.ChatActivity;
+import io.chatz.util.AppUtils;
+import io.chatz.util.Callback;
 import io.chatz.util.Constants;
 import io.chatz.util.Preferences;
 
@@ -24,6 +26,7 @@ public class Chatz {
   private ChatzStatus status;
   private User user;
   private String apiToken;
+  private boolean chatOpened;
 
   private Chatz(Context context) {
     this.context = context;
@@ -41,6 +44,10 @@ public class Chatz {
 
   public Settings getSettings() {
     return settings;
+  }
+
+  public User getUser() {
+    return user;
   }
 
   public ChatzStatus getStatus() {
@@ -67,7 +74,7 @@ public class Chatz {
     Preferences.setUser(context, user);
     Log.d(Constants.TAG, "Authenticating user...");
     LoginTask task = new LoginTask(settings.getProjectToken(), user, getDevice());
-    Tasks.execute(task, new Task.TaskCallback<String>() {
+    Tasks.execute(task, new Callback<String>() {
       @Override
       public void onSuccess(String token) {
         Chatz.this.apiToken = token;
@@ -81,8 +88,8 @@ public class Chatz {
 
   public void connectToFirebase() {
     Log.d(Constants.TAG, "Connecting user to Firebase...");
-    FirebaseConnectionTask task = new FirebaseConnectionTask(apiToken);
-    Tasks.execute(task, new Task.TaskCallback<Void>() {
+    FirebaseConnectionTask task = new FirebaseConnectionTask(context, apiToken);
+    Tasks.execute(task, new Callback<Void>() {
       @Override
       public void onSuccess(Void result) {
         Log.d(Constants.TAG, "User was connected to Firebase with success");
@@ -103,7 +110,7 @@ public class Chatz {
     Preferences.setUser(context, user);
     Log.d(Constants.TAG, "Updating user...");
     UpdateUserTask task = new UpdateUserTask(apiToken, user);
-    Tasks.execute(task, new Task.TaskCallback<Void>() {
+    Tasks.execute(task, new Callback<Void>() {
       @Override
       public void onSuccess(Void result) {
         Log.d(Constants.TAG, "User was updated with success");
@@ -112,25 +119,34 @@ public class Chatz {
   }
 
   public void openChat() {
-    assertLoggedIn();
-    context.startActivity(new Intent(context, ChatActivity.class));
+    Intent intent = new Intent(context, ChatActivity.class);
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    context.startActivity(intent);
+  }
+
+  public boolean isChatOpened() {
+    return chatOpened;
+  }
+
+  public void setChatOpened(boolean chatOpened) {
+    this.chatOpened = chatOpened;
   }
 
   private void assertInitialized() {
     if(!ChatzStatus.INITIALIZED.equals(status)) {
-      throw new RuntimeException("ChatzIO was not initialized previously. Please call init method first.");
+      throw new ChatzException("ChatzIO was not initialized previously. Please call init method first.");
     }
   }
 
   private void assertLoggedIn() {
     if(!ChatzStatus.LOGGED_IN.equals(status)) {
-      throw new RuntimeException("User was not logged in previously. Please call login method first.");
+      throw new ChatzException("User was not logged in previously. Please call login method first.");
     }
   }
 
   private Device getDevice() {
     Device device = new Device();
-    device.setUid(android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID));
+    device.setUid(AppUtils.getDeviceId(context));
     device.setAppId(BuildConfig.APPLICATION_ID);
     device.setAppVersion(BuildConfig.VERSION_NAME);
     device.setPlatform(Constants.PLATFORM);

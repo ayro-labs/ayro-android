@@ -4,7 +4,7 @@ import android.util.Log;
 
 import io.chatz.task.Task;
 import io.chatz.util.Constants;
-import io.chatz.service.payload.AuthenticationPayload;
+import io.chatz.service.payload.LoginRequest;
 import io.chatz.model.Device;
 import io.chatz.model.User;
 import io.chatz.service.ApiService;
@@ -17,12 +17,12 @@ public class LoginTask extends Task<String> {
 
   private static final String TASK_NAME = "ChatzIO.task.login";
 
-  private AuthenticationPayload payload;
+  private LoginRequest payload;
   private ApiService apiService;
 
   public LoginTask(String projectToken, User user, Device device) {
     super(TASK_NAME);
-    this.payload = new AuthenticationPayload();
+    this.payload = new LoginRequest();
     this.payload.setProjectToken(projectToken);
     this.payload.setUser(user);
     this.payload.setDevice(device);
@@ -31,7 +31,7 @@ public class LoginTask extends Task<String> {
 
   @Override
   protected void executeJob() {
-    apiService.authenticateUser(payload).enqueue(new Callback<String>() {
+    apiService.login(payload).enqueue(new Callback<String>() {
       @Override
       public void onResponse(Call<String> call, Response<String> response) {
         if(response.isSuccessful()) {
@@ -51,6 +51,6 @@ public class LoginTask extends Task<String> {
   @Override
   protected void fail() {
     super.fail();
-    Log.d(Constants.TAG, "Could not authenticate user, retrying soon...");
+    Log.e(Constants.TAG, "Could not authenticate user, retrying soon...");
   }
 }

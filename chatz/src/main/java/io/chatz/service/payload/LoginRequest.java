@@ -3,7 +3,7 @@ package io.chatz.service.payload;
 import io.chatz.model.Device;
 import io.chatz.model.User;
 
-public class AuthenticationPayload {
+public class LoginRequest {
 
   private User user;
   private Device device;

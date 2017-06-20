@@ -3,11 +3,13 @@ package io.chatz.task;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.chatz.util.Callback;
+
 public class Tasks {
 
   private static Map<Class<? extends Task>, Task> tasks = new HashMap<>();
 
-  public static <T> void execute(Task<T> task, Task.TaskCallback<T> callback) {
+  public static <T> void execute(Task<T> task, Callback<T> callback) {
     if(!tasks.containsKey(task.getClass())) {
       task.execute(callback);
       tasks.put(task.getClass(), task);

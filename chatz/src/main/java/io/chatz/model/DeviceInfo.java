@@ -1,6 +1,10 @@
 package io.chatz.model;
 
-public class DeviceInfo {
+import java.io.Serializable;
+
+public class DeviceInfo implements Serializable {
+
+  private static final long serialVersionUID = -917711107449374805L;
 
   private String model;
   private String carrier;

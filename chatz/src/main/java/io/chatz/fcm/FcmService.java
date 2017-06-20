@@ -13,7 +13,7 @@ public class FcmService extends FirebaseMessagingService {
   public void onMessageReceived(final RemoteMessage remoteMessage) {
     super.onMessageReceived(remoteMessage);
     Chatz chatz = Chatz.getInstance(this);
-    if(ChatzStatus.LOGGED_IN.equals(chatz.getStatus()) && chatz.getSettings().isMessagingServiceEnabled()) {
+    if(chatz.getSettings().isMessagingServiceEnabled() && ChatzStatus.LOGGED_IN.equals(chatz.getStatus())) {
       ChatzMessages.receive(this, remoteMessage.getData());
     }
   }
