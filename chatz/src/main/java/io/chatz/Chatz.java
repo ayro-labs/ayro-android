@@ -11,7 +11,7 @@ import io.chatz.task.impl.FirebaseConnectionTask;
 import io.chatz.task.impl.LoginTask;
 import io.chatz.task.Tasks;
 import io.chatz.task.impl.UpdateUserTask;
-import io.chatz.ui.activity.ChatActivity;
+import io.chatz.ui.activity.ChatzActivity;
 import io.chatz.util.AppUtils;
 import io.chatz.util.Callback;
 import io.chatz.util.Constants;
@@ -119,7 +119,7 @@ public class Chatz {
   }
 
   public void openChat() {
-    Intent intent = new Intent(context, ChatActivity.class);
+    Intent intent = new Intent(context, ChatzActivity.class);
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     context.startActivity(intent);
   }
