@@ -22,8 +22,6 @@ import io.chatz.Chatz;
 import io.chatz.R;
 import io.chatz.database.ChatMessageDatabase;
 import io.chatz.model.ChatMessage;
-import io.chatz.service.ApiService;
-import io.chatz.service.Services;
 import io.chatz.ui.adapter.ChatAdapter;
 import io.chatz.util.Constants;
 import io.chatz.util.UIUtils;
@@ -37,8 +35,6 @@ public class ChatzActivity extends AppCompatActivity {
   static {
     ACTIONS.add(Constants.INTENT_ACTION_MESSAGE_RECEIVED);
   }
-
-  private ApiService apiService;
 
   private EditText messageInput;
   private RecyclerView chatMessagesView;
@@ -54,7 +50,6 @@ public class ChatzActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_chat);
 
-    apiService = Services.getInstance().getApiService();
     chatMessageDatabase = new ChatMessageDatabase(this);
 
     setupMessageInput();
@@ -159,8 +154,9 @@ public class ChatzActivity extends AppCompatActivity {
   }
 
   private void onSendMessageClick() {
+    Chatz chatz = Chatz.getInstance(this);
     final ChatMessage chatMessage = new ChatMessage();
-    chatMessage.setUserName(Chatz.getInstance(this).getUser().getFullName());
+    chatMessage.setUserName(chatz.getUser().getFullName());
     chatMessage.setText(messageInput.getText().toString());
     chatMessage.setStatus(ChatMessage.Status.SENDING);
     chatMessage.setDirection(ChatMessage.Direction.OUTGOING);
@@ -168,7 +164,7 @@ public class ChatzActivity extends AppCompatActivity {
     final int position = chatAdapter.addItem(chatMessage);
     messageInput.setText("");
     chatMessagesView.scrollToPosition(0);
-    apiService.postMessage(chatMessage).enqueue(new Callback<Void>() {
+    Chatz.getInstance(this).postMessage(chatMessage).enqueue(new Callback<Void>() {
       @Override
       public void onResponse(Call<Void> call, Response<Void> response) {
         if(response.isSuccessful()) {

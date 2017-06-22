@@ -22,5 +22,5 @@ public interface ApiService {
   Call<Void> updateDevice(@Header("X-Token") String apiToken, @Body Device device);
 
   @POST("/chat")
-  Call<Void> postMessage(@Body ChatMessage chatMessage);
+  Call<Void> postMessage(@Header("X-Token") String apiToken, @Body ChatMessage chatMessage);
 }

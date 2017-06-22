@@ -14,7 +14,7 @@ public class Preferences {
   private static final String SETTINGS = "settings";
   private static final String USER = "user";
   private static final String STATUS = "status";
-  private static final String TOKEN = "token";
+  private static final String API_TOKEN = "api_token";
 
   private static SharedPreferences getPreferences(Context context) {
     return context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
@@ -74,20 +74,20 @@ public class Preferences {
     preferences.edit().remove(STATUS).apply();
   }
 
-  public static String getToken(Context context) {
+  public static String getApiToken(Context context) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-    return preferences.getString(TOKEN, null);
+    return preferences.getString(API_TOKEN, null);
   }
 
-  public static void setToken(Context context, String token) {
+  public static void setApiToken(Context context, String token) {
     if(token != null) {
       SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-      preferences.edit().putString(TOKEN, token).apply();
+      preferences.edit().putString(API_TOKEN, token).apply();
     }
   }
 
   public static void removeToken(Context context) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-    preferences.edit().remove(TOKEN).apply();
+    preferences.edit().remove(API_TOKEN).apply();
   }
 }

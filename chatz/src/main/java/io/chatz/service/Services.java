@@ -1,9 +1,5 @@
 package io.chatz.service;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import io.chatz.util.Constants;
 import io.chatz.util.JsonUtils;
 import retrofit2.Retrofit;

@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.util.Log;
 
 import io.chatz.exception.ChatzException;
+import io.chatz.model.ChatMessage;
 import io.chatz.model.Device;
 import io.chatz.model.User;
+import io.chatz.service.ApiService;
+import io.chatz.service.Services;
 import io.chatz.task.impl.FirebaseConnectionTask;
 import io.chatz.task.impl.LoginTask;
 import io.chatz.task.Tasks;
@@ -16,6 +19,7 @@ import io.chatz.util.AppUtils;
 import io.chatz.util.Callback;
 import io.chatz.util.Constants;
 import io.chatz.util.Preferences;
+import retrofit2.Call;
 
 public class Chatz {
 
@@ -27,12 +31,14 @@ public class Chatz {
   private User user;
   private String apiToken;
   private boolean chatOpened;
+  private ApiService apiService;
 
   private Chatz(Context context) {
     this.context = context;
     this.settings = Preferences.getSettings(context);
     this.user = Preferences.getUser(context);
     this.status = Preferences.getStatus(context);
+    this.apiService = Services.getInstance().getApiService();
   }
 
   public static Chatz getInstance(Context context) {
@@ -76,9 +82,9 @@ public class Chatz {
     LoginTask task = new LoginTask(settings.getProjectToken(), user, getDevice());
     Tasks.execute(task, new Callback<String>() {
       @Override
-      public void onSuccess(String token) {
-        Chatz.this.apiToken = token;
-        Preferences.setToken(context, token);
+      public void onSuccess(String apiToken) {
+        Chatz.this.apiToken = apiToken;
+        Preferences.setApiToken(context, apiToken);
         updateStatus(ChatzStatus.LOGGED_IN);
         Log.d(Constants.TAG, "User was authenticated with success");
         connectToFirebase();
@@ -164,5 +170,9 @@ public class Chatz {
     Preferences.removeUser(context);
     Preferences.removeStatus(context);
     Preferences.removeToken(context);
+  }
+
+  public Call<Void> postMessage(ChatMessage chatMessage) {
+    return apiService.postMessage(apiToken, chatMessage);
   }
 }
