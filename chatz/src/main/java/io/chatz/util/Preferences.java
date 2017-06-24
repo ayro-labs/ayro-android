@@ -86,7 +86,7 @@ public class Preferences {
     }
   }
 
-  public static void removeToken(Context context) {
+  public static void removeApiToken(Context context) {
     SharedPreferences preferences = getPreferences(context);
     preferences.edit().remove(API_TOKEN).apply();
   }

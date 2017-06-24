@@ -189,7 +189,7 @@ public class Chatz {
     Preferences.removeSettings(context);
     Preferences.removeUser(context);
     Preferences.removeStatus(context);
-    Preferences.removeToken(context);
+    Preferences.removeApiToken(context);
   }
 
   public Call<Void> postMessage(ChatMessage chatMessage) {
