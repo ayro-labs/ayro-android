@@ -7,7 +7,7 @@ public class LoginRequest {
 
   private User user;
   private Device device;
-  private String projectToken;
+  private String appToken;
 
   public User getUser() {
     return user;
@@ -25,11 +25,11 @@ public class LoginRequest {
     this.device = device;
   }
 
-  public String getProjectToken() {
-    return projectToken;
+  public String getAppToken() {
+    return appToken;
   }
 
-  public void setProjectToken(String projectToken) {
-    this.projectToken = projectToken;
+  public void setAppToken(String appToken) {
+    this.appToken = appToken;
   }
 }

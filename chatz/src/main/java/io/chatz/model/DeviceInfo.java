@@ -6,8 +6,8 @@ public class DeviceInfo implements Serializable {
 
   private static final long serialVersionUID = -917711107449374805L;
 
+  private String manufacturer;
   private String model;
-  private String carrier;
   private String osName;
   private String osVersion;
 
@@ -15,16 +15,16 @@ public class DeviceInfo implements Serializable {
     return model;
   }
 
+  public void setManufacturer(String manufacturer) {
+    this.manufacturer = manufacturer;
+  }
+
+  public String getManufacturer() {
+    return manufacturer;
+  }
+
   public void setModel(String model) {
     this.model = model;
-  }
-
-  public String getCarrier() {
-    return carrier;
-  }
-
-  public void setCarrier(String carrier) {
-    this.carrier = carrier;
   }
 
   public String getOsName() {

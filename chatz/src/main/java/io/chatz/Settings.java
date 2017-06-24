@@ -2,19 +2,19 @@ package io.chatz;
 
 public class Settings {
 
-  private String projectToken;
+  private String appToken;
   private boolean messagingServiceEnabled = true;
 
-  public Settings(String projectToken) {
-    this.projectToken = projectToken;
+  public Settings(String appToken) {
+    this.appToken = appToken;
   }
 
-  public String getProjectToken() {
-    return projectToken;
+  public String getAppToken() {
+    return appToken;
   }
 
-  public void setProjectToken(String projectToken) {
-    this.projectToken = projectToken;
+  public void setAppToken(String appToken) {
+    this.appToken = appToken;
   }
 
   public boolean isMessagingServiceEnabled() {

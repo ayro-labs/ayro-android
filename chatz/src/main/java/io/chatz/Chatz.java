@@ -2,11 +2,15 @@ package io.chatz;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.util.Log;
 
 import io.chatz.exception.ChatzException;
 import io.chatz.model.ChatMessage;
 import io.chatz.model.Device;
+import io.chatz.model.DeviceInfo;
 import io.chatz.model.User;
 import io.chatz.service.ApiService;
 import io.chatz.service.Services;
@@ -71,7 +75,7 @@ public class Chatz {
   }
 
   public void login() {
-    this.login(null);
+    this.login(new User());
   }
 
   public void login(User user) {
@@ -79,7 +83,7 @@ public class Chatz {
     this.user = user;
     Preferences.setUser(context, user);
     Log.d(Constants.TAG, "Authenticating user...");
-    LoginTask task = new LoginTask(settings.getProjectToken(), user, getDevice());
+    LoginTask task = new LoginTask(settings.getAppToken(), user, getDevice());
     Tasks.execute(task, new Callback<String>() {
       @Override
       public void onSuccess(String apiToken) {
@@ -151,11 +155,23 @@ public class Chatz {
   }
 
   private Device getDevice() {
+    DeviceInfo info = new DeviceInfo();
+    info.setManufacturer(Build.MANUFACTURER);
+    info.setModel(Build.MODEL);
+    info.setOsName(Constants.OS_NAME);
+    info.setOsVersion(Build.VERSION.RELEASE);
+
     Device device = new Device();
     device.setUid(AppUtils.getDeviceId(context));
-    device.setAppId(BuildConfig.APPLICATION_ID);
-    device.setAppVersion(BuildConfig.VERSION_NAME);
     device.setPlatform(Constants.PLATFORM);
+    try {
+      PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+      device.setAppId(packageInfo.packageName);
+      device.setAppVersion(packageInfo.versionName);
+    } catch(PackageManager.NameNotFoundException e) {
+      // Nothing to do...
+    }
+    device.setInfo(info);
     return device;
   }
 

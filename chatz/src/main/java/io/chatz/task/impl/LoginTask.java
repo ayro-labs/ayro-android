@@ -20,10 +20,10 @@ public class LoginTask extends Task<String> {
   private LoginRequest payload;
   private ApiService apiService;
 
-  public LoginTask(String projectToken, User user, Device device) {
+  public LoginTask(String appToken, User user, Device device) {
     super(TASK_NAME);
     this.payload = new LoginRequest();
-    this.payload.setProjectToken(projectToken);
+    this.payload.setAppToken(appToken);
     this.payload.setUser(user);
     this.payload.setDevice(device);
     this.apiService = Services.getInstance().getApiService();
