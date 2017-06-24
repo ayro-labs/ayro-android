@@ -2,6 +2,6 @@ package io.chatz;
 
 public enum ChatzStatus {
 
-  NONE, INITIALIZED, LOGGED_IN, LOGGED_OUT
+  NOT_INITIALIZED, INITIALIZED, LOGGED_IN, LOGGED_OUT
 
 }

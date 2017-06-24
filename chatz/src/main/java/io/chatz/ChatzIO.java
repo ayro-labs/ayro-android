@@ -25,6 +25,10 @@ public class ChatzIO {
     chatz.logout();
   }
 
+  public static ChatzStatus getStatus() {
+    return chatz.getStatus();
+  }
+
   public static void updateUser(User user) {
     chatz.updateUser(user);
   }

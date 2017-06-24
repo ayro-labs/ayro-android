@@ -42,6 +42,7 @@ public class Chatz {
     this.settings = Preferences.getSettings(context);
     this.user = Preferences.getUser(context);
     this.status = Preferences.getStatus(context);
+    this.apiToken = Preferences.getApiToken(context);
     this.apiService = Services.getInstance().getApiService();
   }
 
@@ -68,7 +69,7 @@ public class Chatz {
     clearApp();
     this.settings = settings;
     Preferences.setSettings(context, settings);
-    if(ChatzStatus.NONE.equals(status)) {
+    if(ChatzStatus.NOT_INITIALIZED.equals(status)) {
       updateStatus(ChatzStatus.INITIALIZED);
     }
     Log.d(Constants.TAG, "ChatzIO was initialized");
@@ -129,6 +130,9 @@ public class Chatz {
   }
 
   public void openChat() {
+    if(ChatzStatus.INITIALIZED.equals(status)) {
+      login();
+    }
     Intent intent = new Intent(context, ChatzActivity.class);
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     context.startActivity(intent);

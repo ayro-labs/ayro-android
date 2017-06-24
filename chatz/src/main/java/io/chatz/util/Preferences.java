@@ -57,37 +57,37 @@ public class Preferences {
   }
 
   public static ChatzStatus getStatus(Context context) {
-    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    SharedPreferences preferences = getPreferences(context);
     String status = preferences.getString(STATUS, null);
-    return status != null ? ChatzStatus.valueOf(status) : ChatzStatus.NONE;
+    return status != null ? ChatzStatus.valueOf(status) : ChatzStatus.NOT_INITIALIZED;
   }
 
   public static void setStatus(Context context, ChatzStatus status) {
     if(status != null) {
-      SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+      SharedPreferences preferences = getPreferences(context);
       preferences.edit().putString(STATUS, status.toString()).apply();
     }
   }
 
   public static void removeStatus(Context context) {
-    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    SharedPreferences preferences = getPreferences(context);
     preferences.edit().remove(STATUS).apply();
   }
 
   public static String getApiToken(Context context) {
-    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    SharedPreferences preferences = getPreferences(context);
     return preferences.getString(API_TOKEN, null);
   }
 
   public static void setApiToken(Context context, String token) {
     if(token != null) {
-      SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+      SharedPreferences preferences = getPreferences(context);
       preferences.edit().putString(API_TOKEN, token).apply();
     }
   }
 
   public static void removeToken(Context context) {
-    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    SharedPreferences preferences = getPreferences(context);
     preferences.edit().remove(API_TOKEN).apply();
   }
 }
