@@ -31,7 +31,7 @@ public class Chatz {
 
   private Context context;
   private Settings settings;
-  private ChatzStatus status;
+  private Status status;
   private User user;
   private String apiToken;
   private boolean chatOpened;
@@ -61,16 +61,15 @@ public class Chatz {
     return user;
   }
 
-  public ChatzStatus getStatus() {
+  public Status getStatus() {
     return status;
   }
 
   public void init(Settings settings) {
     clearApp();
-    this.settings = settings;
-    Preferences.setSettings(context, settings);
-    if(ChatzStatus.NOT_INITIALIZED.equals(status)) {
-      updateStatus(ChatzStatus.INITIALIZED);
+    saveSettings(settings);
+    if(Status.NOT_INITIALIZED.equals(status)) {
+      saveStatus(Status.INITIALIZED);
     }
     Log.d(Constants.TAG, "ChatzIO was initialized");
   }
@@ -81,17 +80,15 @@ public class Chatz {
 
   public void login(User user) {
     assertInitialized();
-    this.user = user;
-    Preferences.setUser(context, user);
+    saveUser(user);
     Log.d(Constants.TAG, "Authenticating user...");
     LoginTask task = new LoginTask(settings.getAppToken(), user, getDevice());
     Tasks.execute(task, new Callback<String>() {
       @Override
       public void onSuccess(String apiToken) {
-        Chatz.this.apiToken = apiToken;
-        Preferences.setApiToken(context, apiToken);
-        updateStatus(ChatzStatus.LOGGED_IN);
         Log.d(Constants.TAG, "User was authenticated with success");
+        saveApiToken(apiToken);
+        saveStatus(Status.LOGGED_IN);
         connectToFirebase();
       }
     });
@@ -99,7 +96,7 @@ public class Chatz {
 
   public void connectToFirebase() {
     Log.d(Constants.TAG, "Connecting user to Firebase...");
-    FirebaseConnectionTask task = new FirebaseConnectionTask(context, apiToken);
+    FirebaseConnectionTask task = new FirebaseConnectionTask(context);
     Tasks.execute(task, new Callback<Void>() {
       @Override
       public void onSuccess(Void result) {
@@ -110,17 +107,16 @@ public class Chatz {
 
   public void logout() {
     assertInitialized();
+    saveStatus(Status.LOGGED_OUT);
     clearApp();
-    updateStatus(ChatzStatus.LOGGED_OUT);
-    Log.d(Constants.TAG, "User was logged out with with success");
+    Log.d(Constants.TAG, "User was logged out with success");
   }
 
   public void updateUser(User user) {
-    assertLoggedIn();
-    this.user = user;
-    Preferences.setUser(context, user);
+    assertInitialized();
+    saveUser(user);
     Log.d(Constants.TAG, "Updating user...");
-    UpdateUserTask task = new UpdateUserTask(apiToken, user);
+    UpdateUserTask task = new UpdateUserTask(context, user);
     Tasks.execute(task, new Callback<Void>() {
       @Override
       public void onSuccess(Void result) {
@@ -130,7 +126,8 @@ public class Chatz {
   }
 
   public void openChat() {
-    if(ChatzStatus.INITIALIZED.equals(status)) {
+    assertInitialized();
+    if(Status.INITIALIZED.equals(status)) {
       login();
     }
     Intent intent = new Intent(context, ChatzActivity.class);
@@ -146,15 +143,13 @@ public class Chatz {
     this.chatOpened = chatOpened;
   }
 
-  private void assertInitialized() {
-    if(!ChatzStatus.INITIALIZED.equals(status)) {
-      throw new ChatzException("ChatzIO was not initialized previously. Please call init method first.");
-    }
+  public Call<Void> postMessage(ChatMessage chatMessage) {
+    return apiService.postMessage(apiToken, chatMessage);
   }
 
-  private void assertLoggedIn() {
-    if(!ChatzStatus.LOGGED_IN.equals(status)) {
-      throw new ChatzException("User was not logged in previously. Please call login method first.");
+  private void assertInitialized() {
+    if(!Status.INITIALIZED.equals(status)) {
+      throw new ChatzException("ChatzIO was not initialized previously. Please call init method first.");
     }
   }
 
@@ -179,9 +174,24 @@ public class Chatz {
     return device;
   }
 
-  private void updateStatus(ChatzStatus status) {
+  private void saveSettings(Settings settings) {
+    this.settings = settings;
+    Preferences.setSettings(context, settings);
+  }
+
+  private void saveUser(User user) {
+    this.user = user;
+    Preferences.setUser(context, user);
+  }
+
+  private void saveStatus(Status status) {
     this.status = status;
     Preferences.setStatus(context, status);
+  }
+
+  private void saveApiToken(String apiToken) {
+    Chatz.this.apiToken = apiToken;
+    Preferences.setApiToken(context, apiToken);
   }
 
   private void clearApp() {
@@ -190,9 +200,5 @@ public class Chatz {
     Preferences.removeUser(context);
     Preferences.removeStatus(context);
     Preferences.removeApiToken(context);
-  }
-
-  public Call<Void> postMessage(ChatMessage chatMessage) {
-    return apiService.postMessage(apiToken, chatMessage);
   }
 }

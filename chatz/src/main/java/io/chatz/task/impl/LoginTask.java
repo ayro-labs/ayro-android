@@ -15,7 +15,7 @@ import retrofit2.Response;
 
 public class LoginTask extends Task<String> {
 
-  private static final String TASK_NAME = "ChatzIO.task.login";
+  private static final String TASK_NAME = "ChatzIO.task.user.login";
 
   private LoginRequest payload;
   private ApiService apiService;

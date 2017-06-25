@@ -2,9 +2,8 @@ package io.chatz.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
-import io.chatz.ChatzStatus;
+import io.chatz.Status;
 import io.chatz.Settings;
 import io.chatz.model.User;
 
@@ -56,13 +55,13 @@ public class Preferences {
     preferences.edit().remove(USER).apply();
   }
 
-  public static ChatzStatus getStatus(Context context) {
+  public static Status getStatus(Context context) {
     SharedPreferences preferences = getPreferences(context);
     String status = preferences.getString(STATUS, null);
-    return status != null ? ChatzStatus.valueOf(status) : ChatzStatus.NOT_INITIALIZED;
+    return status != null ? Status.valueOf(status) : Status.NOT_INITIALIZED;
   }
 
-  public static void setStatus(Context context, ChatzStatus status) {
+  public static void setStatus(Context context, Status status) {
     if(status != null) {
       SharedPreferences preferences = getPreferences(context);
       preferences.edit().putString(STATUS, status.toString()).apply();
