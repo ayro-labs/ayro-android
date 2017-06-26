@@ -30,8 +30,8 @@
         app:cardCornerRadius="10dp"
         app:contentPaddingLeft="10dp"
         app:contentPaddingRight="10dp"
-        app:contentPaddingTop="5dp"
-        app:contentPaddingBottom="5dp">
+        app:contentPaddingTop="8dp"
+        app:contentPaddingBottom="8dp">
 
         <LinearLayout
             android:orientation="vertical"
@@ -43,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="2dp"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold"/>
 
             <FrameLayout
@@ -56,7 +56,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
                     android:autoLink="web"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textColor="#212121"/>
 
                 <TextView

@@ -13,7 +13,6 @@ public class User implements Serializable {
   private String lastName;
   private String photo;
   private String email;
-  private String jwt;
   private Date signUpDate;
   private Map<String, String> properties;
 
@@ -57,14 +56,6 @@ public class User implements Serializable {
     this.email = email;
   }
 
-  public String getJwt() {
-    return jwt;
-  }
-
-  public void setJwt(String jwt) {
-    this.jwt = jwt;
-  }
-
   public Date getSignUpDate() {
     return signUpDate;
   }
@@ -82,7 +73,13 @@ public class User implements Serializable {
   }
 
   public String getFullName() {
-    return firstName + (lastName != null ? " " + lastName : "");
+    if(firstName != null) {
+      return firstName + (lastName != null ? " " + lastName : "");
+    } else if(lastName != null) {
+      return lastName;
+    } else {
+      return "";
+    }
   }
 
   @Override

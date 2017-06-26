@@ -127,7 +127,7 @@ public class Chatz {
 
   public void openChat() {
     assertInitialized();
-    if(Status.INITIALIZED.equals(status)) {
+    if(!Status.LOGGED_IN.equals(status)) {
       login();
     }
     Intent intent = new Intent(context, ChatzActivity.class);
@@ -148,7 +148,7 @@ public class Chatz {
   }
 
   private void assertInitialized() {
-    if(!Status.INITIALIZED.equals(status)) {
+    if(status.getOrder() < Status.INITIALIZED.getOrder()) {
       throw new ChatzException("ChatzIO was not initialized previously. Please call init method first.");
     }
   }

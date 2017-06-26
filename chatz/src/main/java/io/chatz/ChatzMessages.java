@@ -8,6 +8,7 @@ import android.util.Log;
 import java.util.Map;
 
 import io.chatz.database.ChatMessageDatabase;
+import io.chatz.model.Author;
 import io.chatz.model.ChatMessage;
 import io.chatz.ui.activity.ChatzActivity;
 import io.chatz.util.Callback;
@@ -35,8 +36,6 @@ public class ChatzMessages {
       switch(event) {
         case (EVENT_CHAT_MESSAGE):
           ChatMessage chatMessage = JsonUtils.fromJson(message, ChatMessage.class);
-          chatMessage.setDirection(ChatMessage.Direction.INCOMING);
-          new ChatMessageDatabase(context).insert(chatMessage);
           notifyMessage(context, chatMessage);
           break;
       }
@@ -44,13 +43,16 @@ public class ChatzMessages {
   }
 
   private static void notifyMessage(final Context context, final ChatMessage chatMessage) {
+    chatMessage.setStatus(ChatMessage.Status.SENT);
+    chatMessage.setDirection(ChatMessage.Direction.INCOMING);
     saveChatMessage(context, chatMessage);
     if(!Chatz.getInstance(context).isChatOpened()) {
-      ImageUtils.loadPicture(context, chatMessage.getUserPhoto(), new Callback<Bitmap>() {
+      final Author author = chatMessage.getAuthor();
+      ImageUtils.loadPicture(context, author.getPhoto(), new Callback<Bitmap>() {
         @Override
         public void onSuccess(Bitmap photo) {
-          int notificationId = chatMessage.getUserName().hashCode();
-          UIUtils.notify(context, notificationId, photo, chatMessage.getUserName(), chatMessage.getText(), getDefaultNotificationIntent(context));
+          int notificationId = author.getId().hashCode();
+          UIUtils.notify(context, notificationId, photo, author.getName(), chatMessage.getText(), getDefaultNotificationIntent(context));
         }
       });
     } else {

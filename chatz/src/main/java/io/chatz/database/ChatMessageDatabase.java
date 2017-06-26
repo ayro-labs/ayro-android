@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.chatz.model.Author;
 import io.chatz.model.ChatMessage;
 
 public class ChatMessageDatabase extends SQLiteOpenHelper {
@@ -18,13 +19,14 @@ public class ChatMessageDatabase extends SQLiteOpenHelper {
   private static final Integer DATABASE_VERSION = 1;
 
   private static final String TABLE_NAME = "chat_message";
-  private static final String COLUMN_USER_NAME = "user_name";
-  private static final String COLUMN_USER_PHOTO = "user_photo";
+  private static final String COLUMN_AUTHOR_ID = "author_uid";
+  private static final String COLUMN_AUTHOR_NAME = "author_name";
+  private static final String COLUMN_AUTHOR_PHOTO = "author_photo";
   private static final String COLUMN_TEXT = "text";
   private static final String COLUMN_DIRECTION = "direction";
   private static final String COLUMN_DATE = "date";
 
-  private static final String CREATE_TABLE = String.format("create table %s (%s varchar2, %s varchar2, %s varchar2 not null, %s varchar2 not null, %s integer not null)", TABLE_NAME, COLUMN_USER_NAME, COLUMN_USER_PHOTO, COLUMN_TEXT, COLUMN_DIRECTION, COLUMN_DATE);
+  private static final String CREATE_TABLE = String.format("create table %s (%s varchar2, %s varchar2, %s varchar2, %s varchar2 not null, %s varchar2 not null, %s integer not null)", TABLE_NAME, COLUMN_AUTHOR_ID, COLUMN_AUTHOR_NAME, COLUMN_AUTHOR_PHOTO, COLUMN_TEXT, COLUMN_DIRECTION, COLUMN_DATE);
 
   public ChatMessageDatabase(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -42,8 +44,12 @@ public class ChatMessageDatabase extends SQLiteOpenHelper {
 
   public void insert(ChatMessage chatMessage) {
     ContentValues values = new ContentValues();
-    values.put(COLUMN_USER_NAME, chatMessage.getUserName());
-    values.put(COLUMN_USER_PHOTO, chatMessage.getUserPhoto());
+    Author author = chatMessage.getAuthor();
+    if(author != null) {
+      values.put(COLUMN_AUTHOR_ID, author.getId());
+      values.put(COLUMN_AUTHOR_NAME, author.getName());
+      values.put(COLUMN_AUTHOR_PHOTO, author.getPhoto());
+    }
     values.put(COLUMN_TEXT, chatMessage.getText());
     values.put(COLUMN_DIRECTION, chatMessage.getDirection().toString());
     values.put(COLUMN_DATE, chatMessage.getDate().getTime());
@@ -53,14 +59,17 @@ public class ChatMessageDatabase extends SQLiteOpenHelper {
   }
 
   public List<ChatMessage> list() {
-    String orderBy = COLUMN_DATE + " ASC";
+    String orderBy = COLUMN_DATE + " desc";
     SQLiteDatabase database = getReadableDatabase();
     Cursor cursor = database.query(TABLE_NAME, null, null, null, null, null, orderBy);
     List<ChatMessage> messages = new ArrayList<>();
     while(cursor.moveToNext()) {
+      Author author = new Author();
+      author.setId(cursor.getString(cursor.getColumnIndex(COLUMN_AUTHOR_ID)));
+      author.setName(cursor.getString(cursor.getColumnIndex(COLUMN_AUTHOR_NAME)));
+      author.setPhoto(cursor.getString(cursor.getColumnIndex(COLUMN_AUTHOR_PHOTO)));
       ChatMessage message = new ChatMessage();
-      message.setUserName(cursor.getString(cursor.getColumnIndex(COLUMN_USER_NAME)));
-      message.setUserPhoto(cursor.getString(cursor.getColumnIndex(COLUMN_USER_PHOTO)));
+      message.setAuthor(author);
       message.setText(cursor.getString(cursor.getColumnIndex(COLUMN_TEXT)));
       message.setDirection(ChatMessage.Direction.valueOf(cursor.getString(cursor.getColumnIndex(COLUMN_DIRECTION))));
       message.setDate(new Date(cursor.getLong(cursor.getColumnIndex(COLUMN_DATE))));

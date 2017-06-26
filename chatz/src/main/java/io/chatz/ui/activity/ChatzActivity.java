@@ -154,9 +154,7 @@ public class ChatzActivity extends AppCompatActivity {
   }
 
   private void onSendMessageClick() {
-    Chatz chatz = Chatz.getInstance(this);
     final ChatMessage chatMessage = new ChatMessage();
-    chatMessage.setUserName(chatz.getUser().getFullName());
     chatMessage.setText(messageInput.getText().toString());
     chatMessage.setStatus(ChatMessage.Status.SENDING);
     chatMessage.setDirection(ChatMessage.Direction.OUTGOING);

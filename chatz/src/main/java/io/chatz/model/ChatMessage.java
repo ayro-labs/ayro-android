@@ -7,27 +7,18 @@ public class ChatMessage implements Serializable {
 
   private static final long serialVersionUID = 5024908185070932244L;
 
-  private String userName;
-  private String userPhoto;
+  private Author author;
   private String text;
   private Status status;
   private Direction direction;
   private Date date;
 
-  public String getUserName() {
-    return userName;
+  public Author getAuthor() {
+    return author;
   }
 
-  public void setUserName(String userName) {
-    this.userName = userName;
-  }
-
-  public String getUserPhoto() {
-    return userPhoto;
-  }
-
-  public void setUserPhoto(String userPhoto) {
-    this.userPhoto = userPhoto;
+  public void setAuthor(Author author) {
+    this.author = author;
   }
 
   public String getText() {

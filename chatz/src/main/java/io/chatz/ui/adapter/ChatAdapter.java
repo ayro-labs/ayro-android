@@ -60,12 +60,12 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
     if(holder instanceof IncomingMessageHolder) {
       IncomingMessageHolder incomingMessageHolder = (IncomingMessageHolder) holder;
       boolean sameDay = nextChatMessage != null && sameDay(chatMessage.getDate(), nextChatMessage.getDate());
-      boolean continuation = nextChatMessage != null && chatMessage.getUserName().equals(nextChatMessage.getUserName()) && sameDay;
+      boolean continuation = nextChatMessage != null && nextChatMessage.getDirection().equals(ChatMessage.Direction.INCOMING) && chatMessage.getAuthor().getId().equals(nextChatMessage.getAuthor().getId()) && sameDay;
       if(!continuation) {
-        ImageUtils.setPicture(getContext(), chatMessage.getUserPhoto(), incomingMessageHolder.photoView);
+        ImageUtils.setPicture(getContext(), chatMessage.getAuthor().getPhoto(), incomingMessageHolder.photoView);
         ((RelativeLayout.LayoutParams) incomingMessageHolder.photoView.getLayoutParams()).height = pictureDimension;
         incomingMessageHolder.photoView.setVisibility(View.VISIBLE);
-        incomingMessageHolder.authorView.setText(chatMessage.getUserName());
+        incomingMessageHolder.authorView.setText(chatMessage.getAuthor().getName());
         incomingMessageHolder.authorView.setVisibility(View.VISIBLE);
       } else {
         ((RelativeLayout.LayoutParams) incomingMessageHolder.photoView.getLayoutParams()).height = 1;

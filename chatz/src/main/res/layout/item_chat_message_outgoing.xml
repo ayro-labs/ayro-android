@@ -26,8 +26,8 @@
         app:cardCornerRadius="10dp"
         app:contentPaddingLeft="10dp"
         app:contentPaddingRight="10dp"
-        app:contentPaddingTop="6dp"
-        app:contentPaddingBottom="6dp">
+        app:contentPaddingTop="8dp"
+        app:contentPaddingBottom="8dp">
 
         <FrameLayout
             android:layout_width="wrap_content"
@@ -40,7 +40,7 @@
                 android:layout_gravity="start|center_vertical"
                 android:minWidth="55dp"
                 android:autoLink="web"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textColor="@color/chatz_outgoing_message"/>
 
             <LinearLayout
