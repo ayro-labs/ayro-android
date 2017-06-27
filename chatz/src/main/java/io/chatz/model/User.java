@@ -11,7 +11,7 @@ public class User implements Serializable {
   private String uid;
   private String firstName;
   private String lastName;
-  private String photo;
+  private String photoUrl;
   private String email;
   private Date signUpDate;
   private Map<String, String> properties;
@@ -40,12 +40,12 @@ public class User implements Serializable {
     this.lastName = lastName;
   }
 
-  public String getPhoto() {
-    return photo;
+  public String getPhotoUrl() {
+    return photoUrl;
   }
 
-  public void setPhoto(String photo) {
-    this.photo = photo;
+  public void setPhotoUrl(String photoUrl) {
+    this.photoUrl = photoUrl;
   }
 
   public String getEmail() {

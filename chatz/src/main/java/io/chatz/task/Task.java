@@ -26,6 +26,8 @@ public abstract class Task<T> {
     handler = new Handler(thread.getLooper());
   }
 
+  protected abstract boolean shouldBeReplaced();
+
   protected abstract void executeJob();
 
   protected void success(T result) {
@@ -46,5 +48,6 @@ public abstract class Task<T> {
 
   void cancel() {
     handler.removeCallbacks(runnable);
+    handler.getLooper().quit();
   }
 }

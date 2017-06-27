@@ -30,6 +30,11 @@ public class LoginTask extends Task<String> {
   }
 
   @Override
+  protected boolean shouldBeReplaced() {
+    return false;
+  }
+
+  @Override
   protected void executeJob() {
     apiService.login(payload).enqueue(new Callback<String>() {
       @Override

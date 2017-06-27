@@ -10,7 +10,11 @@ public class Tasks {
   private static Map<Class<? extends Task>, Task> tasks = new HashMap<>();
 
   public static <T> void execute(Task<T> task, Callback<T> callback) {
-    if(!tasks.containsKey(task.getClass())) {
+    Task runningTask = tasks.get(task.getClass());
+    if(runningTask == null || runningTask.shouldBeReplaced()) {
+      if(runningTask != null) {
+        runningTask.cancel();
+      }
       task.execute(callback);
       tasks.put(task.getClass(), task);
     }

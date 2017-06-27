@@ -30,6 +30,11 @@ public class FirebaseConnectionTask extends Task<Void> {
   }
 
   @Override
+  protected boolean shouldBeReplaced() {
+    return false;
+  }
+
+  @Override
   protected void executeJob() {
     String apiToken = Preferences.getApiToken(context);
     if(apiToken == null) {
