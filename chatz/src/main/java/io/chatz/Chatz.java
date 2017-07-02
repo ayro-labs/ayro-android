@@ -7,6 +7,9 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.chatz.exception.ChatzException;
 import io.chatz.model.ChatMessage;
 import io.chatz.model.Device;
@@ -143,8 +146,10 @@ public class Chatz {
     this.chatOpened = chatOpened;
   }
 
-  public Call<Void> postMessage(ChatMessage chatMessage) {
-    return apiService.postMessage(apiToken, chatMessage);
+  public Call<Void> postMessage(String message) {
+    Map<String, String> payload = new HashMap<>();
+    payload.put("text", message);
+    return apiService.postMessage(apiToken, payload);
   }
 
   private void assertInitialized() {

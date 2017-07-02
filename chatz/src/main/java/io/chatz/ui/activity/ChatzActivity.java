@@ -38,7 +38,7 @@ public class ChatzActivity extends AppCompatActivity {
 
   private EditText messageInput;
   private RecyclerView chatMessagesView;
-  private View sendMessageView;
+  private View postMessageView;
 
   private ChatAdapter chatAdapter;
   private ChatMessageDatabase chatMessageDatabase;
@@ -82,12 +82,12 @@ public class ChatzActivity extends AppCompatActivity {
   }
 
   private void setupSendMessageButton() {
-    sendMessageView = findViewById(R.id.send_message);
-    sendMessageView.setEnabled(false);
-    sendMessageView.setOnClickListener(new View.OnClickListener() {
+    postMessageView = findViewById(R.id.post_message);
+    postMessageView.setEnabled(false);
+    postMessageView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        onSendMessageClick();
+        onPostMessageClick();
       }
     });
   }
@@ -147,13 +147,13 @@ public class ChatzActivity extends AppCompatActivity {
 
   private void onMessageChanged(String message) {
     if(message.trim().isEmpty()) {
-      sendMessageView.setEnabled(false);
+      postMessageView.setEnabled(false);
     } else {
-      sendMessageView.setEnabled(true);
+      postMessageView.setEnabled(true);
     }
   }
 
-  private void onSendMessageClick() {
+  private void onPostMessageClick() {
     final ChatMessage chatMessage = new ChatMessage();
     chatMessage.setText(messageInput.getText().toString());
     chatMessage.setStatus(ChatMessage.Status.SENDING);
@@ -162,7 +162,7 @@ public class ChatzActivity extends AppCompatActivity {
     final int position = chatAdapter.addItem(chatMessage);
     messageInput.setText("");
     chatMessagesView.scrollToPosition(0);
-    Chatz.getInstance(this).postMessage(chatMessage).enqueue(new Callback<Void>() {
+    Chatz.getInstance(this).postMessage(chatMessage.getText()).enqueue(new Callback<Void>() {
       @Override
       public void onResponse(Call<Void> call, Response<Void> response) {
         if(response.isSuccessful()) {
