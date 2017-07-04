@@ -2,10 +2,10 @@ package io.chatz.service;
 
 import java.util.Map;
 
-import io.chatz.model.ChatMessage;
 import io.chatz.model.User;
-import io.chatz.service.payload.LoginRequest;
+import io.chatz.service.payload.LoginPayload;
 import io.chatz.model.Device;
+import io.chatz.service.payload.LoginResult;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Header;
@@ -15,7 +15,7 @@ import retrofit2.http.PUT;
 public interface ApiService {
 
   @POST("/auth/users")
-  Call<String> login(@Body LoginRequest payload);
+  Call<LoginResult> login(@Body LoginPayload payload);
 
   @PUT("/users")
   Call<Void> updateUser(@Header("X-Token") String apiToken, @Body User user);

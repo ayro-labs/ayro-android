@@ -2,18 +2,10 @@ package io.chatz.service.payload;
 
 import io.chatz.model.User;
 
-public class LoginResponse {
+public class LoginResult {
 
-  private User user;
   private String token;
-
-  public User getUser() {
-    return user;
-  }
-
-  public void setUser(User user) {
-    this.user = user;
-  }
+  private User user;
 
   public String getToken() {
     return token;
@@ -21,5 +13,13 @@ public class LoginResponse {
 
   public void setToken(String token) {
     this.token = token;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
   }
 }

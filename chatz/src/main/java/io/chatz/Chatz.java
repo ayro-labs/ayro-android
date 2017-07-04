@@ -5,18 +5,19 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import io.chatz.exception.ChatzException;
-import io.chatz.model.ChatMessage;
 import io.chatz.model.Device;
 import io.chatz.model.DeviceInfo;
 import io.chatz.model.User;
 import io.chatz.service.ApiService;
 import io.chatz.service.Services;
+import io.chatz.service.payload.LoginResult;
 import io.chatz.task.impl.FirebaseConnectionTask;
 import io.chatz.task.impl.LoginTask;
 import io.chatz.task.Tasks;
@@ -86,11 +87,12 @@ public class Chatz {
     saveUser(user);
     Log.d(Constants.TAG, "Authenticating user...");
     LoginTask task = new LoginTask(settings.getAppToken(), user, getDevice());
-    Tasks.execute(task, new Callback<String>() {
+    Tasks.execute(task, new Callback<LoginResult>() {
       @Override
-      public void onSuccess(String apiToken) {
+      public void onSuccess(LoginResult result) {
         Log.d(Constants.TAG, "User was authenticated with success");
-        saveApiToken(apiToken);
+        saveUser(result.getUser());
+        saveApiToken(result.getToken());
         saveStatus(Status.LOGGED_IN);
         connectToFirebase();
       }
@@ -160,21 +162,21 @@ public class Chatz {
 
   private Device getDevice() {
     DeviceInfo info = new DeviceInfo();
-    info.setManufacturer(Build.MANUFACTURER);
-    info.setModel(Build.MODEL);
     info.setOsName(Constants.OS_NAME);
     info.setOsVersion(Build.VERSION.RELEASE);
-
-    Device device = new Device();
-    device.setUid(AppUtils.getDeviceId(context));
-    device.setPlatform(Constants.PLATFORM);
+    info.setManufacturer(Build.MANUFACTURER);
+    info.setModel(Build.MODEL);
+    info.setCarrier(((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getNetworkOperatorName());
     try {
       PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-      device.setAppId(packageInfo.packageName);
-      device.setAppVersion(packageInfo.versionName);
+      info.setAppId(packageInfo.packageName);
+      info.setAppVersion(packageInfo.versionName);
     } catch(PackageManager.NameNotFoundException e) {
       // Nothing to do...
     }
+    Device device = new Device();
+    device.setUid(AppUtils.getDeviceId(context));
+    device.setPlatform(Constants.PLATFORM);
     device.setInfo(info);
     return device;
   }

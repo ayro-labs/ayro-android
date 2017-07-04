@@ -3,11 +3,19 @@ package io.chatz.service.payload;
 import io.chatz.model.Device;
 import io.chatz.model.User;
 
-public class LoginRequest {
+public class LoginPayload {
 
+  private String appToken;
   private User user;
   private Device device;
-  private String appToken;
+
+  public String getAppToken() {
+    return appToken;
+  }
+
+  public void setAppToken(String appToken) {
+    this.appToken = appToken;
+  }
 
   public User getUser() {
     return user;
@@ -23,13 +31,5 @@ public class LoginRequest {
 
   public void setDevice(Device device) {
     this.device = device;
-  }
-
-  public String getAppToken() {
-    return appToken;
-  }
-
-  public void setAppToken(String appToken) {
-    this.appToken = appToken;
   }
 }
