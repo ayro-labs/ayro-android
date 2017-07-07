@@ -9,11 +9,11 @@ public class Services {
 
   private static Services instance;
 
-  private ApiService apiService;
+  private ChatzService chatzService;
 
   private Services() {
     Retrofit retrofit = new Retrofit.Builder().baseUrl(Constants.API_URL).addConverterFactory(GsonConverterFactory.create(JsonUtils.getGson())).build();
-    apiService = retrofit.create(ApiService.class);
+    chatzService = retrofit.create(ChatzService.class);
   }
 
   public static Services getInstance() {
@@ -23,7 +23,7 @@ public class Services {
     return instance;
   }
 
-  public ApiService getApiService() {
-    return apiService;
+  public ChatzService getChatzService() {
+    return chatzService;
   }
 }

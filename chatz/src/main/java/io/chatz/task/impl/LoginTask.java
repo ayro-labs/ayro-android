@@ -8,7 +8,7 @@ import io.chatz.util.Constants;
 import io.chatz.service.payload.LoginPayload;
 import io.chatz.model.Device;
 import io.chatz.model.User;
-import io.chatz.service.ApiService;
+import io.chatz.service.ChatzService;
 import io.chatz.service.Services;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -19,15 +19,12 @@ public class LoginTask extends Task<LoginResult> {
   private static final String TASK_NAME = "ChatzIO.task.user.login";
 
   private LoginPayload payload;
-  private ApiService apiService;
+  private ChatzService chatzService;
 
   public LoginTask(String appToken, User user, Device device) {
     super(TASK_NAME);
-    this.payload = new LoginPayload();
-    this.payload.setAppToken(appToken);
-    this.payload.setUser(user);
-    this.payload.setDevice(device);
-    this.apiService = Services.getInstance().getApiService();
+    this.payload = new LoginPayload(appToken, user, device);
+    this.chatzService = Services.getInstance().getChatzService();
   }
 
   @Override
@@ -37,7 +34,7 @@ public class LoginTask extends Task<LoginResult> {
 
   @Override
   protected void executeJob() {
-    apiService.login(payload).enqueue(new Callback<LoginResult>() {
+    chatzService.login(payload).enqueue(new Callback<LoginResult>() {
       @Override
       public void onResponse(Call<LoginResult> call, Response<LoginResult> response) {
         if(response.isSuccessful()) {

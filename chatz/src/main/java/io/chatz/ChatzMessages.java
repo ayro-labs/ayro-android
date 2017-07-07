@@ -7,7 +7,6 @@ import android.util.Log;
 
 import java.util.Map;
 
-import io.chatz.database.ChatMessageDatabase;
 import io.chatz.model.Author;
 import io.chatz.model.ChatMessage;
 import io.chatz.ui.activity.ChatzActivity;
@@ -26,8 +25,6 @@ public class ChatzMessages {
   private static final String ORIGIN_CHATZ = "chatz";
   private static final String EVENT_CHAT_MESSAGE = "chat_message";
 
-  private static ChatMessageDatabase chatMessageDatabase;
-
   public static void receive(Context context, Map<String, String> data) {
     if(ORIGIN_CHATZ.equals(data.get(KEY_ORIGIN))) {
       String event = data.get(KEY_EVENT);
@@ -45,7 +42,6 @@ public class ChatzMessages {
   private static void notifyMessage(final Context context, final ChatMessage chatMessage) {
     chatMessage.setStatus(ChatMessage.Status.SENT);
     chatMessage.setDirection(ChatMessage.Direction.INCOMING);
-    saveChatMessage(context, chatMessage);
     if(!Chatz.getInstance(context).isChatOpened()) {
       final Author author = chatMessage.getAuthor();
       ImageUtils.loadPicture(context, author.getPhoto(), new Callback<Bitmap>() {
@@ -64,12 +60,5 @@ public class ChatzMessages {
 
   private static Intent getDefaultNotificationIntent(Context context) {
     return new Intent(context, ChatzActivity.class);
-  }
-
-  private static void saveChatMessage(Context context, ChatMessage chatMessage) {
-    if(chatMessageDatabase == null) {
-      chatMessageDatabase = new ChatMessageDatabase(context);
-    }
-    chatMessageDatabase.insert(chatMessage);
   }
 }

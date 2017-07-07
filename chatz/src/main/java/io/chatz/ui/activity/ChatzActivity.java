@@ -20,8 +20,10 @@ import java.util.List;
 
 import io.chatz.Chatz;
 import io.chatz.R;
-import io.chatz.database.ChatMessageDatabase;
 import io.chatz.model.ChatMessage;
+import io.chatz.service.ChatzService;
+import io.chatz.service.Services;
+import io.chatz.service.payload.PostMessagePayload;
 import io.chatz.ui.adapter.ChatAdapter;
 import io.chatz.util.Constants;
 import io.chatz.util.UIUtils;
@@ -36,21 +38,22 @@ public class ChatzActivity extends AppCompatActivity {
     ACTIONS.add(Constants.INTENT_ACTION_MESSAGE_RECEIVED);
   }
 
+  private ChatzService chatzService;
+  private String apiToken;
+
   private EditText messageInput;
   private RecyclerView chatMessagesView;
   private View postMessageView;
-
   private ChatAdapter chatAdapter;
-  private ChatMessageDatabase chatMessageDatabase;
   private BroadcastReceiver broadcastReceiver;
-
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_chat);
 
-    chatMessageDatabase = new ChatMessageDatabase(this);
+    chatzService = Services.getInstance().getChatzService();
+    apiToken = Chatz.getInstance(this).getApiToken();
 
     setupMessageInput();
     setupSendMessageButton();
@@ -162,17 +165,17 @@ public class ChatzActivity extends AppCompatActivity {
     final int position = chatAdapter.addItem(chatMessage);
     messageInput.setText("");
     chatMessagesView.scrollToPosition(0);
-    Chatz.getInstance(this).postMessage(chatMessage.getText()).enqueue(new Callback<Void>() {
+
+    PostMessagePayload payload = new PostMessagePayload(chatMessage.getText());
+    chatzService.postMessage(apiToken, payload).enqueue(new Callback<Void>() {
       @Override
       public void onResponse(Call<Void> call, Response<Void> response) {
         if(response.isSuccessful()) {
           chatMessage.setStatus(ChatMessage.Status.SENT);
-          chatAdapter.reloadItem(position);
-          chatMessageDatabase.insert(chatMessage);
         } else {
           chatMessage.setStatus(ChatMessage.Status.ERROR_SENDING);
-          chatAdapter.reloadItem(position);
         }
+        chatAdapter.reloadItem(position);
       }
 
       @Override
@@ -184,6 +187,18 @@ public class ChatzActivity extends AppCompatActivity {
   }
 
   private void loadChatMessages() {
-    chatAdapter.setItems(chatMessageDatabase.list());
+    chatzService.listMessages(apiToken).enqueue(new Callback<List<ChatMessage>>() {
+      @Override
+      public void onResponse(Call<List<ChatMessage>> call, Response<List<ChatMessage>> response) {
+        if(response.isSuccessful()) {
+          chatAdapter.setItems(response.body());
+        }
+      }
+
+      @Override
+      public void onFailure(Call<List<ChatMessage>> call, Throwable t) {
+
+      }
+    });
   }
 }

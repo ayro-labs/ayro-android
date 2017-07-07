@@ -9,6 +9,12 @@ public class LoginPayload {
   private User user;
   private Device device;
 
+  public LoginPayload(String appToken, User user, Device device) {
+    this.appToken = appToken;
+    this.user = user;
+    this.device = device;
+  }
+
   public String getAppToken() {
     return appToken;
   }

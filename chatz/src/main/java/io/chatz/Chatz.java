@@ -2,20 +2,11 @@ package io.chatz;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import io.chatz.exception.ChatzException;
-import io.chatz.model.Device;
-import io.chatz.model.DeviceInfo;
 import io.chatz.model.User;
-import io.chatz.service.ApiService;
+import io.chatz.service.ChatzService;
 import io.chatz.service.Services;
 import io.chatz.service.payload.LoginResult;
 import io.chatz.task.impl.FirebaseConnectionTask;
@@ -27,7 +18,6 @@ import io.chatz.util.AppUtils;
 import io.chatz.util.Callback;
 import io.chatz.util.Constants;
 import io.chatz.util.Preferences;
-import retrofit2.Call;
 
 public class Chatz {
 
@@ -39,7 +29,6 @@ public class Chatz {
   private User user;
   private String apiToken;
   private boolean chatOpened;
-  private ApiService apiService;
 
   private Chatz(Context context) {
     this.context = context;
@@ -47,7 +36,6 @@ public class Chatz {
     this.user = Preferences.getUser(context);
     this.status = Preferences.getStatus(context);
     this.apiToken = Preferences.getApiToken(context);
-    this.apiService = Services.getInstance().getApiService();
   }
 
   public static Chatz getInstance(Context context) {
@@ -69,6 +57,10 @@ public class Chatz {
     return status;
   }
 
+  public String getApiToken() {
+    return apiToken;
+  }
+
   public void init(Settings settings) {
     clearApp();
     saveSettings(settings);
@@ -86,7 +78,7 @@ public class Chatz {
     assertInitialized();
     saveUser(user);
     Log.d(Constants.TAG, "Authenticating user...");
-    LoginTask task = new LoginTask(settings.getAppToken(), user, getDevice());
+    LoginTask task = new LoginTask(settings.getAppToken(), user, AppUtils.getDevice(context));
     Tasks.execute(task, new Callback<LoginResult>() {
       @Override
       public void onSuccess(LoginResult result) {
@@ -148,37 +140,10 @@ public class Chatz {
     this.chatOpened = chatOpened;
   }
 
-  public Call<Void> postMessage(String message) {
-    Map<String, String> payload = new HashMap<>();
-    payload.put("text", message);
-    return apiService.postMessage(apiToken, payload);
-  }
-
   private void assertInitialized() {
     if(status.getOrder() < Status.INITIALIZED.getOrder()) {
       throw new ChatzException("ChatzIO was not initialized previously. Please call init method first.");
     }
-  }
-
-  private Device getDevice() {
-    DeviceInfo info = new DeviceInfo();
-    info.setOsName(Constants.OS_NAME);
-    info.setOsVersion(Build.VERSION.RELEASE);
-    info.setManufacturer(Build.MANUFACTURER);
-    info.setModel(Build.MODEL);
-    info.setCarrier(((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getNetworkOperatorName());
-    try {
-      PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-      info.setAppId(packageInfo.packageName);
-      info.setAppVersion(packageInfo.versionName);
-    } catch(PackageManager.NameNotFoundException e) {
-      // Nothing to do...
-    }
-    Device device = new Device();
-    device.setUid(AppUtils.getDeviceId(context));
-    device.setPlatform(Constants.PLATFORM);
-    device.setInfo(info);
-    return device;
   }
 
   private void saveSettings(Settings settings) {

@@ -6,7 +6,7 @@ import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import io.chatz.model.Device;
-import io.chatz.service.ApiService;
+import io.chatz.service.ChatzService;
 import io.chatz.service.Services;
 import io.chatz.task.Task;
 import io.chatz.util.AppUtils;
@@ -21,12 +21,12 @@ public class FirebaseConnectionTask extends Task<Void> {
   private static final String TASK_NAME = "ChatzIO.task.firebase.connection";
 
   private Context context;
-  private ApiService apiService;
+  private ChatzService chatzService;
 
   public FirebaseConnectionTask(Context context) {
     super(TASK_NAME);
     this.context = context;
-    this.apiService = Services.getInstance().getApiService();
+    this.chatzService = Services.getInstance().getChatzService();
   }
 
   @Override
@@ -51,7 +51,7 @@ public class FirebaseConnectionTask extends Task<Void> {
     Device device = new Device();
     device.setUid(AppUtils.getDeviceId(context));
     device.setPushToken(token);
-    apiService.updateDevice(apiToken, device).enqueue(new Callback<Void>() {
+    chatzService.updateDevice(apiToken, device).enqueue(new Callback<Void>() {
       @Override
       public void onResponse(Call<Void> call, Response<Void> response) {
         if(response.isSuccessful()) {

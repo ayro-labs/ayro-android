@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import io.chatz.model.User;
-import io.chatz.service.ApiService;
+import io.chatz.service.ChatzService;
 import io.chatz.service.Services;
 import io.chatz.task.Task;
 import io.chatz.util.Constants;
@@ -19,13 +19,13 @@ public class UpdateUserTask extends Task<Void> {
 
   private Context context;
   private User user;
-  private ApiService apiService;
+  private ChatzService chatzService;
 
   public UpdateUserTask(Context context, User user) {
     super(TASK_NAME);
     this.context = context;
     this.user = user;
-    this.apiService = Services.getInstance().getApiService();
+    this.chatzService = Services.getInstance().getChatzService();
   }
 
   @Override
@@ -41,7 +41,7 @@ public class UpdateUserTask extends Task<Void> {
       super.fail();
       return;
     }
-    apiService.updateUser(apiToken, user).enqueue(new Callback<Void>() {
+    chatzService.updateUser(apiToken, user).enqueue(new Callback<Void>() {
       @Override
       public void onResponse(Call<Void> call, Response<Void> response) {
         if(response.isSuccessful()) {
