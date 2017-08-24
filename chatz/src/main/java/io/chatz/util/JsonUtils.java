@@ -41,6 +41,10 @@ public class JsonUtils {
     return gson.fromJson(json, clazz);
   }
 
+  public static <T> T fromJson(String json, Type type) {
+    return gson.fromJson(json, type);
+  }
+
   private static class DateSerializer implements JsonSerializer<Date>, JsonDeserializer<Date> {
 
     private static final String TAG = DateSerializer.class.getSimpleName();
@@ -55,7 +59,7 @@ public class JsonUtils {
       Date deserialized = null;
       try {
         deserialized = createDateFormat().parse(json.getAsString());
-      } catch(ParseException e) {
+      } catch (ParseException e) {
         Log.w(TAG, "Error deserializing date", e);
       }
       return deserialized;

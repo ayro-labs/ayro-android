@@ -10,7 +10,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -42,9 +41,14 @@ public class ImageUtils {
     new LoadPictureTask(context, photoUrl, new Callback<Bitmap>() {
       @Override
       public void onSuccess(Bitmap bitmap) {
-        if(bitmap != null) {
+        if (bitmap != null) {
           imageView.setImageBitmap(bitmap);
         }
+      }
+
+      @Override
+      public void onFail(Exception exception) {
+
       }
     }).execute((Void) null);
   }
@@ -67,11 +71,13 @@ public class ImageUtils {
 
     @Override
     protected Bitmap doInBackground(Void... params) {
-      if(photoUrl != null) {
+      if (photoUrl != null) {
         try {
           return Picasso.with(context).load(photoUrl).get();
-        } catch(IOException e) {
-          Log.e(Constants.TAG, "Could not load user picture", e);
+        } catch (IOException e) {
+          if (callback != null) {
+            callback.onFail(e);
+          }
         }
       }
       return null;
@@ -79,7 +85,7 @@ public class ImageUtils {
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
-      if(callback != null) {
+      if (callback != null) {
         callback.onSuccess(bitmap);
       }
     }

@@ -52,7 +52,7 @@ public abstract class BaseAdapter<T, VH extends RecyclerView.ViewHolder> extends
   }
 
   public int addItem(T item, boolean reversed) {
-    if(!reversed) {
+    if (!reversed) {
       items.add(item);
       notifyItemInserted(items.size() - 1);
       return items.size() - 1;
@@ -80,7 +80,7 @@ public abstract class BaseAdapter<T, VH extends RecyclerView.ViewHolder> extends
 
   public void removeItem(T item) {
     int index = items.indexOf(item);
-    if(index >= 0) {
+    if (index >= 0) {
       removeItem(index);
     }
   }
@@ -96,7 +96,7 @@ public abstract class BaseAdapter<T, VH extends RecyclerView.ViewHolder> extends
 
   public void removeItems(List<T> items, boolean notify) {
     this.items.removeAll(items);
-    if(notify) {
+    if (notify) {
       notifyDataSetChanged();
     }
   }

@@ -6,13 +6,15 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 
+import java.util.UUID;
+
 import io.chatz.model.Device;
 import io.chatz.model.DeviceInfo;
 
 public class AppUtils {
 
-  public static String getDeviceId(Context context) {
-    return android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+  public static String getDeviceId() {
+    return UUID.randomUUID().toString().replace("-", "");
   }
 
   public static Device getDevice(Context context) {
@@ -26,11 +28,11 @@ public class AppUtils {
       PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
       info.setAppId(packageInfo.packageName);
       info.setAppVersion(packageInfo.versionName);
-    } catch(PackageManager.NameNotFoundException e) {
+    } catch (PackageManager.NameNotFoundException e) {
       // Nothing to do...
     }
     Device device = new Device();
-    device.setUid(getDeviceId(context));
+    device.setUid(getDeviceId());
     device.setPlatform(Constants.PLATFORM);
     device.setInfo(info);
     return device;

@@ -7,6 +7,7 @@ import android.util.Log;
 
 import java.util.Map;
 
+import io.chatz.core.ChatzApp;
 import io.chatz.model.Author;
 import io.chatz.model.ChatMessage;
 import io.chatz.ui.activity.ChatzActivity;
@@ -26,11 +27,11 @@ public class ChatzMessages {
   private static final String EVENT_CHAT_MESSAGE = "chat_message";
 
   public static void receive(Context context, Map<String, String> data) {
-    if(ORIGIN_CHATZ.equals(data.get(KEY_ORIGIN))) {
+    if (ORIGIN_CHATZ.equals(data.get(KEY_ORIGIN))) {
       String event = data.get(KEY_EVENT);
       String message = data.get(KEY_MESSAGE);
       Log.d(Constants.TAG, "Incoming message of event " + event + ": " + message);
-      switch(event) {
+      switch (event) {
         case (EVENT_CHAT_MESSAGE):
           ChatMessage chatMessage = JsonUtils.fromJson(message, ChatMessage.class);
           notifyMessage(context, chatMessage);
@@ -42,13 +43,18 @@ public class ChatzMessages {
   private static void notifyMessage(final Context context, final ChatMessage chatMessage) {
     chatMessage.setStatus(ChatMessage.Status.SENT);
     chatMessage.setDirection(ChatMessage.Direction.INCOMING);
-    if(!Chatz.getInstance(context).isChatOpened()) {
+    if (!ChatzApp.getInstance(context).isChatOpened()) {
       final Author author = chatMessage.getAuthor();
       ImageUtils.loadPicture(context, author.getPhoto(), new Callback<Bitmap>() {
         @Override
         public void onSuccess(Bitmap photo) {
           int notificationId = author.getId().hashCode();
           UIUtils.notify(context, notificationId, photo, author.getName(), chatMessage.getText(), getDefaultNotificationIntent(context));
+        }
+
+        @Override
+        public void onFail(Exception exception) {
+
         }
       });
     } else {

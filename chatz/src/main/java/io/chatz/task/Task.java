@@ -1,53 +1,35 @@
 package io.chatz.task;
 
-import android.os.Handler;
-import android.os.HandlerThread;
-
-import io.chatz.util.Callback;
+import io.chatz.exception.TaskException;
 
 public abstract class Task<T> {
 
-  private static final long SLEEP = 10000L;
-
-  private Handler handler;
-  private Callback<T> callback;
-  private int executions;
-  private Runnable runnable = new Runnable() {
-    @Override
-    public void run() {
-      executions++;
-      executeJob();
-    }
-  };
+  private String name;
+  private TaskCallback<T> callback;
 
   public Task(String name) {
-    HandlerThread thread = new HandlerThread(name);
-    thread.start();
-    handler = new Handler(thread.getLooper());
+    this.name = name;
   }
 
-  protected abstract boolean shouldBeReplaced();
+  protected abstract T executeJob() throws TaskException;
 
-  protected abstract void executeJob();
-
-  protected void success(T result) {
-    Tasks.cancel(getClass());
-    if(callback != null) {
-      callback.onSuccess(result);
-    }
+  public String getName() {
+    return name;
   }
 
-  protected void fail() {
-    execute(callback);
+  public TaskCallback<T> getCallback() {
+    return callback;
   }
 
-  void execute(Callback<T> callback) {
+  public void setCallback(TaskCallback<T> callback) {
     this.callback = callback;
-    handler.postDelayed(runnable, SLEEP * executions);
   }
 
-  void cancel() {
-    handler.removeCallbacks(runnable);
-    handler.getLooper().quit();
+  public void execute() {
+    Tasks.getInstance().execute(this);
+  }
+
+  public void schedule() {
+    Tasks.getInstance().schedule(this);
   }
 }

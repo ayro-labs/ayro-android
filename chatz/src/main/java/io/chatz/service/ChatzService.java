@@ -3,32 +3,71 @@ package io.chatz.service;
 import java.util.List;
 
 import io.chatz.model.ChatMessage;
-import io.chatz.model.User;
-import io.chatz.service.payload.LoginPayload;
 import io.chatz.model.Device;
+import io.chatz.model.User;
+import io.chatz.service.iface.ChatzApi;
+import io.chatz.service.payload.InitPayload;
+import io.chatz.service.payload.InitResult;
+import io.chatz.service.payload.LoginPayload;
 import io.chatz.service.payload.LoginResult;
 import io.chatz.service.payload.PostMessagePayload;
+import io.chatz.util.JsonUtils;
 import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.POST;
-import retrofit2.http.PUT;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
-public interface ChatzService {
+public class ChatzService implements ChatzApi {
 
-  @POST("/auth/users")
-  Call<LoginResult> login(@Body LoginPayload payload);
+  private static final String API_URL = "http://192.168.0.19:3000";
 
-  @PUT("/users")
-  Call<Void> updateUser(@Header("X-Token") String apiToken, @Body User user);
+  private static ChatzService instance;
 
-  @PUT("/users/devices")
-  Call<Void> updateDevice(@Header("X-Token") String apiToken, @Body Device device);
+  private ChatzApi chatzApi;
 
-  @POST("/chat/android")
-  Call<Void> postMessage(@Header("X-Token") String apiToken, @Body PostMessagePayload payload);
+  private ChatzService() {
+    Retrofit retrofit = new Retrofit.Builder().baseUrl(API_URL).addConverterFactory(GsonConverterFactory.create(JsonUtils.getGson())).build();
+    chatzApi = retrofit.create(ChatzApi.class);
+  }
 
-  @GET("/chat")
-  Call<List<ChatMessage>> listMessages(@Header("X-Token") String apiToken);
+  public static ChatzService getInstance() {
+    if (instance == null) {
+      instance = new ChatzService();
+    }
+    return instance;
+  }
+
+  @Override
+  public Call<InitResult> init(InitPayload payload) {
+    return chatzApi.init(payload);
+  }
+
+  @Override
+  public Call<LoginResult> login(LoginPayload payload) {
+    return chatzApi.login(payload);
+  }
+
+  @Override
+  public Call<Void> logout(String apiToken) {
+    return chatzApi.logout(apiToken);
+  }
+
+  @Override
+  public Call<User> updateUser(String apiToken, User user) {
+    return chatzApi.updateUser(apiToken, user);
+  }
+
+  @Override
+  public Call<Device> updateDevice(String apiToken, Device device) {
+    return chatzApi.updateDevice(apiToken, device);
+  }
+
+  @Override
+  public Call<ChatMessage> postMessage(String apiToken, PostMessagePayload payload) {
+    return chatzApi.postMessage(apiToken, payload);
+  }
+
+  @Override
+  public Call<List<ChatMessage>> listMessages(String apiToken) {
+    return chatzApi.listMessages(apiToken);
+  }
 }

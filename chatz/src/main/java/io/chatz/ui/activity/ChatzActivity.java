@@ -18,12 +18,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import io.chatz.Chatz;
+import io.chatz.core.ChatzApp;
 import io.chatz.R;
+import io.chatz.enums.UserStatus;
 import io.chatz.model.ChatMessage;
+import io.chatz.model.User;
 import io.chatz.service.ChatzService;
-import io.chatz.service.Services;
 import io.chatz.service.payload.PostMessagePayload;
+import io.chatz.task.TaskCallback;
+import io.chatz.exception.TaskException;
 import io.chatz.ui.adapter.ChatAdapter;
 import io.chatz.util.Constants;
 import io.chatz.util.UIUtils;
@@ -39,7 +42,7 @@ public class ChatzActivity extends AppCompatActivity {
   }
 
   private ChatzService chatzService;
-  private String apiToken;
+  private ChatzApp chatzApp;
 
   private EditText messageInput;
   private RecyclerView chatMessagesView;
@@ -52,8 +55,8 @@ public class ChatzActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_chat);
 
-    chatzService = Services.getInstance().getChatzService();
-    apiToken = Chatz.getInstance(this).getApiToken();
+    chatzService = ChatzService.getInstance();
+    chatzApp = ChatzApp.getInstance(this);
 
     setupMessageInput();
     setupSendMessageButton();
@@ -107,7 +110,7 @@ public class ChatzActivity extends AppCompatActivity {
       @Override
       public void onReceive(Context context, Intent intent) {
         Object data = intent.getSerializableExtra(Constants.INTENT_ACTION_EXTRA_DATA);
-        switch(intent.getAction()) {
+        switch (intent.getAction()) {
           case Constants.INTENT_ACTION_MESSAGE_RECEIVED:
             onMessageReceived((ChatMessage) data);
             break;
@@ -121,19 +124,19 @@ public class ChatzActivity extends AppCompatActivity {
     super.onResume();
     registerReceiver();
     loadChatMessages();
-    Chatz.getInstance(this).setChatOpened(true);
+    chatzApp.setChatOpened(true);
   }
 
   @Override
   protected void onPause() {
     super.onPause();
     unregisterReceiver();
-    Chatz.getInstance(this).setChatOpened(false);
+    chatzApp.setChatOpened(false);
   }
 
   private void registerReceiver() {
     IntentFilter intentFilter = new IntentFilter();
-    for(String action : ACTIONS) {
+    for (String action : ACTIONS) {
       intentFilter.addAction(action);
     }
     registerReceiver(broadcastReceiver, intentFilter);
@@ -149,7 +152,7 @@ public class ChatzActivity extends AppCompatActivity {
   }
 
   private void onMessageChanged(String message) {
-    if(message.trim().isEmpty()) {
+    if (message.trim().isEmpty()) {
       postMessageView.setEnabled(false);
     } else {
       postMessageView.setEnabled(true);
@@ -157,6 +160,24 @@ public class ChatzActivity extends AppCompatActivity {
   }
 
   private void onPostMessageClick() {
+    if (!chatzApp.getUserStatus().equals(UserStatus.LOGGED_IN)) {
+      chatzApp.login(new User(), new TaskCallback<Void>() {
+        @Override
+        public void onSuccess(Void result) {
+          postChatMessage();
+        }
+
+        @Override
+        public void onFail(TaskException exception) {
+
+        }
+      });
+    } else {
+      postChatMessage();
+    }
+  }
+
+  private void postChatMessage() {
     final ChatMessage chatMessage = new ChatMessage();
     chatMessage.setText(messageInput.getText().toString());
     chatMessage.setStatus(ChatMessage.Status.SENDING);
@@ -167,10 +188,10 @@ public class ChatzActivity extends AppCompatActivity {
     chatMessagesView.scrollToPosition(0);
 
     PostMessagePayload payload = new PostMessagePayload(chatMessage.getText());
-    chatzService.postMessage(apiToken, payload).enqueue(new Callback<Void>() {
+    chatzService.postMessage(chatzApp.getApiToken(), payload).enqueue(new Callback<ChatMessage>() {
       @Override
-      public void onResponse(Call<Void> call, Response<Void> response) {
-        if(response.isSuccessful()) {
+      public void onResponse(Call<ChatMessage> call, Response<ChatMessage> response) {
+        if (response.isSuccessful()) {
           chatMessage.setStatus(ChatMessage.Status.SENT);
         } else {
           chatMessage.setStatus(ChatMessage.Status.ERROR_SENDING);
@@ -179,7 +200,7 @@ public class ChatzActivity extends AppCompatActivity {
       }
 
       @Override
-      public void onFailure(Call<Void> call, Throwable throwable) {
+      public void onFailure(Call<ChatMessage> call, Throwable throwable) {
         chatMessage.setStatus(ChatMessage.Status.ERROR_SENDING);
         chatAdapter.reloadItem(position);
       }
@@ -187,10 +208,10 @@ public class ChatzActivity extends AppCompatActivity {
   }
 
   private void loadChatMessages() {
-    chatzService.listMessages(apiToken).enqueue(new Callback<List<ChatMessage>>() {
+    chatzService.listMessages(chatzApp.getApiToken()).enqueue(new Callback<List<ChatMessage>>() {
       @Override
       public void onResponse(Call<List<ChatMessage>> call, Response<List<ChatMessage>> response) {
-        if(response.isSuccessful()) {
+        if (response.isSuccessful()) {
           chatAdapter.setItems(response.body());
         }
       }

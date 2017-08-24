@@ -5,7 +5,6 @@ import android.util.Log;
 
 import java.io.IOException;
 
-import io.chatz.model.User;
 import io.chatz.service.ChatzService;
 import io.chatz.store.Store;
 import io.chatz.task.Task;
@@ -14,40 +13,40 @@ import io.chatz.util.Constants;
 import io.chatz.util.MessageUtils;
 import retrofit2.Response;
 
-public class UpdateUserTask extends Task<User> {
+public class LogoutTask extends Task<Void> {
 
-  private static final String TASK_NAME = "user.update";
+  private static final String TASK_NAME = "logout";
 
   private static final String GENERIC_ERROR_STATUS = "999";
-  private static final String GENERIC_ERROR_CODE = "user.update.error";
-  private static final String GENERIC_ERROR_MESSAGE = "Could not update user";
+  private static final String GENERIC_ERROR_CODE = "logout.error";
+  private static final String GENERIC_ERROR_MESSAGE = "Could not sign out";
+
+  private static final String PERMISSION_DENIED_ERROR_CODE = "permission.denied";
 
   private Context context;
-  private User user;
   private ChatzService chatzService;
 
-  public UpdateUserTask(Context context, User user) {
+  public LogoutTask(Context context) {
     super(TASK_NAME);
     this.context = context;
-    this.user = user;
     this.chatzService = ChatzService.getInstance();
   }
 
   @Override
-  protected User executeJob() throws TaskException {
-    Log.i(Constants.TAG, String.format("(%s) Updating user...", TASK_NAME));
-    String apiToken = Store.getApiToken(context);
-    if (apiToken == null) {
-      return null;
-    }
+  protected Void executeJob() throws TaskException {
     try {
-      Response<User> response = chatzService.updateUser(apiToken, user).execute();
+      Log.i(Constants.TAG, String.format("(%s) Signing out...", TASK_NAME));
+      String apiToken = Store.getApiToken(context);
+      Response<Void> response = chatzService.logout(apiToken).execute();
       if (response.isSuccessful()) {
-        Log.i(Constants.TAG, String.format("(%s) User updated with success!", TASK_NAME));
-        return response.body();
+        Log.i(Constants.TAG, String.format("(%s) User signed out with success!", TASK_NAME));
+        return null;
       } else {
         TaskException exception = new TaskException(response, true);
-        Log.e(Constants.TAG, String.format("(%s) Could not update user: %s", TASK_NAME, MessageUtils.get(exception)));
+        if (PERMISSION_DENIED_ERROR_CODE.equals(exception.getCode())) {
+          return null;
+        }
+        Log.e(Constants.TAG, String.format("(%s) Could not sign out: %s", TASK_NAME, MessageUtils.get(exception)));
         throw exception;
       }
     } catch (IOException e) {

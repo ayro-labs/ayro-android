@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Author implements Serializable {
 
   private static final long serialVersionUID = 8523803625309951192L;
-  
+
   private String id;
   private String name;
   private String photo;

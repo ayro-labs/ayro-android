@@ -57,11 +57,11 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
     ChatMessage chatMessage = getItem(position);
     ChatMessage nextChatMessage = hasItem(position + 1) ? getItem(position + 1) : null;
     holder.timeView.setText(TIME_FORMAT.format(chatMessage.getDate()));
-    if(holder instanceof IncomingMessageHolder) {
+    if (holder instanceof IncomingMessageHolder) {
       IncomingMessageHolder incomingMessageHolder = (IncomingMessageHolder) holder;
       boolean sameDay = nextChatMessage != null && sameDay(chatMessage.getDate(), nextChatMessage.getDate());
       boolean continuation = nextChatMessage != null && nextChatMessage.getDirection().equals(ChatMessage.Direction.INCOMING) && chatMessage.getAuthor().getId().equals(nextChatMessage.getAuthor().getId()) && sameDay;
-      if(!continuation) {
+      if (!continuation) {
         ImageUtils.setPicture(getContext(), chatMessage.getAuthor().getPhoto(), incomingMessageHolder.photoView);
         ((RelativeLayout.LayoutParams) incomingMessageHolder.photoView.getLayoutParams()).height = pictureDimension;
         incomingMessageHolder.photoView.setVisibility(View.VISIBLE);
@@ -75,9 +75,9 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
       holder.textView.setText(fromHtml(chatMessage.getText() + " &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"));
     } else {
       OutgoingMessageHolder outgoingMessageHolder = (OutgoingMessageHolder) holder;
-      if(ChatMessage.Status.SENT.equals(chatMessage.getStatus())) {
+      if (ChatMessage.Status.SENT.equals(chatMessage.getStatus())) {
         outgoingMessageHolder.statusView.setImageResource(R.drawable.message_sent);
-      } else if(ChatMessage.Status.SENDING.equals(chatMessage.getStatus())) {
+      } else if (ChatMessage.Status.SENDING.equals(chatMessage.getStatus())) {
         outgoingMessageHolder.statusView.setImageResource(R.drawable.message_sending);
       } else {
         outgoingMessageHolder.statusView.setImageResource(R.drawable.message_error_sending);
@@ -94,7 +94,7 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
   }
 
   private Spanned fromHtml(String source) {
-    if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
       return Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY);
     } else {
       return Html.fromHtml(source);

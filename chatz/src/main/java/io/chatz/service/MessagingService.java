@@ -1,19 +1,19 @@
-package io.chatz.fcm;
+package io.chatz.service;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import io.chatz.Chatz;
+import io.chatz.core.ChatzApp;
 import io.chatz.ChatzMessages;
-import io.chatz.Status;
+import io.chatz.enums.UserStatus;
 
-public class FcmService extends FirebaseMessagingService {
+public class MessagingService extends FirebaseMessagingService {
 
   @Override
   public void onMessageReceived(final RemoteMessage remoteMessage) {
     super.onMessageReceived(remoteMessage);
-    Chatz chatz = Chatz.getInstance(this);
-    if(chatz.getSettings().isMessagingServiceEnabled() && Status.LOGGED_IN.equals(chatz.getStatus())) {
+    ChatzApp chatzApp = ChatzApp.getInstance(this);
+    if (chatzApp.getSettings().isMessagingServiceEnabled() && UserStatus.LOGGED_IN.equals(chatzApp.getUserStatus())) {
       ChatzMessages.receive(this, remoteMessage.getData());
     }
   }

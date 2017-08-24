@@ -73,9 +73,9 @@ public class User implements Serializable {
   }
 
   public String getFullName() {
-    if(firstName != null) {
+    if (firstName != null) {
       return firstName + (lastName != null ? " " + lastName : "");
-    } else if(lastName != null) {
+    } else if (lastName != null) {
       return lastName;
     } else {
       return "";
@@ -84,10 +84,10 @@ public class User implements Serializable {
 
   @Override
   public boolean equals(Object o) {
-    if(this == o) {
+    if (this == o) {
       return true;
     }
-    if(o == null || getClass() != o.getClass()) {
+    if (o == null || getClass() != o.getClass()) {
       return false;
     }
     User user = (User) o;
