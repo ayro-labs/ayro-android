@@ -19,6 +19,10 @@ import io.chatz.R;
 
 public class UIUtils {
 
+  private UIUtils() {
+
+  }
+
   public static void defaultToolbar(final AppCompatActivity activity) {
     Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
     if (toolbar != null) {

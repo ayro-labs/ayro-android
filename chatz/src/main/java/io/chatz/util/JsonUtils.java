@@ -25,6 +25,10 @@ public class JsonUtils {
 
   private static Gson gson = createGson();
 
+  private JsonUtils() {
+
+  }
+
   private static Gson createGson() {
     return new GsonBuilder().registerTypeAdapter(Date.class, new DateSerializer()).setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
   }

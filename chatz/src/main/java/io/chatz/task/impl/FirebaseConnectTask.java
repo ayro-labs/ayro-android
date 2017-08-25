@@ -48,7 +48,7 @@ public class FirebaseConnectTask extends Task<Device> {
       throw exception;
     }
     Device device = new Device();
-    device.setUid(AppUtils.getDeviceId());
+    device.setUid(AppUtils.getDeviceId(context));
     device.setPushToken(token);
     try {
       String apiToken = Store.getApiToken(context);

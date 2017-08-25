@@ -97,7 +97,7 @@ public class ChatzApp {
     task.schedule();
   }
 
-  public void login(User user, final TaskCallback<Void> callback) {
+  public void login(User user, final TaskCallback<User> callback) {
     setUser(user);
     LoginTask task = new LoginTask(settings.getAppToken(), user, AppUtils.getDevice(context));
     task.setCallback(new TaskCallback<LoginResult>() {
@@ -108,7 +108,7 @@ public class ChatzApp {
         setApiToken(result.getToken());
         connectToFirebase();
         if (callback != null) {
-          callback.onSuccess(null);
+          callback.onSuccess(result.getUser());
         }
       }
 

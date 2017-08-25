@@ -18,6 +18,10 @@ import java.io.IOException;
 
 public class ImageUtils {
 
+  private ImageUtils() {
+
+  }
+
   public static Bitmap getCircularBitmap(Bitmap bitmap) {
     Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
 

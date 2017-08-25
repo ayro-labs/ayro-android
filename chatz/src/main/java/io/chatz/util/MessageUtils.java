@@ -7,12 +7,16 @@ import io.chatz.exception.ChatzException;
 
 public class MessageUtils {
 
-  private static final String APP_DOES_NOT_EXIST_CODE = "app.doesNotExist";
+  private static final String APP_DOES_NOT_EXIST = "app.doesNotExist";
 
   private static final Map<String, String> MESSAGES = new HashMap<>();
 
   static {
-    MESSAGES.put(APP_DOES_NOT_EXIST_CODE, "App does not exist, please make sure you initialize Chatz with the correct app token.");
+    MESSAGES.put(APP_DOES_NOT_EXIST, "App does not exist, please make sure you initialize Chatz with the correct app token.");
+  }
+
+  private MessageUtils() {
+
   }
 
   public static String get(ChatzException e) {

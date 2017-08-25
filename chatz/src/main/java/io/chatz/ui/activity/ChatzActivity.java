@@ -26,7 +26,6 @@ import io.chatz.model.User;
 import io.chatz.service.ChatzService;
 import io.chatz.service.payload.PostMessagePayload;
 import io.chatz.task.TaskCallback;
-import io.chatz.exception.TaskException;
 import io.chatz.ui.adapter.ChatAdapter;
 import io.chatz.util.Constants;
 import io.chatz.util.UIUtils;
@@ -62,9 +61,24 @@ public class ChatzActivity extends AppCompatActivity {
     setupSendMessageButton();
     setupAdapter();
     setupBroadcastReceiver();
+    loadContent();
 
     UIUtils.defaultToolbar(this);
     setTitle(getString(R.string.chatz_activity_title));
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    registerReceiver();
+    chatzApp.setChatOpened(true);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    unregisterReceiver();
+    chatzApp.setChatOpened(false);
   }
 
   private void setupMessageInput() {
@@ -119,19 +133,33 @@ public class ChatzActivity extends AppCompatActivity {
     };
   }
 
-  @Override
-  protected void onResume() {
-    super.onResume();
-    registerReceiver();
-    loadChatMessages();
-    chatzApp.setChatOpened(true);
+  private void loadContent() {
+    if (!UserStatus.LOGGED_IN.equals(chatzApp.getUserStatus())) {
+      chatzApp.login(chatzApp.getUser(), new TaskCallback<User>() {
+        @Override
+        public void onSuccess(User user) {
+          loadMessages();
+        }
+      });
+    } else {
+      loadMessages();
+    }
   }
 
-  @Override
-  protected void onPause() {
-    super.onPause();
-    unregisterReceiver();
-    chatzApp.setChatOpened(false);
+  private void loadMessages() {
+    chatzService.listMessages(chatzApp.getApiToken()).enqueue(new Callback<List<ChatMessage>>() {
+      @Override
+      public void onResponse(Call<List<ChatMessage>> call, Response<List<ChatMessage>> response) {
+        if (response.isSuccessful()) {
+          chatAdapter.setItems(response.body());
+        }
+      }
+
+      @Override
+      public void onFailure(Call<List<ChatMessage>> call, Throwable throwable) {
+
+      }
+    });
   }
 
   private void registerReceiver() {
@@ -160,24 +188,6 @@ public class ChatzActivity extends AppCompatActivity {
   }
 
   private void onPostMessageClick() {
-    if (!chatzApp.getUserStatus().equals(UserStatus.LOGGED_IN)) {
-      chatzApp.login(new User(), new TaskCallback<Void>() {
-        @Override
-        public void onSuccess(Void result) {
-          postChatMessage();
-        }
-
-        @Override
-        public void onFail(TaskException exception) {
-
-        }
-      });
-    } else {
-      postChatMessage();
-    }
-  }
-
-  private void postChatMessage() {
     final ChatMessage chatMessage = new ChatMessage();
     chatMessage.setText(messageInput.getText().toString());
     chatMessage.setStatus(ChatMessage.Status.SENDING);
@@ -203,22 +213,6 @@ public class ChatzActivity extends AppCompatActivity {
       public void onFailure(Call<ChatMessage> call, Throwable throwable) {
         chatMessage.setStatus(ChatMessage.Status.ERROR_SENDING);
         chatAdapter.reloadItem(position);
-      }
-    });
-  }
-
-  private void loadChatMessages() {
-    chatzService.listMessages(chatzApp.getApiToken()).enqueue(new Callback<List<ChatMessage>>() {
-      @Override
-      public void onResponse(Call<List<ChatMessage>> call, Response<List<ChatMessage>> response) {
-        if (response.isSuccessful()) {
-          chatAdapter.setItems(response.body());
-        }
-      }
-
-      @Override
-      public void onFailure(Call<List<ChatMessage>> call, Throwable t) {
-
       }
     });
   }
