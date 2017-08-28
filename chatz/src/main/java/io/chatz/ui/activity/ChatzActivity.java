@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -13,8 +15,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -35,9 +37,12 @@ import retrofit2.Response;
 
 public class ChatzActivity extends AppCompatActivity {
 
-  private static final List<String> ACTIONS = new ArrayList<>();
+  private static final String NO_INTERNET_CONNECTION_ERROR = "No internet connection";
+  private static final IntentFilter INTENT_FILTER = new IntentFilter();
+
   static {
-    ACTIONS.add(Constants.INTENT_ACTION_MESSAGE_RECEIVED);
+    INTENT_FILTER.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+    INTENT_FILTER.addAction(Constants.INTENT_ACTION_MESSAGE_RECEIVED);
   }
 
   private ChatzService chatzService;
@@ -48,6 +53,7 @@ public class ChatzActivity extends AppCompatActivity {
   private View postMessageView;
   private ChatAdapter chatAdapter;
   private BroadcastReceiver broadcastReceiver;
+  private boolean connected;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,10 +63,11 @@ public class ChatzActivity extends AppCompatActivity {
     chatzService = ChatzService.getInstance();
     chatzApp = ChatzApp.getInstance(this);
 
+    onConnectivityChange();
+    setupBroadcastReceiver();
+    setupAdapter();
     setupMessageInput();
     setupSendMessageButton();
-    setupAdapter();
-    setupBroadcastReceiver();
     loadContent();
 
     UIUtils.defaultToolbar(this);
@@ -70,15 +77,41 @@ public class ChatzActivity extends AppCompatActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    registerReceiver();
     chatzApp.setChatOpened(true);
+    registerReceiver(broadcastReceiver, INTENT_FILTER);
   }
 
   @Override
   protected void onPause() {
     super.onPause();
-    unregisterReceiver();
     chatzApp.setChatOpened(false);
+    unregisterReceiver(broadcastReceiver);
+  }
+
+  private void setupBroadcastReceiver() {
+    broadcastReceiver = new BroadcastReceiver() {
+      @Override
+      public void onReceive(Context context, Intent intent) {
+        Object data = intent.getSerializableExtra(Constants.INTENT_ACTION_EXTRA_DATA);
+        switch (intent.getAction()) {
+          case ConnectivityManager.CONNECTIVITY_ACTION:
+            onConnectivityChange();
+            break;
+          case Constants.INTENT_ACTION_MESSAGE_RECEIVED:
+            onMessageReceived((ChatMessage) data);
+            break;
+        }
+      }
+    };
+  }
+
+  private void setupAdapter() {
+    chatAdapter = new ChatAdapter(this);
+    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+    linearLayoutManager.setStackFromEnd(true);
+    chatMessagesView = (RecyclerView) findViewById(R.id.chat_messages);
+    chatMessagesView.setLayoutManager(linearLayoutManager);
+    chatMessagesView.setAdapter(chatAdapter);
   }
 
   private void setupMessageInput() {
@@ -112,27 +145,6 @@ public class ChatzActivity extends AppCompatActivity {
     });
   }
 
-  private void setupAdapter() {
-    chatAdapter = new ChatAdapter(this);
-    chatMessagesView = (RecyclerView) findViewById(R.id.chat_messages);
-    chatMessagesView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true));
-    chatMessagesView.setAdapter(chatAdapter);
-  }
-
-  private void setupBroadcastReceiver() {
-    broadcastReceiver = new BroadcastReceiver() {
-      @Override
-      public void onReceive(Context context, Intent intent) {
-        Object data = intent.getSerializableExtra(Constants.INTENT_ACTION_EXTRA_DATA);
-        switch (intent.getAction()) {
-          case Constants.INTENT_ACTION_MESSAGE_RECEIVED:
-            onMessageReceived((ChatMessage) data);
-            break;
-        }
-      }
-    };
-  }
-
   private void loadContent() {
     if (!UserStatus.LOGGED_IN.equals(chatzApp.getUserStatus())) {
       chatzApp.login(chatzApp.getUser(), new TaskCallback<User>() {
@@ -162,29 +174,42 @@ public class ChatzActivity extends AppCompatActivity {
     });
   }
 
-  private void registerReceiver() {
-    IntentFilter intentFilter = new IntentFilter();
-    for (String action : ACTIONS) {
-      intentFilter.addAction(action);
+  private void onConnectivityChange() {
+    ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+    if (connectivityManager != null) {
+      NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+      if (networkInfo != null && networkInfo.isConnected() && networkInfo.isAvailable()) {
+        connected = true;
+        hideErrorBar();
+      } else {
+        connected = false;
+        showErrorBar(NO_INTERNET_CONNECTION_ERROR);
+        onMessageChanged(messageInput.getText().toString());
+      }
     }
-    registerReceiver(broadcastReceiver, intentFilter);
-  }
-
-  private void unregisterReceiver() {
-    unregisterReceiver(broadcastReceiver);
   }
 
   private void onMessageReceived(ChatMessage chatMessage) {
     chatAdapter.addItem(chatMessage);
-    chatMessagesView.scrollToPosition(0);
+    chatMessagesView.scrollToPosition(chatAdapter.lastIndex());
   }
 
   private void onMessageChanged(String message) {
-    if (message.trim().isEmpty()) {
+    if (!connected || message.trim().isEmpty()) {
       postMessageView.setEnabled(false);
     } else {
       postMessageView.setEnabled(true);
     }
+  }
+
+  public void showErrorBar(String text) {
+    findViewById(R.id.status).setVisibility(View.VISIBLE);
+    TextView textView = (TextView) findViewById(R.id.status_text);
+    textView.setText(text);
+  }
+
+  public void hideErrorBar() {
+    findViewById(R.id.status).setVisibility(View.GONE);
   }
 
   private void onPostMessageClick() {
@@ -195,17 +220,12 @@ public class ChatzActivity extends AppCompatActivity {
     chatMessage.setDate(new Date());
     final int position = chatAdapter.addItem(chatMessage);
     messageInput.setText("");
-    chatMessagesView.scrollToPosition(0);
-
+    chatMessagesView.scrollToPosition(chatAdapter.lastIndex());
     PostMessagePayload payload = new PostMessagePayload(chatMessage.getText());
     chatzService.postMessage(chatzApp.getApiToken(), payload).enqueue(new Callback<ChatMessage>() {
       @Override
       public void onResponse(Call<ChatMessage> call, Response<ChatMessage> response) {
-        if (response.isSuccessful()) {
-          chatMessage.setStatus(ChatMessage.Status.SENT);
-        } else {
-          chatMessage.setStatus(ChatMessage.Status.ERROR_SENDING);
-        }
+        chatMessage.setStatus(response.isSuccessful() ? ChatMessage.Status.SENT : ChatMessage.Status.ERROR_SENDING);
         chatAdapter.reloadItem(position);
       }
 

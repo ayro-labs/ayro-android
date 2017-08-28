@@ -14,6 +14,7 @@ import io.chatz.service.payload.LoginResult;
 import io.chatz.store.Store;
 import io.chatz.task.TaskCallback;
 import io.chatz.exception.TaskException;
+import io.chatz.task.Tasks;
 import io.chatz.task.impl.FirebaseConnectTask;
 import io.chatz.task.impl.FirebaseDisconnectTask;
 import io.chatz.task.impl.InitTask;
@@ -160,6 +161,10 @@ public class ChatzApp {
   public void disconnectFromFirebase() {
     FirebaseDisconnectTask task = new FirebaseDisconnectTask();
     task.schedule();
+  }
+
+  public boolean hasPendingTasks() {
+    return Tasks.getInstance().hasPendingTasks();
   }
 
   public void openChat() {

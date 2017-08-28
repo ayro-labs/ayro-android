@@ -40,6 +40,10 @@ public class Tasks {
     return instance;
   }
 
+  public boolean hasPendingTasks() {
+    return !tasksQueue.isEmpty() || !failedTasksQueue.isEmpty();
+  }
+
   private void executeScheduledTasks() {
     new Thread(new Runnable() {
       @Override

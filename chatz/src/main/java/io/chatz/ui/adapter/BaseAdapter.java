@@ -10,19 +10,10 @@ public abstract class BaseAdapter<T, VH extends RecyclerView.ViewHolder> extends
 
   private Context context;
   private List<T> items;
-  private boolean reversed;
 
   public BaseAdapter(Context context, List<T> items) {
     this.context = context;
     this.items = new ArrayList<>(items);
-  }
-
-  public boolean isReversed() {
-    return reversed;
-  }
-
-  public void setReversed(boolean reversed) {
-    this.reversed = reversed;
   }
 
   @Override
@@ -48,19 +39,9 @@ public abstract class BaseAdapter<T, VH extends RecyclerView.ViewHolder> extends
   }
 
   public int addItem(T item) {
-    return addItem(item, reversed);
-  }
-
-  public int addItem(T item, boolean reversed) {
-    if (!reversed) {
-      items.add(item);
-      notifyItemInserted(items.size() - 1);
-      return items.size() - 1;
-    } else {
-      getItems().add(0, item);
-      notifyItemInserted(0);
-      return 0;
-    }
+    items.add(item);
+    notifyItemInserted(lastIndex());
+    return lastIndex();
   }
 
   public void addItem(int index, T item) {

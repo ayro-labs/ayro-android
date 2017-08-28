@@ -14,8 +14,10 @@ import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.TextView;
 
 import io.chatz.R;
+import io.chatz.ui.activity.ChatzActivity;
 
 public class UIUtils {
 

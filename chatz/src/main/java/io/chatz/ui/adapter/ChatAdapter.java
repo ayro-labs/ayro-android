@@ -33,11 +33,12 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
   private static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
   private int pictureDimension;
+  private int errorIconDimension;
 
   public ChatAdapter(Context context) {
     super(context, new ArrayList<ChatMessage>());
-    setReversed(true);
     pictureDimension = UIUtils.dpToPixels(getContext(), 40);
+    errorIconDimension = UIUtils.dpToPixels(getContext(), 35);
   }
 
   @Override
@@ -68,7 +69,7 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
         incomingMessageHolder.authorView.setText(chatMessage.getAuthor().getName());
         incomingMessageHolder.authorView.setVisibility(View.VISIBLE);
       } else {
-        ((RelativeLayout.LayoutParams) incomingMessageHolder.photoView.getLayoutParams()).height = 1;
+        ((RelativeLayout.LayoutParams) incomingMessageHolder.photoView.getLayoutParams()).height = 0;
         incomingMessageHolder.photoView.setVisibility(View.INVISIBLE);
         incomingMessageHolder.authorView.setVisibility(View.GONE);
       }
@@ -76,10 +77,13 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
     } else {
       OutgoingMessageHolder outgoingMessageHolder = (OutgoingMessageHolder) holder;
       if (ChatMessage.Status.SENT.equals(chatMessage.getStatus())) {
+        ((RelativeLayout.LayoutParams) outgoingMessageHolder.errorView.getLayoutParams()).width = 0;
         outgoingMessageHolder.statusView.setImageResource(R.drawable.message_sent);
       } else if (ChatMessage.Status.SENDING.equals(chatMessage.getStatus())) {
+        ((RelativeLayout.LayoutParams) outgoingMessageHolder.errorView.getLayoutParams()).width = 0;
         outgoingMessageHolder.statusView.setImageResource(R.drawable.message_sending);
       } else {
+        ((RelativeLayout.LayoutParams) outgoingMessageHolder.errorView.getLayoutParams()).width = errorIconDimension;
         outgoingMessageHolder.statusView.setImageResource(R.drawable.message_error_sending);
       }
       holder.textView.setText(fromHtml(chatMessage.getText() + " &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"));
@@ -128,10 +132,12 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
   private class OutgoingMessageHolder extends ChatMessageHolder {
 
     private ImageView statusView;
+    private ImageView errorView;
 
     OutgoingMessageHolder(View view) {
       super(view);
       statusView = (ImageView) view.findViewById(R.id.status);
+      errorView = (ImageView) view.findViewById(R.id.error);
     }
   }
 
