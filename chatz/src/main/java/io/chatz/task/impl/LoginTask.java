@@ -1,5 +1,6 @@
 package io.chatz.task.impl;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.io.IOException;
@@ -26,8 +27,8 @@ public class LoginTask extends Task<LoginResult> {
   private LoginPayload payload;
   private ChatzService chatzService;
 
-  public LoginTask(String appToken, User user, Device device) {
-    super(TASK_NAME);
+  public LoginTask(Context context, String appToken, User user, Device device) {
+    super(context, TASK_NAME);
     this.payload = new LoginPayload(appToken, user, device);
     this.chatzService = ChatzService.getInstance();
   }

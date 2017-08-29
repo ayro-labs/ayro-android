@@ -34,36 +34,42 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
 
   private int pictureDimension;
   private int errorIconDimension;
+  private int conversationMargin;
 
   public ChatAdapter(Context context) {
     super(context, new ArrayList<ChatMessage>());
-    pictureDimension = UIUtils.dpToPixels(getContext(), 40);
-    errorIconDimension = UIUtils.dpToPixels(getContext(), 35);
+    pictureDimension = UIUtils.dpToPixels(getContext(), 45);
+    errorIconDimension = UIUtils.dpToPixels(getContext(), 36);
+    conversationMargin = UIUtils.dpToPixels(getContext(), 5);
   }
 
   @Override
   public int getItemViewType(int position) {
     ChatMessage chatMessage = getItem(position);
-    return ChatMessage.Direction.OUTGOING.equals(chatMessage.getDirection()) ? OUTGOING_MESSAGE : INCOMING_MESSAGE;
+    return ChatMessage.Direction.outgoing.equals(chatMessage.getDirection()) ? OUTGOING_MESSAGE : INCOMING_MESSAGE;
   }
 
   @Override
   public ChatMessageHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View view = LayoutInflater.from(getContext()).inflate(viewType == OUTGOING_MESSAGE ? R.layout.item_chat_message_outgoing : R.layout.item_chat_message_incoming, parent, false);
-    return viewType == INCOMING_MESSAGE ? new IncomingMessageHolder(view) : new OutgoingMessageHolder(view);
+    return viewType == OUTGOING_MESSAGE ? new OutgoingMessageHolder(view) : new IncomingMessageHolder(view);
   }
 
   @Override
   public void onBindViewHolder(ChatMessageHolder holder, int position) {
     ChatMessage chatMessage = getItem(position);
-    ChatMessage nextChatMessage = hasItem(position + 1) ? getItem(position + 1) : null;
+    ChatMessage nextChatMessage = hasItem(position - 1) ? getItem(position - 1) : null;
     holder.timeView.setText(TIME_FORMAT.format(chatMessage.getDate()));
+
+    boolean sameDay = nextChatMessage != null && sameDay(chatMessage.getDate(), nextChatMessage.getDate());
+    boolean continuation = nextChatMessage != null && nextChatMessage.getDirection().equals(chatMessage.getDirection()) && (nextChatMessage.getDirection().equals(ChatMessage.Direction.outgoing) || (nextChatMessage.getDirection().equals(ChatMessage.Direction.incoming) && chatMessage.getAuthor().equals(nextChatMessage.getAuthor()))) && sameDay;
+
+    ((RecyclerView.LayoutParams) holder.rootView.getLayoutParams()).topMargin = !continuation ? conversationMargin : 0;
+
     if (holder instanceof IncomingMessageHolder) {
       IncomingMessageHolder incomingMessageHolder = (IncomingMessageHolder) holder;
-      boolean sameDay = nextChatMessage != null && sameDay(chatMessage.getDate(), nextChatMessage.getDate());
-      boolean continuation = nextChatMessage != null && nextChatMessage.getDirection().equals(ChatMessage.Direction.INCOMING) && chatMessage.getAuthor().getId().equals(nextChatMessage.getAuthor().getId()) && sameDay;
       if (!continuation) {
-        ImageUtils.setPicture(getContext(), chatMessage.getAuthor().getPhoto(), incomingMessageHolder.photoView);
+        ImageUtils.setPicture(getContext(), chatMessage.getAuthor().getPhotoUrl(), incomingMessageHolder.photoView);
         ((RelativeLayout.LayoutParams) incomingMessageHolder.photoView.getLayoutParams()).height = pictureDimension;
         incomingMessageHolder.photoView.setVisibility(View.VISIBLE);
         incomingMessageHolder.authorView.setText(chatMessage.getAuthor().getName());
@@ -76,10 +82,10 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
       holder.textView.setText(fromHtml(chatMessage.getText() + " &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"));
     } else {
       OutgoingMessageHolder outgoingMessageHolder = (OutgoingMessageHolder) holder;
-      if (ChatMessage.Status.SENT.equals(chatMessage.getStatus())) {
+      if (chatMessage.getStatus() == null || ChatMessage.Status.sent.equals(chatMessage.getStatus())) {
         ((RelativeLayout.LayoutParams) outgoingMessageHolder.errorView.getLayoutParams()).width = 0;
         outgoingMessageHolder.statusView.setImageResource(R.drawable.message_sent);
-      } else if (ChatMessage.Status.SENDING.equals(chatMessage.getStatus())) {
+      } else if (ChatMessage.Status.sending.equals(chatMessage.getStatus())) {
         ((RelativeLayout.LayoutParams) outgoingMessageHolder.errorView.getLayoutParams()).width = 0;
         outgoingMessageHolder.statusView.setImageResource(R.drawable.message_sending);
       } else {
@@ -143,11 +149,13 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
 
   abstract class ChatMessageHolder extends RecyclerView.ViewHolder {
 
+    private View rootView;
     private TextView textView;
     private TextView timeView;
 
     ChatMessageHolder(View view) {
       super(view);
+      rootView = view.findViewById(R.id.root);
       textView = (TextView) view.findViewById(R.id.text);
       timeView = (TextView) view.findViewById(R.id.time);
     }

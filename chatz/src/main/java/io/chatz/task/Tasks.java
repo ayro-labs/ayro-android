@@ -1,5 +1,7 @@
 package io.chatz.task;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
@@ -17,13 +19,15 @@ public class Tasks {
 
   private static Tasks instance;
 
+  private Context context;
   private Handler taskHandler;
   private LinkedBlockingQueue<Task> tasksQueue;
   private LinkedBlockingQueue<Task> failedTasksQueue;
   private boolean runScheduledTasks;
   private int scheduledTaskExecution;
 
-  private Tasks() {
+  private Tasks(Context context) {
+    this.context = context;
     HandlerThread taskThread = new HandlerThread(TASKS_THREAD_NAME);
     taskThread.start();
     this.taskHandler = new Handler(taskThread.getLooper());
@@ -33,9 +37,9 @@ public class Tasks {
     executeScheduledTasks();
   }
 
-  public static Tasks getInstance() {
+  public static Tasks getInstance(Context context) {
     if (instance == null) {
-      instance = new Tasks();
+      instance = new Tasks(context);
     }
     return instance;
   }
@@ -52,6 +56,9 @@ public class Tasks {
           try {
             Task task = failedTasksQueue.poll();
             if (task == null) {
+              if (tasksQueue.isEmpty()) {
+                broadcastTasksChanged();
+              }
               task = tasksQueue.take();
               scheduledTaskExecution = 0;
             }
@@ -98,6 +105,7 @@ public class Tasks {
   void schedule(Task task) {
     try {
       tasksQueue.put(task);
+      broadcastTasksChanged();
     } catch (InterruptedException e) {
       // Nothing to do...
     }
@@ -115,5 +123,9 @@ public class Tasks {
     if (callback != null) {
       callback.onFail(exception);
     }
+  }
+
+  private void broadcastTasksChanged() {
+    context.sendBroadcast(new Intent(Constants.INTENT_ACTION_TASKS_CHANGED));
   }
 }

@@ -7,7 +7,6 @@ import io.chatz.Settings;
 import io.chatz.enums.AppStatus;
 import io.chatz.enums.UserStatus;
 import io.chatz.model.App;
-import io.chatz.model.Integration;
 import io.chatz.model.User;
 import io.chatz.service.payload.InitResult;
 import io.chatz.service.payload.LoginResult;
@@ -33,7 +32,6 @@ public class ChatzApp {
   private UserStatus userStatus;
   private Settings settings;
   private App app;
-  private Integration integration;
   private User user;
   private String apiToken;
   private boolean chatOpened;
@@ -44,7 +42,6 @@ public class ChatzApp {
     this.userStatus = Store.getUserStatus(context);
     this.settings = Store.getSettings(context);
     this.app = Store.getApp(context);
-    this.integration = Store.getIntegration(context);
     this.user = Store.getUser(context);
     this.apiToken = Store.getApiToken(context);
   }
@@ -72,10 +69,6 @@ public class ChatzApp {
     return app;
   }
 
-  public Integration getIntegration() {
-    return integration;
-  }
-
   public User getUser() {
     return user;
   }
@@ -86,13 +79,12 @@ public class ChatzApp {
 
   public void init(Settings settings) {
     setSettings(settings);
-    InitTask task = new InitTask(settings.getAppToken());
+    InitTask task = new InitTask(context, settings.getAppToken());
     task.setCallback(new TaskCallback<InitResult>() {
       @Override
       public void onSuccess(InitResult result) {
         setAppStatus(AppStatus.INITIALIZED);
         setApp(result.getApp());
-        setIntegration(result.getIntegration());
       }
     });
     task.schedule();
@@ -100,7 +92,7 @@ public class ChatzApp {
 
   public void login(User user, final TaskCallback<User> callback) {
     setUser(user);
-    LoginTask task = new LoginTask(settings.getAppToken(), user, AppUtils.getDevice(context));
+    LoginTask task = new LoginTask(context, settings.getAppToken(), user, AppUtils.getDevice(context));
     task.setCallback(new TaskCallback<LoginResult>() {
       @Override
       public void onSuccess(LoginResult result) {
@@ -159,12 +151,12 @@ public class ChatzApp {
   }
 
   public void disconnectFromFirebase() {
-    FirebaseDisconnectTask task = new FirebaseDisconnectTask();
+    FirebaseDisconnectTask task = new FirebaseDisconnectTask(context);
     task.schedule();
   }
 
   public boolean hasPendingTasks() {
-    return Tasks.getInstance().hasPendingTasks();
+    return Tasks.getInstance(context).hasPendingTasks();
   }
 
   public void openChat() {
@@ -199,11 +191,6 @@ public class ChatzApp {
   private void setApp(App app) {
     this.app = app;
     Store.setApp(context, app);
-  }
-
-  private void setIntegration(Integration integration) {
-    this.integration = integration;
-    Store.setIntegration(context, integration);
   }
 
   private void setUser(User user) {

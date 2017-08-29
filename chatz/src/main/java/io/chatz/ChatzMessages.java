@@ -8,6 +8,7 @@ import android.util.Log;
 import java.util.Map;
 
 import io.chatz.core.ChatzApp;
+import io.chatz.enums.UserStatus;
 import io.chatz.model.Author;
 import io.chatz.model.ChatMessage;
 import io.chatz.ui.activity.ChatzActivity;
@@ -27,7 +28,8 @@ public class ChatzMessages {
   private static final String EVENT_CHAT_MESSAGE = "chat_message";
 
   public static void receive(Context context, Map<String, String> data) {
-    if (ORIGIN_CHATZ.equals(data.get(KEY_ORIGIN))) {
+    ChatzApp chatzApp = ChatzApp.getInstance(context);
+    if (UserStatus.LOGGED_IN.equals(chatzApp.getUserStatus()) && ORIGIN_CHATZ.equals(data.get(KEY_ORIGIN))) {
       String event = data.get(KEY_EVENT);
       String message = data.get(KEY_MESSAGE);
       Log.d(Constants.TAG, "Incoming message of event " + event + ": " + message);
@@ -41,11 +43,11 @@ public class ChatzMessages {
   }
 
   private static void notifyMessage(final Context context, final ChatMessage chatMessage) {
-    chatMessage.setStatus(ChatMessage.Status.SENT);
-    chatMessage.setDirection(ChatMessage.Direction.INCOMING);
+    chatMessage.setStatus(ChatMessage.Status.sent);
+    chatMessage.setDirection(ChatMessage.Direction.incoming);
     if (!ChatzApp.getInstance(context).isChatOpened()) {
       final Author author = chatMessage.getAuthor();
-      ImageUtils.loadPicture(context, author.getPhoto(), new Callback<Bitmap>() {
+      ImageUtils.loadPicture(context, author.getPhotoUrl(), new Callback<Bitmap>() {
         @Override
         public void onSuccess(Bitmap photo) {
           int notificationId = author.getId().hashCode();

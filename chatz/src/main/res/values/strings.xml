@@ -4,4 +4,7 @@
     <string name="chatz_activity_title">Chat with us</string>
     <string name="chatz_type_a_message">Type a message…</string>
 
+    <string name="chatz_status_no_internet_connection">No internet connection</string>
+    <string name="chatz_status_connecting_to_the_server">Connecting to the server…</string>
+
 </resources>

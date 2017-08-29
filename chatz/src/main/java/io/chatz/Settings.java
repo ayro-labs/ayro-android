@@ -3,7 +3,7 @@ package io.chatz;
 public class Settings {
 
   private String appToken;
-  private boolean messagingServiceEnabled = true;
+  private boolean messagingServiceEnabled;
 
   public Settings(String appToken) {
     this.appToken = appToken;
@@ -21,7 +21,11 @@ public class Settings {
     return messagingServiceEnabled;
   }
 
-  public void setMessagingServiceEnabled(boolean messagingServiceEnabled) {
-    this.messagingServiceEnabled = messagingServiceEnabled;
+  public void enableMessagingService() {
+    this.messagingServiceEnabled = true;
+  }
+
+  public void disableMessagingService() {
+    this.messagingServiceEnabled = false;
   }
 }

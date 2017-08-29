@@ -37,12 +37,12 @@ import retrofit2.Response;
 
 public class ChatzActivity extends AppCompatActivity {
 
-  private static final String NO_INTERNET_CONNECTION_ERROR = "No internet connection";
   private static final IntentFilter INTENT_FILTER = new IntentFilter();
 
   static {
     INTENT_FILTER.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
     INTENT_FILTER.addAction(Constants.INTENT_ACTION_MESSAGE_RECEIVED);
+    INTENT_FILTER.addAction(Constants.INTENT_ACTION_TASKS_CHANGED);
   }
 
   private ChatzService chatzService;
@@ -53,7 +53,7 @@ public class ChatzActivity extends AppCompatActivity {
   private View postMessageView;
   private ChatAdapter chatAdapter;
   private BroadcastReceiver broadcastReceiver;
-  private boolean connected;
+  private String currentError;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,7 +63,6 @@ public class ChatzActivity extends AppCompatActivity {
     chatzService = ChatzService.getInstance();
     chatzApp = ChatzApp.getInstance(this);
 
-    onConnectivityChange();
     setupBroadcastReceiver();
     setupAdapter();
     setupMessageInput();
@@ -79,6 +78,7 @@ public class ChatzActivity extends AppCompatActivity {
     super.onResume();
     chatzApp.setChatOpened(true);
     registerReceiver(broadcastReceiver, INTENT_FILTER);
+    updateConnectionStatus();
   }
 
   @Override
@@ -95,7 +95,8 @@ public class ChatzActivity extends AppCompatActivity {
         Object data = intent.getSerializableExtra(Constants.INTENT_ACTION_EXTRA_DATA);
         switch (intent.getAction()) {
           case ConnectivityManager.CONNECTIVITY_ACTION:
-            onConnectivityChange();
+          case Constants.INTENT_ACTION_TASKS_CHANGED:
+            updateConnectionStatus();
             break;
           case Constants.INTENT_ACTION_MESSAGE_RECEIVED:
             onMessageReceived((ChatMessage) data);
@@ -174,18 +175,24 @@ public class ChatzActivity extends AppCompatActivity {
     });
   }
 
-  private void onConnectivityChange() {
+  private void updateConnectionStatus() {
+    String error = null;
     ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
     if (connectivityManager != null) {
       NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-      if (networkInfo != null && networkInfo.isConnected() && networkInfo.isAvailable()) {
-        connected = true;
-        hideErrorBar();
-      } else {
-        connected = false;
-        showErrorBar(NO_INTERNET_CONNECTION_ERROR);
-        onMessageChanged(messageInput.getText().toString());
+      if (networkInfo == null || !networkInfo.isConnected() || !networkInfo.isAvailable()) {
+        error = getString(R.string.chatz_status_no_internet_connection);
       }
+    }
+    if (chatzApp.hasPendingTasks()) {
+      error = getString(R.string.chatz_status_connecting_to_the_server);
+    }
+    if (error != null) {
+      currentError = error;
+      showErrorBar(error);
+      onMessageChanged(messageInput.getText().toString());
+    } else {
+      hideErrorBar();
     }
   }
 
@@ -195,7 +202,7 @@ public class ChatzActivity extends AppCompatActivity {
   }
 
   private void onMessageChanged(String message) {
-    if (!connected || message.trim().isEmpty()) {
+    if (currentError != null || message.trim().isEmpty()) {
       postMessageView.setEnabled(false);
     } else {
       postMessageView.setEnabled(true);
@@ -215,8 +222,8 @@ public class ChatzActivity extends AppCompatActivity {
   private void onPostMessageClick() {
     final ChatMessage chatMessage = new ChatMessage();
     chatMessage.setText(messageInput.getText().toString());
-    chatMessage.setStatus(ChatMessage.Status.SENDING);
-    chatMessage.setDirection(ChatMessage.Direction.OUTGOING);
+    chatMessage.setStatus(ChatMessage.Status.sending);
+    chatMessage.setDirection(ChatMessage.Direction.outgoing);
     chatMessage.setDate(new Date());
     final int position = chatAdapter.addItem(chatMessage);
     messageInput.setText("");
@@ -225,13 +232,13 @@ public class ChatzActivity extends AppCompatActivity {
     chatzService.postMessage(chatzApp.getApiToken(), payload).enqueue(new Callback<ChatMessage>() {
       @Override
       public void onResponse(Call<ChatMessage> call, Response<ChatMessage> response) {
-        chatMessage.setStatus(response.isSuccessful() ? ChatMessage.Status.SENT : ChatMessage.Status.ERROR_SENDING);
+        chatMessage.setStatus(response.isSuccessful() ? ChatMessage.Status.sent : ChatMessage.Status.error);
         chatAdapter.reloadItem(position);
       }
 
       @Override
       public void onFailure(Call<ChatMessage> call, Throwable throwable) {
-        chatMessage.setStatus(ChatMessage.Status.ERROR_SENDING);
+        chatMessage.setStatus(ChatMessage.Status.error);
         chatAdapter.reloadItem(position);
       }
     });

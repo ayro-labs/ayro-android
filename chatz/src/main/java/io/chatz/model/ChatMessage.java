@@ -54,10 +54,10 @@ public class ChatMessage implements Serializable {
   }
 
   public enum Status {
-    SENDING, SENT, ERROR_SENDING
+    sending, sent, error
   }
 
   public enum Direction {
-    INCOMING, OUTGOING;
+    incoming, outgoing;
   }
 }

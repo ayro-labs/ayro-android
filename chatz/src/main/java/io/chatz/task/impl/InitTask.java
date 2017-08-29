@@ -1,5 +1,6 @@
 package io.chatz.task.impl;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.io.IOException;
@@ -24,8 +25,8 @@ public class InitTask extends Task<InitResult> {
   private InitPayload payload;
   private ChatzService chatzService;
 
-  public InitTask(String appToken) {
-    super(TASK_NAME);
+  public InitTask(Context context, String appToken) {
+    super(context, TASK_NAME);
     this.payload = new InitPayload(appToken);
     this.chatzService = ChatzService.getInstance();
   }

@@ -27,7 +27,7 @@ public class UpdateUserTask extends Task<User> {
   private ChatzService chatzService;
 
   public UpdateUserTask(Context context, User user) {
-    super(TASK_NAME);
+    super(context, TASK_NAME);
     this.context = context;
     this.user = user;
     this.chatzService = ChatzService.getInstance();

@@ -7,7 +7,6 @@ import io.chatz.enums.AppStatus;
 import io.chatz.Settings;
 import io.chatz.enums.UserStatus;
 import io.chatz.model.App;
-import io.chatz.model.Integration;
 import io.chatz.model.User;
 import io.chatz.util.JsonUtils;
 
@@ -18,7 +17,6 @@ public class Store {
   private static final String USER_STATUS = "user_status";
   private static final String SETTINGS = "settings";
   private static final String APP = "app";
-  private static final String INTEGRATION = "integration";
   private static final String USER = "user";
   private static final String API_TOKEN = "api_token";
   private static final String DEVICE_ID = "device_id";
@@ -79,19 +77,6 @@ public class Store {
     }
   }
 
-  public static Integration getIntegration(Context context) {
-    SharedPreferences preferences = getPreferences(context);
-    String userJson = preferences.getString(INTEGRATION, null);
-    return userJson != null ? JsonUtils.fromJson(userJson, Integration.class) : null;
-  }
-
-  public static void setIntegration(Context context, Integration user) {
-    if (user != null) {
-      SharedPreferences preferences = getPreferences(context);
-      preferences.edit().putString(INTEGRATION, JsonUtils.toJson(user)).apply();
-    }
-  }
-
   public static User getUser(Context context) {
     SharedPreferences preferences = getPreferences(context);
     String userJson = preferences.getString(USER, null);
@@ -141,6 +126,6 @@ public class Store {
 
   public static void clear(Context context) {
     SharedPreferences preferences = getPreferences(context);
-    preferences.edit().remove(APP_STATUS).remove(USER_STATUS).remove(SETTINGS).remove(APP).remove(INTEGRATION).remove(USER).remove(API_TOKEN).remove(DEVICE_ID).apply();
+    preferences.edit().remove(APP_STATUS).remove(USER_STATUS).remove(SETTINGS).remove(APP).remove(USER).remove(API_TOKEN).remove(DEVICE_ID).apply();
   }
 }

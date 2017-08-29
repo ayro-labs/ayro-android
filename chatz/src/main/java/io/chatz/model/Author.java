@@ -8,7 +8,7 @@ public class Author implements Serializable {
 
   private String id;
   private String name;
-  private String photo;
+  private String photoUrl;
 
   public String getId() {
     return id;
@@ -26,11 +26,28 @@ public class Author implements Serializable {
     this.name = name;
   }
 
-  public String getPhoto() {
-    return photo;
+  public String getPhotoUrl() {
+    return photoUrl;
   }
 
-  public void setPhoto(String photo) {
-    this.photo = photo;
+  public void setPhotoUrl(String photoUrl) {
+    this.photoUrl = photoUrl;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Author author = (Author) o;
+    return id != null ? id.equals(author.id) : author.id == null;
+  }
+
+  @Override
+  public int hashCode() {
+    return id != null ? id.hashCode() : 0;
   }
 }

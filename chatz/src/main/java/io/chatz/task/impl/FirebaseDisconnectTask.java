@@ -1,5 +1,6 @@
 package io.chatz.task.impl;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -14,8 +15,8 @@ public class FirebaseDisconnectTask extends Task<Void> {
 
   private static final String TASK_NAME = "firebase.disconnect";
 
-  public FirebaseDisconnectTask() {
-    super(TASK_NAME);
+  public FirebaseDisconnectTask(Context context) {
+    super(context, TASK_NAME);
   }
 
   @Override

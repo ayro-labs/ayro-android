@@ -27,7 +27,7 @@ public class LogoutTask extends Task<Void> {
   private ChatzService chatzService;
 
   public LogoutTask(Context context) {
-    super(TASK_NAME);
+    super(context, TASK_NAME);
     this.context = context;
     this.chatzService = ChatzService.getInstance();
   }

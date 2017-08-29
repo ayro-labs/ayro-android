@@ -33,7 +33,7 @@ public class FirebaseConnectTask extends Task<Device> {
   private ChatzService chatzService;
 
   public FirebaseConnectTask(Context context) {
-    super(TASK_NAME);
+    super(context, TASK_NAME);
     this.context = context;
     this.chatzService = ChatzService.getInstance();
   }
