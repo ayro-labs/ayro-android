@@ -108,6 +108,12 @@ public class ChatzActivity extends AppCompatActivity {
 
   private void setupAdapter() {
     chatAdapter = new ChatAdapter(this);
+    chatAdapter.setOnRetryMessageClickListener(new ChatAdapter.OnRetryMessageClickListener() {
+      @Override
+      public void onClick(int position, ChatMessage chatMessage) {
+        onRetryMessageClick(position, chatMessage);
+      }
+    });
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
     linearLayoutManager.setStackFromEnd(true);
     chatMessagesView = (RecyclerView) findViewById(R.id.chat_messages);
@@ -220,13 +226,23 @@ public class ChatzActivity extends AppCompatActivity {
   }
 
   private void onPostMessageClick() {
+    postMessage(messageInput.getText().toString());
+    messageInput.setText("");
+    chatMessagesView.scrollToPosition(chatAdapter.lastIndex());
+  }
+
+  private void onRetryMessageClick(int position, ChatMessage chatMessage) {
+    chatAdapter.removeItem(position);
+    postMessage(chatMessage.getText());
+  }
+
+  private void postMessage(String text) {
     final ChatMessage chatMessage = new ChatMessage();
-    chatMessage.setText(messageInput.getText().toString());
+    chatMessage.setText(text);
     chatMessage.setStatus(ChatMessage.Status.sending);
     chatMessage.setDirection(ChatMessage.Direction.outgoing);
     chatMessage.setDate(new Date());
     final int position = chatAdapter.addItem(chatMessage);
-    messageInput.setText("");
     chatMessagesView.scrollToPosition(chatAdapter.lastIndex());
     PostMessagePayload payload = new PostMessagePayload(chatMessage.getText());
     chatzService.postMessage(chatzApp.getApiToken(), payload).enqueue(new Callback<ChatMessage>() {

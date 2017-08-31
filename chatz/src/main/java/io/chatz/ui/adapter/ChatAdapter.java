@@ -35,12 +35,17 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
   private int pictureDimension;
   private int errorIconDimension;
   private int conversationMargin;
+  private OnRetryMessageClickListener onRetryMessageClickListener;
 
   public ChatAdapter(Context context) {
     super(context, new ArrayList<ChatMessage>());
     pictureDimension = UIUtils.dpToPixels(getContext(), 45);
     errorIconDimension = UIUtils.dpToPixels(getContext(), 36);
     conversationMargin = UIUtils.dpToPixels(getContext(), 5);
+  }
+
+  public void setOnRetryMessageClickListener(OnRetryMessageClickListener onRetryMessageClickListener) {
+    this.onRetryMessageClickListener = onRetryMessageClickListener;
   }
 
   @Override
@@ -83,14 +88,14 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
     } else {
       OutgoingMessageHolder outgoingMessageHolder = (OutgoingMessageHolder) holder;
       if (chatMessage.getStatus() == null || ChatMessage.Status.sent.equals(chatMessage.getStatus())) {
-        ((RelativeLayout.LayoutParams) outgoingMessageHolder.errorView.getLayoutParams()).width = 0;
+        ((RelativeLayout.LayoutParams) outgoingMessageHolder.retryView.getLayoutParams()).width = 0;
         outgoingMessageHolder.statusView.setImageResource(R.drawable.message_sent);
       } else if (ChatMessage.Status.sending.equals(chatMessage.getStatus())) {
-        ((RelativeLayout.LayoutParams) outgoingMessageHolder.errorView.getLayoutParams()).width = 0;
+        ((RelativeLayout.LayoutParams) outgoingMessageHolder.retryView.getLayoutParams()).width = 0;
         outgoingMessageHolder.statusView.setImageResource(R.drawable.message_sending);
       } else {
-        ((RelativeLayout.LayoutParams) outgoingMessageHolder.errorView.getLayoutParams()).width = errorIconDimension;
-        outgoingMessageHolder.statusView.setImageResource(R.drawable.message_error_sending);
+        ((RelativeLayout.LayoutParams) outgoingMessageHolder.retryView.getLayoutParams()).width = errorIconDimension;
+        outgoingMessageHolder.statusView.setImageResource(R.drawable.message_error);
       }
       holder.textView.setText(fromHtml(chatMessage.getText() + " &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"));
       applyOutgoingColor(outgoingMessageHolder);
@@ -138,12 +143,21 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
   private class OutgoingMessageHolder extends ChatMessageHolder {
 
     private ImageView statusView;
-    private ImageView errorView;
+    private ImageView retryView;
 
     OutgoingMessageHolder(View view) {
       super(view);
       statusView = (ImageView) view.findViewById(R.id.status);
-      errorView = (ImageView) view.findViewById(R.id.error);
+      retryView = (ImageView) view.findViewById(R.id.retry);
+      retryView.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          if (onRetryMessageClickListener != null) {
+            int adapterPosition = getAdapterPosition();
+            onRetryMessageClickListener.onClick(adapterPosition, getItem(adapterPosition));
+          }
+        }
+      });
     }
   }
 
@@ -159,5 +173,11 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
       textView = (TextView) view.findViewById(R.id.text);
       timeView = (TextView) view.findViewById(R.id.time);
     }
+  }
+
+  public interface OnRetryMessageClickListener {
+
+    void onClick(int position, ChatMessage chatMessage);
+
   }
 }
