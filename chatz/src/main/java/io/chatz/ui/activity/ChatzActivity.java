@@ -228,7 +228,6 @@ public class ChatzActivity extends AppCompatActivity {
   private void onPostMessageClick() {
     postMessage(messageInput.getText().toString());
     messageInput.setText("");
-    chatMessagesView.scrollToPosition(chatAdapter.lastIndex());
   }
 
   private void onRetryMessageClick(int position, ChatMessage chatMessage) {
