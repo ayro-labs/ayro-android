@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="chatz_primary">#00c7a0</color>
-    <color name="chatz_outgoing_message">@android:color/white</color>
-    <color name="chatz_send_button_enabled">#448aff</color>
-    <color name="chatz_send_button_disabled">#6f448aff</color>
+    <color name="chatz_primary">#007bff</color>
+    <color name="chatz_conversation">@android:color/white</color>
+    <color name="chatz_send_button_enabled">#007bff</color>
+    <color name="chatz_send_button_disabled">#6f007bff</color>
 
 </resources>

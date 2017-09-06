@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="ToolbarTheme" parent="Widget.AppCompat.Toolbar">
+    <style name="ChatzToolbarTheme" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">@color/chatz_primary</item>
         <item name="background">@color/chatz_primary</item>
-        <item name="titleTextAppearance">@style/ToolbarTitleTheme</item>
+        <item name="titleTextAppearance">@style/ChatzToolbarTitleTheme</item>
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
-    <style name="ToolbarTitleTheme">
+    <style name="ChatzToolbarTitleTheme">
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textStyle">bold</item>

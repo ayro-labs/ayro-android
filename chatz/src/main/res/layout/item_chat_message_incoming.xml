@@ -29,10 +29,10 @@
         app:cardUseCompatPadding="true"
         app:cardElevation="1dp"
         app:cardCornerRadius="8dp"
-        app:contentPaddingLeft="10dp"
-        app:contentPaddingRight="10dp"
-        app:contentPaddingTop="5dp"
-        app:contentPaddingBottom="7dp">
+        app:contentPaddingLeft="12dp"
+        app:contentPaddingRight="12dp"
+        app:contentPaddingTop="8dp"
+        app:contentPaddingBottom="8dp">
 
         <LinearLayout
             android:orientation="vertical"
@@ -43,8 +43,8 @@
                 android:id="@+id/author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#8f8f8f"
-                android:textSize="15sp"
+                android:textColor="#989898"
+                android:textSize="16sp"
                 android:textStyle="bold"/>
 
             <FrameLayout
@@ -58,14 +58,14 @@
                     android:layout_gravity="start|center_vertical"
                     android:autoLink="web"
                     android:textSize="16sp"
-                    android:textColor="#212121"/>
+                    android:textColor="#525252"/>
 
                 <TextView
                     android:id="@+id/time"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_gravity="bottom|end"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="#989898"
                     android:textSize="12sp"/>
 
             </FrameLayout>

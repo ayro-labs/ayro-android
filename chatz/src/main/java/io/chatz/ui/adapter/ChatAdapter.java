@@ -104,7 +104,7 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
 
   private void applyOutgoingColor(OutgoingMessageHolder holder) {
     Drawable callDrawable = holder.statusView.getDrawable().getConstantState().newDrawable().mutate();
-    DrawableCompat.setTint(callDrawable, ContextCompat.getColor(getContext(), R.color.chatz_outgoing_message));
+    DrawableCompat.setTint(callDrawable, ContextCompat.getColor(getContext(), R.color.chatz_conversation));
     holder.statusView.setImageDrawable(callDrawable);
   }
 

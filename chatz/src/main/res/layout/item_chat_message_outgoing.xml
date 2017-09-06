@@ -25,10 +25,10 @@
         app:cardUseCompatPadding="true"
         app:cardElevation="1dp"
         app:cardCornerRadius="8dp"
-        app:contentPaddingLeft="8dp"
-        app:contentPaddingRight="8dp"
-        app:contentPaddingTop="5dp"
-        app:contentPaddingBottom="5dp">
+        app:contentPaddingLeft="12dp"
+        app:contentPaddingRight="12dp"
+        app:contentPaddingTop="8dp"
+        app:contentPaddingBottom="8dp">
 
         <FrameLayout
             android:layout_width="wrap_content"
@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:autoLink="web"
                 android:textSize="16sp"
-                android:textColor="@color/chatz_outgoing_message"/>
+                android:textColor="@color/chatz_conversation"/>
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -52,7 +52,7 @@
                     android:id="@+id/time"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:textColor="@color/chatz_outgoing_message"
+                    android:textColor="@color/chatz_conversation"
                     android:textSize="12sp"/>
 
                 <ImageView
