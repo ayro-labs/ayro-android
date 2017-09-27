@@ -58,7 +58,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginEnd="20dp"
             android:background="@null"
-            android:hint="@string/chatz_type_a_message"
+            android:hint="@string/chatz_activity_input_placeholder"
             android:textSize="18sp"/>
 
         <LinearLayout

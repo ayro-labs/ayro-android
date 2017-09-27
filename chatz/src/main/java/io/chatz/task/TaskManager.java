@@ -11,13 +11,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 import io.chatz.exception.TaskException;
 import io.chatz.util.Constants;
 
-public class Tasks {
+public class TaskManager {
 
   private static final String TASKS_THREAD_NAME = "Chatz.tasks";
   private static final String SCHEDULED_TASKS_THREAD_NAME = "Chatz.tasks.scheduled";
   private static final int SLEEP_TIME = 10000;
 
-  private static Tasks instance;
+  private static TaskManager instance;
 
   private Context context;
   private Handler taskHandler;
@@ -26,7 +26,7 @@ public class Tasks {
   private boolean runScheduledTasks;
   private int scheduledTaskExecution;
 
-  private Tasks(Context context) {
+  private TaskManager(Context context) {
     this.context = context;
     HandlerThread taskThread = new HandlerThread(TASKS_THREAD_NAME);
     taskThread.start();
@@ -37,9 +37,9 @@ public class Tasks {
     executeScheduledTasks();
   }
 
-  public static Tasks getInstance(Context context) {
+  public static TaskManager getInstance(Context context) {
     if (instance == null) {
-      instance = new Tasks(context);
+      instance = new TaskManager(context);
     }
     return instance;
   }
@@ -56,9 +56,7 @@ public class Tasks {
           try {
             Task task = failedTasksQueue.poll();
             if (task == null) {
-              if (tasksQueue.isEmpty()) {
-                broadcastTasksChanged();
-              }
+              broadcastTasksChanged();
               task = tasksQueue.take();
               scheduledTaskExecution = 0;
             }

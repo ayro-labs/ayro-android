@@ -18,7 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChatzService implements ChatzApi {
 
-  private static final String API_URL = "http://192.168.0.19:3000";
+  private static final String API_URL = "http://192.168.15.5:3000";
 
   private static ChatzService instance;
 

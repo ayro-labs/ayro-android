@@ -7,6 +7,7 @@ import io.chatz.enums.AppStatus;
 import io.chatz.Settings;
 import io.chatz.enums.UserStatus;
 import io.chatz.model.App;
+import io.chatz.model.Integration;
 import io.chatz.model.User;
 import io.chatz.util.JsonUtils;
 
@@ -17,6 +18,7 @@ public class Store {
   private static final String USER_STATUS = "user_status";
   private static final String SETTINGS = "settings";
   private static final String APP = "app";
+  private static final String INTEGRATION = "integration";
   private static final String USER = "user";
   private static final String API_TOKEN = "api_token";
   private static final String DEVICE_ID = "device_id";
@@ -27,8 +29,8 @@ public class Store {
 
   public static AppStatus getAppStatus(Context context) {
     SharedPreferences preferences = getPreferences(context);
-    String status = preferences.getString(APP_STATUS, null);
-    return status != null ? AppStatus.valueOf(status) : AppStatus.NOT_INITIALIZED;
+    String appStatus = preferences.getString(APP_STATUS, null);
+    return appStatus != null ? AppStatus.valueOf(appStatus) : AppStatus.NOT_INITIALIZED;
   }
 
   public static void setAppStatus(Context context, AppStatus appStatus) {
@@ -40,8 +42,8 @@ public class Store {
 
   public static UserStatus getUserStatus(Context context) {
     SharedPreferences preferences = getPreferences(context);
-    String status = preferences.getString(USER_STATUS, null);
-    return status != null ? UserStatus.valueOf(status) : UserStatus.LOGGED_OUT;
+    String userStatus = preferences.getString(USER_STATUS, null);
+    return userStatus != null ? UserStatus.valueOf(userStatus) : UserStatus.LOGGED_OUT;
   }
 
   public static void setUserStatus(Context context, UserStatus appStatus) {
@@ -66,14 +68,27 @@ public class Store {
 
   public static App getApp(Context context) {
     SharedPreferences preferences = getPreferences(context);
-    String userJson = preferences.getString(APP, null);
-    return userJson != null ? JsonUtils.fromJson(userJson, App.class) : null;
+    String appJson = preferences.getString(APP, null);
+    return appJson != null ? JsonUtils.fromJson(appJson, App.class) : null;
   }
 
   public static void setApp(Context context, App user) {
     if (user != null) {
       SharedPreferences preferences = getPreferences(context);
       preferences.edit().putString(APP, JsonUtils.toJson(user)).apply();
+    }
+  }
+
+  public static Integration getIntegration(Context context) {
+    SharedPreferences preferences = getPreferences(context);
+    String integrationJson = preferences.getString(INTEGRATION, null);
+    return integrationJson != null ? JsonUtils.fromJson(integrationJson, Integration.class) : null;
+  }
+
+  public static void setIntegration(Context context, Integration integration) {
+    if (integration != null) {
+      SharedPreferences preferences = getPreferences(context);
+      preferences.edit().putString(INTEGRATION, JsonUtils.toJson(integration)).apply();
     }
   }
 

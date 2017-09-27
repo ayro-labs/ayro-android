@@ -70,6 +70,7 @@ public class ChatzActivity extends AppCompatActivity {
     loadContent();
 
     UIUtils.defaultToolbar(this);
+    UIUtils.changeStatusBarColor(this);
     setTitle(getString(R.string.chatz_activity_title));
   }
 
@@ -187,11 +188,11 @@ public class ChatzActivity extends AppCompatActivity {
     if (connectivityManager != null) {
       NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
       if (networkInfo == null || !networkInfo.isConnected() || !networkInfo.isAvailable()) {
-        error = getString(R.string.chatz_status_no_internet_connection);
+        error = getString(R.string.chatz_activity_status_no_internet_connection);
       }
     }
     if (chatzApp.hasPendingTasks()) {
-      error = getString(R.string.chatz_status_connecting_to_the_server);
+      error = getString(R.string.chatz_activity_status_connecting_to_the_servers);
     }
     if (error != null) {
       currentError = error;

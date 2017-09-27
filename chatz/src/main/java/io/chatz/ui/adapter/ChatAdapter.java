@@ -1,9 +1,11 @@
 package io.chatz.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
@@ -22,7 +24,9 @@ import java.util.Date;
 import java.util.Locale;
 
 import io.chatz.R;
+import io.chatz.core.ChatzApp;
 import io.chatz.model.ChatMessage;
+import io.chatz.model.Integration;
 import io.chatz.util.ImageUtils;
 import io.chatz.util.UIUtils;
 
@@ -106,6 +110,8 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
     Drawable callDrawable = holder.statusView.getDrawable().getConstantState().newDrawable().mutate();
     DrawableCompat.setTint(callDrawable, ContextCompat.getColor(getContext(), R.color.chatz_conversation));
     holder.statusView.setImageDrawable(callDrawable);
+    String colorHex = ChatzApp.getInstance(getContext()).getIntegration().getConfiguration().get(Integration.CONVERSATION_COLOR_CONFIGURATION);
+    holder.cardView.setCardBackgroundColor(Color.parseColor(colorHex));
   }
 
   private Spanned fromHtml(String source) {
@@ -144,9 +150,11 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
 
     private ImageView statusView;
     private ImageView retryView;
+    private CardView cardView;
 
     OutgoingMessageHolder(View view) {
       super(view);
+      cardView = (CardView) view.findViewById(R.id.card);
       statusView = (ImageView) view.findViewById(R.id.status);
       retryView = (ImageView) view.findViewById(R.id.retry);
       retryView.setOnClickListener(new View.OnClickListener() {

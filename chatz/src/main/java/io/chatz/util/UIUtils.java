@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.os.Build;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -14,9 +16,12 @@ import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.TextView;
+import android.view.Window;
+import android.view.WindowManager;
 
 import io.chatz.R;
+import io.chatz.core.ChatzApp;
+import io.chatz.model.Integration;
 import io.chatz.ui.activity.ChatzActivity;
 
 public class UIUtils {
@@ -29,6 +34,8 @@ public class UIUtils {
     Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
     if (toolbar != null) {
       activity.setSupportActionBar(toolbar);
+      String colorHex = ChatzApp.getInstance(activity).getIntegration().getConfiguration().get(Integration.PRIMARY_COLOR_CONFIGURATION);
+      toolbar.setBackgroundColor(Color.parseColor(colorHex));
       toolbar.setNavigationIcon(getAttributeResourceId(activity, R.attr.homeAsUpIndicator));
       toolbar.setNavigationOnClickListener(new View.OnClickListener() {
         @Override
@@ -36,6 +43,23 @@ public class UIUtils {
           activity.finish();
         }
       });
+    }
+  }
+
+  public static void changeStatusBarColor(AppCompatActivity activity) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      String colorHex = ChatzApp.getInstance(activity).getIntegration().getConfiguration().get(Integration.PRIMARY_COLOR_CONFIGURATION);
+      int color = Color.parseColor(colorHex);
+      float factor = 0.8f;
+      int a = Color.alpha(color);
+      int r = Math.round(Color.red(color) * factor);
+      int g = Math.round(Color.green(color) * factor);
+      int b = Math.round(Color.blue(color) * factor);
+      int statusBarColor = Color.argb(a, Math.min(r, 255), Math.min(g, 255), Math.min(b, 255));
+      Window window = activity.getWindow();
+      window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+      window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+      window.setStatusBarColor(statusBarColor);
     }
   }
 

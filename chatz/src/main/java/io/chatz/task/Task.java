@@ -30,10 +30,10 @@ public abstract class Task<T> {
   }
 
   public void execute() {
-    Tasks.getInstance(context).execute(this);
+    TaskManager.getInstance(context).execute(this);
   }
 
   public void schedule() {
-    Tasks.getInstance(context).schedule(this);
+    TaskManager.getInstance(context).schedule(this);
   }
 }

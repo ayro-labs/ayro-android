@@ -7,13 +7,14 @@ import io.chatz.Settings;
 import io.chatz.enums.AppStatus;
 import io.chatz.enums.UserStatus;
 import io.chatz.model.App;
+import io.chatz.model.Integration;
 import io.chatz.model.User;
 import io.chatz.service.payload.InitResult;
 import io.chatz.service.payload.LoginResult;
 import io.chatz.store.Store;
 import io.chatz.task.TaskCallback;
 import io.chatz.exception.TaskException;
-import io.chatz.task.Tasks;
+import io.chatz.task.TaskManager;
 import io.chatz.task.impl.FirebaseConnectTask;
 import io.chatz.task.impl.FirebaseDisconnectTask;
 import io.chatz.task.impl.InitTask;
@@ -32,6 +33,7 @@ public class ChatzApp {
   private UserStatus userStatus;
   private Settings settings;
   private App app;
+  private Integration integration;
   private User user;
   private String apiToken;
   private boolean chatOpened;
@@ -42,6 +44,7 @@ public class ChatzApp {
     this.userStatus = Store.getUserStatus(context);
     this.settings = Store.getSettings(context);
     this.app = Store.getApp(context);
+    this.integration = Store.getIntegration(context);
     this.user = Store.getUser(context);
     this.apiToken = Store.getApiToken(context);
   }
@@ -69,6 +72,10 @@ public class ChatzApp {
     return app;
   }
 
+  public Integration getIntegration() {
+    return integration;
+  }
+
   public User getUser() {
     return user;
   }
@@ -85,6 +92,7 @@ public class ChatzApp {
       public void onSuccess(InitResult result) {
         setAppStatus(AppStatus.INITIALIZED);
         setApp(result.getApp());
+        setIntegration(result.getIntegration());
       }
     });
     task.schedule();
@@ -156,7 +164,7 @@ public class ChatzApp {
   }
 
   public boolean hasPendingTasks() {
-    return Tasks.getInstance(context).hasPendingTasks();
+    return TaskManager.getInstance(context).hasPendingTasks();
   }
 
   public void openChat() {
@@ -191,6 +199,11 @@ public class ChatzApp {
   private void setApp(App app) {
     this.app = app;
     Store.setApp(context, app);
+  }
+
+  private void setIntegration(Integration integration) {
+    this.integration = integration;
+    Store.setIntegration(context, integration);
   }
 
   private void setUser(User user) {
