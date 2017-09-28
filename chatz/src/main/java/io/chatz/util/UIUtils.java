@@ -22,7 +22,6 @@ import android.view.WindowManager;
 import io.chatz.R;
 import io.chatz.core.ChatzApp;
 import io.chatz.model.Integration;
-import io.chatz.ui.activity.ChatzActivity;
 
 public class UIUtils {
 
@@ -30,13 +29,14 @@ public class UIUtils {
 
   }
 
-  public static void defaultToolbar(final AppCompatActivity activity) {
+  public static void defaultToolbar(final AppCompatActivity activity, Integer color) {
     Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
     if (toolbar != null) {
       activity.setSupportActionBar(toolbar);
-      String colorHex = ChatzApp.getInstance(activity).getIntegration().getConfiguration().get(Integration.PRIMARY_COLOR_CONFIGURATION);
-      toolbar.setBackgroundColor(Color.parseColor(colorHex));
-      toolbar.setNavigationIcon(getAttributeResourceId(activity, R.attr.homeAsUpIndicator));
+      toolbar.setBackgroundColor(color != null ? color : ContextCompat.getColor(activity, R.color.chatz_primary));
+      TypedValue typedValue = new TypedValue();
+      activity.getTheme().resolveAttribute(R.attr.homeAsUpIndicator, typedValue, true);
+      toolbar.setNavigationIcon(typedValue.resourceId);
       toolbar.setNavigationOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -46,10 +46,11 @@ public class UIUtils {
     }
   }
 
-  public static void changeStatusBarColor(AppCompatActivity activity) {
+  public static void changeStatusBarColor(AppCompatActivity activity, Integer color) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      String colorHex = ChatzApp.getInstance(activity).getIntegration().getConfiguration().get(Integration.PRIMARY_COLOR_CONFIGURATION);
-      int color = Color.parseColor(colorHex);
+      if (color == null) {
+        color = ContextCompat.getColor(activity, R.color.chatz_primary);
+      }
       float factor = 0.8f;
       int a = Color.alpha(color);
       int r = Math.round(Color.red(color) * factor);
@@ -64,9 +65,15 @@ public class UIUtils {
   }
 
   public static void notify(Context context, int notificationId, Bitmap image, String title, String text, Intent intent) {
+    Integer primaryColor = null;
+    Integration integration = ChatzApp.getInstance(context).getIntegration();
+    if (integration != null) {
+      String colorHex = integration.getConfiguration().get(Integration.PRIMARY_COLOR_CONFIGURATION);
+      primaryColor = Color.parseColor(colorHex);
+    }
     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context);
     notificationBuilder.setSmallIcon(R.drawable.chatz_logo_small);
-    notificationBuilder.setColor(ContextCompat.getColor(context, R.color.chatz_primary));
+    notificationBuilder.setColor(primaryColor != null ? primaryColor : ContextCompat.getColor(context, R.color.chatz_primary));
     notificationBuilder.setContentTitle(title);
     notificationBuilder.setContentText(text);
     notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(text));
@@ -83,15 +90,6 @@ public class UIUtils {
     }
     NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     notificationManager.notify(notificationId, notificationBuilder.build());
-  }
-
-  private static int getAttributeResourceId(Context context, int attribute) {
-    if (attribute == 0) {
-      return 0;
-    }
-    TypedValue typedValue = new TypedValue();
-    context.getTheme().resolveAttribute(attribute, typedValue, true);
-    return typedValue.resourceId;
   }
 
   public static int dpToPixels(Context context, int dp) {

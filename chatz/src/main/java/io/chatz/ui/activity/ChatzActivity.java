@@ -4,10 +4,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +19,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Date;
@@ -24,6 +29,7 @@ import io.chatz.core.ChatzApp;
 import io.chatz.R;
 import io.chatz.enums.UserStatus;
 import io.chatz.model.ChatMessage;
+import io.chatz.model.Integration;
 import io.chatz.model.User;
 import io.chatz.service.ChatzService;
 import io.chatz.service.payload.PostMessagePayload;
@@ -50,10 +56,13 @@ public class ChatzActivity extends AppCompatActivity {
 
   private EditText messageInput;
   private RecyclerView chatMessagesView;
-  private View postMessageView;
+  private ImageView postMessageView;
   private ChatAdapter chatAdapter;
   private BroadcastReceiver broadcastReceiver;
   private String currentError;
+
+  private Drawable postMessageEnabledDrawable;
+  private Drawable postMessageDisabledDrawable;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,14 +72,13 @@ public class ChatzActivity extends AppCompatActivity {
     chatzService = ChatzService.getInstance();
     chatzApp = ChatzApp.getInstance(this);
 
+    setupToolbar();
     setupBroadcastReceiver();
     setupAdapter();
     setupMessageInput();
-    setupSendMessageButton();
+    setupPostMessageButton();
     loadContent();
 
-    UIUtils.defaultToolbar(this);
-    UIUtils.changeStatusBarColor(this);
     setTitle(getString(R.string.chatz_activity_title));
   }
 
@@ -87,6 +95,17 @@ public class ChatzActivity extends AppCompatActivity {
     super.onPause();
     chatzApp.setChatOpened(false);
     unregisterReceiver(broadcastReceiver);
+  }
+
+  private void setupToolbar() {
+    Integer primaryColor = null;
+    Integration integration = chatzApp.getIntegration();
+    if (integration != null) {
+      String colorHex = integration.getConfiguration().get(Integration.PRIMARY_COLOR_CONFIGURATION);
+      primaryColor = Color.parseColor(colorHex);
+    }
+    UIUtils.defaultToolbar(this, primaryColor);
+    UIUtils.changeStatusBarColor(this, primaryColor);
   }
 
   private void setupBroadcastReceiver() {
@@ -142,15 +161,19 @@ public class ChatzActivity extends AppCompatActivity {
     });
   }
 
-  private void setupSendMessageButton() {
-    postMessageView = findViewById(R.id.post_message);
-    postMessageView.setEnabled(false);
+  private void setupPostMessageButton() {
+    postMessageView = (ImageView) findViewById(R.id.post_message);
     postMessageView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
         onPostMessageClick();
       }
     });
+    postMessageEnabledDrawable = ContextCompat.getDrawable(this, R.drawable.chatz_post_message).mutate();
+    DrawableCompat.setTint(postMessageEnabledDrawable, ContextCompat.getColor(this, R.color.chatz_send_button_enabled));
+    postMessageDisabledDrawable = ContextCompat.getDrawable(this, R.drawable.chatz_post_message).mutate();
+    DrawableCompat.setTint(postMessageDisabledDrawable, ContextCompat.getColor(this, R.color.chatz_send_button_disabled));
+    onMessageChanged("");
   }
 
   private void loadContent() {
@@ -211,8 +234,10 @@ public class ChatzActivity extends AppCompatActivity {
   private void onMessageChanged(String message) {
     if (currentError != null || message.trim().isEmpty()) {
       postMessageView.setEnabled(false);
+      postMessageView.setImageDrawable(postMessageDisabledDrawable);
     } else {
       postMessageView.setEnabled(true);
+      postMessageView.setImageDrawable(postMessageEnabledDrawable);
     }
   }
 

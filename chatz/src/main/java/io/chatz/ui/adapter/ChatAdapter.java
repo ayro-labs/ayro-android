@@ -2,9 +2,6 @@ package io.chatz.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -36,6 +33,7 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
   private static final int INCOMING_MESSAGE = 1;
   private static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
+  private int outgoingCardColor;
   private int pictureDimension;
   private int errorIconDimension;
   private int conversationMargin;
@@ -46,6 +44,8 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
     pictureDimension = UIUtils.dpToPixels(getContext(), 45);
     errorIconDimension = UIUtils.dpToPixels(getContext(), 36);
     conversationMargin = UIUtils.dpToPixels(getContext(), 5);
+    String colorHex = ChatzApp.getInstance(getContext()).getIntegration().getConfiguration().get(Integration.CONVERSATION_COLOR_CONFIGURATION);
+    outgoingCardColor = Color.parseColor(colorHex);
   }
 
   public void setOnRetryMessageClickListener(OnRetryMessageClickListener onRetryMessageClickListener) {
@@ -91,27 +91,19 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
       holder.textView.setText(fromHtml(chatMessage.getText() + " &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"));
     } else {
       OutgoingMessageHolder outgoingMessageHolder = (OutgoingMessageHolder) holder;
+      outgoingMessageHolder.cardView.setCardBackgroundColor(outgoingCardColor);
       if (chatMessage.getStatus() == null || ChatMessage.Status.sent.equals(chatMessage.getStatus())) {
         ((RelativeLayout.LayoutParams) outgoingMessageHolder.retryView.getLayoutParams()).width = 0;
-        outgoingMessageHolder.statusView.setImageResource(R.drawable.message_sent);
+        outgoingMessageHolder.statusView.setImageResource(R.drawable.chatz_message_sent);
       } else if (ChatMessage.Status.sending.equals(chatMessage.getStatus())) {
         ((RelativeLayout.LayoutParams) outgoingMessageHolder.retryView.getLayoutParams()).width = 0;
-        outgoingMessageHolder.statusView.setImageResource(R.drawable.message_sending);
+        outgoingMessageHolder.statusView.setImageResource(R.drawable.chatz_message_sending);
       } else {
         ((RelativeLayout.LayoutParams) outgoingMessageHolder.retryView.getLayoutParams()).width = errorIconDimension;
-        outgoingMessageHolder.statusView.setImageResource(R.drawable.message_error);
+        outgoingMessageHolder.statusView.setImageResource(R.drawable.chatz_message_error);
       }
       holder.textView.setText(fromHtml(chatMessage.getText() + " &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"));
-      applyOutgoingColor(outgoingMessageHolder);
     }
-  }
-
-  private void applyOutgoingColor(OutgoingMessageHolder holder) {
-    Drawable callDrawable = holder.statusView.getDrawable().getConstantState().newDrawable().mutate();
-    DrawableCompat.setTint(callDrawable, ContextCompat.getColor(getContext(), R.color.chatz_conversation));
-    holder.statusView.setImageDrawable(callDrawable);
-    String colorHex = ChatzApp.getInstance(getContext()).getIntegration().getConfiguration().get(Integration.CONVERSATION_COLOR_CONFIGURATION);
-    holder.cardView.setCardBackgroundColor(Color.parseColor(colorHex));
   }
 
   private Spanned fromHtml(String source) {

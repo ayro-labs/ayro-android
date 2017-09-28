@@ -2,8 +2,7 @@
 <resources>
 
     <color name="chatz_primary">#007bff</color>
-    <color name="chatz_conversation">@android:color/white</color>
-    <color name="chatz_send_button_enabled">#007bff</color>
-    <color name="chatz_send_button_disabled">#6f007bff</color>
+    <color name="chatz_send_button_enabled">#989898</color>
+    <color name="chatz_send_button_disabled">#d8d8d8</color>
 
 </resources>
