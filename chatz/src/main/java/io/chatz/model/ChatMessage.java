@@ -7,18 +7,18 @@ public class ChatMessage implements Serializable {
 
   private static final long serialVersionUID = 5024908185070932244L;
 
-  private Author author;
+  private Agent agent;
   private String text;
   private Status status;
   private Direction direction;
   private Date date;
 
-  public Author getAuthor() {
-    return author;
+  public Agent getAgent() {
+    return agent;
   }
 
-  public void setAuthor(Author author) {
-    this.author = author;
+  public void setAgent(Agent agent) {
+    this.agent = agent;
   }
 
   public String getText() {

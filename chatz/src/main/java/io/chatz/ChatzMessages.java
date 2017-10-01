@@ -9,7 +9,7 @@ import java.util.Map;
 
 import io.chatz.core.ChatzApp;
 import io.chatz.enums.UserStatus;
-import io.chatz.model.Author;
+import io.chatz.model.Agent;
 import io.chatz.model.ChatMessage;
 import io.chatz.ui.activity.ChatzActivity;
 import io.chatz.util.Callback;
@@ -46,12 +46,12 @@ public class ChatzMessages {
     chatMessage.setStatus(ChatMessage.Status.sent);
     chatMessage.setDirection(ChatMessage.Direction.incoming);
     if (!ChatzApp.getInstance(context).isChatOpened()) {
-      final Author author = chatMessage.getAuthor();
-      ImageUtils.loadPicture(context, author.getPhotoUrl(), new Callback<Bitmap>() {
+      final Agent agent = chatMessage.getAgent();
+      ImageUtils.loadPicture(context, agent.getPhotoUrl(), new Callback<Bitmap>() {
         @Override
         public void onSuccess(Bitmap photo) {
-          int notificationId = author.getId().hashCode();
-          UIUtils.notify(context, notificationId, photo, author.getName(), chatMessage.getText(), getDefaultNotificationIntent(context));
+          int notificationId = agent.getId().hashCode();
+          UIUtils.notify(context, notificationId, photo, agent.getName(), chatMessage.getText(), getDefaultNotificationIntent(context));
         }
 
         @Override

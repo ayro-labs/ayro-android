@@ -71,22 +71,22 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
     holder.timeView.setText(TIME_FORMAT.format(chatMessage.getDate()));
 
     boolean sameDay = nextChatMessage != null && sameDay(chatMessage.getDate(), nextChatMessage.getDate());
-    boolean continuation = nextChatMessage != null && nextChatMessage.getDirection().equals(chatMessage.getDirection()) && (nextChatMessage.getDirection().equals(ChatMessage.Direction.outgoing) || (nextChatMessage.getDirection().equals(ChatMessage.Direction.incoming) && chatMessage.getAuthor().equals(nextChatMessage.getAuthor()))) && sameDay;
+    boolean continuation = nextChatMessage != null && nextChatMessage.getDirection().equals(chatMessage.getDirection()) && (nextChatMessage.getDirection().equals(ChatMessage.Direction.outgoing) || (nextChatMessage.getDirection().equals(ChatMessage.Direction.incoming) && chatMessage.getAgent().equals(nextChatMessage.getAgent()))) && sameDay;
 
     ((RecyclerView.LayoutParams) holder.rootView.getLayoutParams()).topMargin = !continuation ? conversationMargin : 0;
 
     if (holder instanceof IncomingMessageHolder) {
       IncomingMessageHolder incomingMessageHolder = (IncomingMessageHolder) holder;
       if (!continuation) {
-        ImageUtils.setPicture(getContext(), chatMessage.getAuthor().getPhotoUrl(), incomingMessageHolder.photoView);
+        ImageUtils.setPicture(getContext(), chatMessage.getAgent().getPhotoUrl(), incomingMessageHolder.photoView);
         ((RelativeLayout.LayoutParams) incomingMessageHolder.photoView.getLayoutParams()).height = pictureDimension;
         incomingMessageHolder.photoView.setVisibility(View.VISIBLE);
-        incomingMessageHolder.authorView.setText(chatMessage.getAuthor().getName());
-        incomingMessageHolder.authorView.setVisibility(View.VISIBLE);
+        incomingMessageHolder.agentView.setText(chatMessage.getAgent().getName());
+        incomingMessageHolder.agentView.setVisibility(View.VISIBLE);
       } else {
         ((RelativeLayout.LayoutParams) incomingMessageHolder.photoView.getLayoutParams()).height = 0;
         incomingMessageHolder.photoView.setVisibility(View.INVISIBLE);
-        incomingMessageHolder.authorView.setVisibility(View.GONE);
+        incomingMessageHolder.agentView.setVisibility(View.GONE);
       }
       holder.textView.setText(fromHtml(chatMessage.getText() + " &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"));
     } else {
@@ -128,12 +128,12 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
 
   private class IncomingMessageHolder extends ChatMessageHolder {
 
-    private TextView authorView;
+    private TextView agentView;
     private ImageView photoView;
 
     IncomingMessageHolder(View view) {
       super(view);
-      authorView = (TextView) view.findViewById(R.id.author);
+      agentView = (TextView) view.findViewById(R.id.agent);
       photoView = (ImageView) view.findViewById(R.id.photo);
     }
   }

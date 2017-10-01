@@ -2,7 +2,7 @@ package io.chatz.model;
 
 import java.io.Serializable;
 
-public class Author implements Serializable {
+public class Agent implements Serializable {
 
   private static final long serialVersionUID = 8523803625309951192L;
 
@@ -42,8 +42,8 @@ public class Author implements Serializable {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Author author = (Author) o;
-    return id != null ? id.equals(author.id) : author.id == null;
+    Agent agent = (Agent) o;
+    return id != null ? id.equals(agent.id) : agent.id == null;
   }
 
   @Override
