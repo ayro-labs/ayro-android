@@ -7,11 +7,20 @@ public class ChatMessage implements Serializable {
 
   private static final long serialVersionUID = 5024908185070932244L;
 
+  private String id;
   private Agent agent;
   private String text;
   private Status status;
   private Direction direction;
   private Date date;
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
 
   public Agent getAgent() {
     return agent;

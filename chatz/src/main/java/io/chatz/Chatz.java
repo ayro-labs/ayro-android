@@ -5,7 +5,6 @@ import android.util.Log;
 
 import io.chatz.core.ChatzApp;
 import io.chatz.exception.ChatzException;
-import io.chatz.model.User;
 import io.chatz.util.Constants;
 
 public class Chatz {

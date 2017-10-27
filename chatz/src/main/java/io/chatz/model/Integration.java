@@ -8,10 +8,19 @@ public class Integration {
   public static final String PRIMARY_COLOR_CONFIGURATION = "primary_color";
   public static final String CONVERSATION_COLOR_CONFIGURATION = "conversation_color";
 
-  public String type;
-  public String channel;
-  public Map<String, String> configuration;
-  public Date registration_date;
+  private String id;
+  private String type;
+  private String channel;
+  private Map<String, String> configuration;
+  private Date registration_date;
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
 
   public String getType() {
     return type;

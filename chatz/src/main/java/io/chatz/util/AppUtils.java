@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import io.chatz.model.Device;
 import io.chatz.model.DeviceInfo;
+import io.chatz.model.User;
 import io.chatz.store.Store;
 
 public class AppUtils {
@@ -18,13 +19,22 @@ public class AppUtils {
 
   }
 
-  public static String getDeviceId(Context context) {
-    String deviceId = Store.getDeviceId(context);
-    if (deviceId == null) {
-      deviceId = UUID.randomUUID().toString().replace("-", "");
-      Store.setDeviceId(context, deviceId);
+  public static User getUser(Context context, io.chatz.User user) {
+    User chatzUser = new User();
+    chatzUser.setUid(user.getUid());
+    chatzUser.setFirstName(user.getFirstName());
+    chatzUser.setLastName(user.getLastName());
+    chatzUser.setEmail(user.getEmail());
+    chatzUser.setPhotoUrl(user.getPhotoUrl());
+    chatzUser.setSignUpDate(user.getSignUpDate());
+    chatzUser.setPhotoUrl(user.getPhotoUrl());
+    if (user.getUid() == null) {
+      chatzUser.setUid(getUserUid(context));
+      chatzUser.setIdentified(false);
+    } else {
+      chatzUser.setIdentified(true);
     }
-    return deviceId;
+    return chatzUser;
   }
 
   public static Device getDevice(Context context) {
@@ -42,9 +52,31 @@ public class AppUtils {
       // Nothing to do...
     }
     Device device = new Device();
-    device.setUid(getDeviceId(context));
+    device.setUid(getDeviceUid(context));
     device.setPlatform(Constants.PLATFORM);
     device.setInfo(info);
     return device;
+  }
+
+  private static String getUserUid(Context context) {
+    String uid = Store.getUserUid(context);
+    if (uid == null) {
+      uid = generateUid();
+      Store.setUserUid(context, uid);
+    }
+    return uid;
+  }
+
+  private static String getDeviceUid(Context context) {
+    String uid = Store.getDeviceUid(context);
+    if (uid == null) {
+      uid = generateUid();
+      Store.setDeviceUid(context, uid);
+    }
+    return uid;
+  }
+
+  private static String generateUid() {
+    return UUID.randomUUID().toString().replace("-", "");
   }
 }

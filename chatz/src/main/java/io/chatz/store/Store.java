@@ -14,6 +14,8 @@ import io.chatz.util.JsonUtils;
 public class Store {
 
   private static final String PREFERENCES_NAME = "chatz";
+  private static final String DEVICE_UID = "device_uid";
+  private static final String USER_UID = "user_uid";
   private static final String APP_STATUS = "app_status";
   private static final String USER_STATUS = "user_status";
   private static final String SETTINGS = "settings";
@@ -21,10 +23,33 @@ public class Store {
   private static final String INTEGRATION = "integration";
   private static final String USER = "user";
   private static final String API_TOKEN = "api_token";
-  private static final String DEVICE_ID = "device_id";
 
   private static SharedPreferences getPreferences(Context context) {
     return context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+  }
+
+  public static String getUserUid(Context context) {
+    SharedPreferences preferences = getPreferences(context);
+    return preferences.getString(USER_UID, null);
+  }
+
+  public static void setUserUid(Context context, String uid) {
+    if (uid != null) {
+      SharedPreferences preferences = getPreferences(context);
+      preferences.edit().putString(USER_UID, uid).apply();
+    }
+  }
+
+  public static String getDeviceUid(Context context) {
+    SharedPreferences preferences = getPreferences(context);
+    return preferences.getString(DEVICE_UID, null);
+  }
+
+  public static void setDeviceUid(Context context, String uid) {
+    if (uid != null) {
+      SharedPreferences preferences = getPreferences(context);
+      preferences.edit().putString(DEVICE_UID, uid).apply();
+    }
   }
 
   public static AppStatus getAppStatus(Context context) {
@@ -127,20 +152,8 @@ public class Store {
     preferences.edit().remove(API_TOKEN).apply();
   }
 
-  public static String getDeviceId(Context context) {
-    SharedPreferences preferences = getPreferences(context);
-    return preferences.getString(DEVICE_ID, null);
-  }
-
-  public static void setDeviceId(Context context, String deviceId) {
-    if (deviceId != null) {
-      SharedPreferences preferences = getPreferences(context);
-      preferences.edit().putString(DEVICE_ID, deviceId).apply();
-    }
-  }
-
   public static void clear(Context context) {
     SharedPreferences preferences = getPreferences(context);
-    preferences.edit().remove(APP_STATUS).remove(USER_STATUS).remove(SETTINGS).remove(APP).remove(USER).remove(API_TOKEN).remove(DEVICE_ID).apply();
+    preferences.edit().remove(APP_STATUS).remove(USER_STATUS).remove(SETTINGS).remove(APP).remove(USER).remove(API_TOKEN).remove(DEVICE_UID).apply();
   }
 }

@@ -98,6 +98,11 @@ public class ChatzApp {
     task.schedule();
   }
 
+  public void login(io.chatz.User user, final TaskCallback<User> callback) {
+    User chatzUser = AppUtils.getUser(context, user);
+    login(chatzUser, callback);
+  }
+
   public void login(User user, final TaskCallback<User> callback) {
     setUser(user);
     LoginTask task = new LoginTask(context, settings.getAppToken(), user, AppUtils.getDevice(context));
@@ -141,9 +146,10 @@ public class ChatzApp {
     task.schedule();
   }
 
-  public void updateUser(User user) {
-    setUser(user);
-    UpdateUserTask task = new UpdateUserTask(context, user);
+  public void updateUser(io.chatz.User user) {
+    User chatzUser = AppUtils.getUser(context, user);
+    setUser(chatzUser);
+    UpdateUserTask task = new UpdateUserTask(context, chatzUser);
     task.setCallback(new TaskCallback<User>() {
       @Override
       public void onSuccess(User user) {

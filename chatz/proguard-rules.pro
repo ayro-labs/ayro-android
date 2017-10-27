@@ -1,25 +1,56 @@
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in /media/sandro/e1c71bc3-8257-4d87-acc4-e26e453c8a94/Android/Sdk/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the proguardFiles
-# directive in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+#######################
+### Project sources ###
+#######################
 
-# Add any project specific keep options here:
+-keep class io.chatz.Chatz { *; }
+-keep class io.chatz.ChatzMessages { *; }
+-keep class io.chatz.Settings { *; }
+-keep class io.chatz.User { *; }
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+-keepclassmembers class io.chatz.model.** implements android.os.Parcelable {
+  static ** CREATOR;
+}
+-keepclassmembers class io.chatz.model.** implements java.io.Serializable {
+  static final long serialVersionUID;
+  private static final java.io.ObjectStreamField[] serialPersistentFields;
+  !static !transient <fields>;
+  !private <fields>;
+  !private <methods>;
+  private void writeObject(java.io.ObjectOutputStream);
+  private void readObject(java.io.ObjectInputStream);
+  java.lang.Object writeReplace();
+  java.lang.Object readResolve();
+}
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keepattributes Signature
+-keepattributes Annotation
+-keepattributes InnerClasses
+-keepattributes Exceptions
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+###########################
+### Direct dependencies ###
+###########################
+
+# Gson
+-keep class sun.misc.Unsafe { *; }
+
+# Retrofit
+-dontnote retrofit2.Platform
+-dontwarn retrofit2.Platform$Java8
+
+#############################
+### Indirect dependencies ###
+#############################
+
+# OkHttp3
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-dontwarn okhttp3.**
+
+# OkHttp
+-keep class com.squareup.okhttp.** { *; }
+-keep interface com.squareup.okhttp.** { *; }
+-dontwarn com.squareup.okhttp.**
+
+# Okio
+-dontwarn okio.**

@@ -1,16 +1,11 @@
-package io.chatz.model;
+package io.chatz;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
-public class User implements Serializable {
+public class User {
 
-  private static final long serialVersionUID = 8121929561544316347L;
-
-  private String id;
   private String uid;
-  private Boolean identified;
   private String firstName;
   private String lastName;
   private String photoUrl;
@@ -18,28 +13,12 @@ public class User implements Serializable {
   private Date signUpDate;
   private Map<String, String> properties;
 
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
   public String getUid() {
     return uid;
   }
 
   public void setUid(String uid) {
     this.uid = uid;
-  }
-
-  public Boolean getIdentified() {
-    return identified;
-  }
-
-  public void setIdentified(Boolean identified) {
-    this.identified = identified;
   }
 
   public String getFirstName() {
@@ -88,32 +67,5 @@ public class User implements Serializable {
 
   public void setProperties(Map<String, String> properties) {
     this.properties = properties;
-  }
-
-  public String getFullName() {
-    if (firstName != null) {
-      return firstName + (lastName != null ? " " + lastName : "");
-    } else if (lastName != null) {
-      return lastName;
-    } else {
-      return "";
-    }
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    User user = (User) o;
-    return uid != null ? uid.equals(user.uid) : user.uid == null;
-  }
-
-  @Override
-  public int hashCode() {
-    return uid != null ? uid.hashCode() : 0;
   }
 }
