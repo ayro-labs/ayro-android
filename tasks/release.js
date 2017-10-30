@@ -71,7 +71,7 @@ function createTag(version) {
 function pushTag(version) {
   return Promise.coroutine(function*() {
     console.log('Pushing tag to remote...');
-    yield exec('git push origin ${version}');
+    yield exec(`git push origin ${version}`);
   })();
 }
 
