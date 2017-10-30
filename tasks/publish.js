@@ -32,14 +32,13 @@ function checkoutTag(version) {
   })();
 }
 
-function buildProduction() {
+function buildLibrary() {
   return Promise.coroutine(function*() {
     console.log('Building library...');
     yield exec('npm run build-prod');
-    console.log('Building browser library...');
-    yield exec('npm run build-browser-prod');
   })();
 }
+
 
 function prepareRepository() {
   return Promise.coroutine(function*() {
@@ -95,7 +94,7 @@ if (require.main === module) {
       const version = projectPackage.version;
       console.log(`Publishing version ${version} to Github and npm...`);
       yield checkoutTag(version);
-      yield buildProduction();
+      yield buildLibrary();
       yield prepareRepository();
       yield copyFiles(version);
       yield pushFiles(version);
