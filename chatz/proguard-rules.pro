@@ -2,10 +2,10 @@
 ### Project sources ###
 #######################
 
--keep class io.chatz.Chatz { *; }
--keep class io.chatz.ChatzMessages { *; }
--keep class io.chatz.Settings { *; }
--keep class io.chatz.User { *; }
+-keep class io.chatz.Chatz { public <methods>; }
+-keep class io.chatz.ChatzMessages { public <methods>; }
+-keep class io.chatz.Settings { public <methods>; }
+-keep class io.chatz.User { public <methods>; }
 
 -keepclassmembers class io.chatz.model.** implements android.os.Parcelable {
   static ** CREATOR;
