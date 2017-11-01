@@ -3,8 +3,6 @@
 build
 node_modules
 npm-debug.log
-gradlew
-gradlew.bat
 local.properties
 *.log
 *.iml
