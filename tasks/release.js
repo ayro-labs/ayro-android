@@ -20,9 +20,16 @@ function exec(command, options) {
   return execAsync(command, options || {cwd: WORKING_DIR});
 }
 
+function updateMaster() {
+  return Promise.coroutine(function*() {
+    console.log('Updating master branch...');
+    yield exec('git checkout master');
+    yield exec('git pull origin master');
+  })();
+}
+
 function updateVersion(versionType) {
   return Promise.coroutine(function*() {
-    yield exec('git checkout master');
     console.log('Updating version...');
     const projectGradle =  yield readFileAsync(GRADLE_FILE, 'utf8');
     const match = VERSION_NAME_REGEX.exec(projectGradle);
@@ -85,6 +92,7 @@ if (require.main === module) {
   }
   Promise.coroutine(function*() {
     try {
+      yield updateMaster();
       const version = yield updateVersion(versionType);
       console.log(`Releasing version ${version} to remote...`);
       yield buildLibrary();
