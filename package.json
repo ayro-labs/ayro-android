@@ -11,8 +11,8 @@
   "scripts": {
     "build": "./gradlew clean assembleDebug",
     "build-prod": "./gradlew clean assembleRelease",
-    "release": "node tasks/release.js",
-    "publish": "node tasks/publish.js"
+    "release-lib": "node tasks/release.js",
+    "publish-lib": "node tasks/publish.js"
   },
   "devDependencies": {
     "bluebird": "3.5.1",

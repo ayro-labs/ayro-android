@@ -7,7 +7,7 @@ const childProcess = require('child_process');
 const GitHubApi = require('github');
 const Promise = require('bluebird');
 
-const REPOSITORY_NAME = 'chatz-javascript';
+const REPOSITORY_NAME = 'chatz-android';
 const REPOSITORY_OWNER = 'chatz-io';
 const WORKING_DIR = path.resolve(__dirname, '../');
 const TEMP_DIR = '/tmp';
@@ -99,8 +99,8 @@ if (require.main === module) {
       yield copyFiles(version);
       yield pushFiles(version);
       yield createRelease(version);
-      yield checkoutTag('master');
       yield publishToNpm();
+      yield checkoutTag('master');
       console.log(`Version ${version} published with success!`);
     } catch (err) {
       console.error(err);

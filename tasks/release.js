@@ -20,20 +20,14 @@ function exec(command, options) {
   return execAsync(command, options || {cwd: WORKING_DIR});
 }
 
-function buildLibrary() {
-  return Promise.coroutine(function*() {
-    console.log('Building library...');
-    yield exec('npm run build-prod');
-  })();
-}
-
 function updateVersion(versionType) {
   return Promise.coroutine(function*() {
+    yield exec('git checkout master');
     console.log('Updating version...');
     const projectGradle =  yield readFileAsync(GRADLE_FILE, 'utf8');
     const match = VERSION_NAME_REGEX.exec(projectGradle);
     if (!match) {
-      throw new Error('Could not get project version');
+      throw new Error('Could not find the project version in gradle file');
     }
     const version = match[1];
     console.log(`  Current version is ${version}`);
@@ -45,10 +39,16 @@ function updateVersion(versionType) {
   })();
 }
 
+function buildLibrary() {
+  return Promise.coroutine(function*() {
+    console.log('Building library...');
+    yield exec('npm run build-prod');
+  })();
+}
+
 function commitFiles(version) {
   return Promise.coroutine(function*() {
     console.log('Committing files...');
-    yield exec('git checkout master');
     yield exec('git add --all');
     yield exec(`git commit -am "Release ${version}"`);
   })();
@@ -68,10 +68,10 @@ function createTag(version) {
   })();
 }
 
-function pushTag(version) {
+function pushTag() {
   return Promise.coroutine(function*() {
     console.log('Pushing tag to remote...');
-    yield exec(`git push origin ${version}`);
+    yield exec('git push --tags');
   })();
 }
 
@@ -91,7 +91,7 @@ if (require.main === module) {
       yield commitFiles(version);
       yield pushFiles();
       yield createTag(version);
-      yield pushTag(version);
+      yield pushTag();
       console.log(`Version ${version} released with success!`);
     } catch (err) {
       console.error(err);
