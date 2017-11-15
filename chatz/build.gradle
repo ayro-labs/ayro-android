@@ -14,13 +14,13 @@ android {
       minifyEnabled true
       shrinkResources true
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-      buildConfigField('String', 'API_URL', '"' + System.getProperty("API_URL_PROD") + '"')
+      buildConfigField('String', 'API_URL', '"https://api.chatz.io"')
     }
     debug {
       minifyEnabled false
       shrinkResources false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-      buildConfigField('String', 'API_URL', '"' + System.getProperty("API_URL_DEV") + '"')
+      buildConfigField('String', 'API_URL', '"' + System.getProperty("CHATZ_API_URL") + '"')
     }
   }
   compileOptions {
