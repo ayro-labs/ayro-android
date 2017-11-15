@@ -2,10 +2,11 @@ package io.chatz.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
-public class Integration {
+public class Integration implements Serializable {
 
   public static final String PRIMARY_COLOR_CONFIGURATION = "primary_color";
   public static final String CONVERSATION_COLOR_CONFIGURATION = "conversation_color";

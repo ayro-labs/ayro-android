@@ -1,10 +1,14 @@
 package io.chatz.service.payload;
 
+import com.google.gson.annotations.SerializedName;
+
 import io.chatz.model.User;
 
 public class LoginResult {
 
+  @SerializedName("token")
   private String token;
+  @SerializedName("user")
   private User user;
 
   public String getToken() {
