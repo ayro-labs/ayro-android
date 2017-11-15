@@ -4,5 +4,6 @@ build
 node_modules
 npm-debug.log
 local.properties
+gradle.properties
 *.log
 *.iml
