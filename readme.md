@@ -1,9 +1,6 @@
 ## Running the project ##
 
-First you need to define the API url to be used:
-
-- Create the file gradle.properties.
-- Add the following content to the file, replacing <IP> by your IP address.
+First you need to define the API url to be used. To do this simply create the gradle.properties file and add the following content to the file, replacing <IP> by your IP address.
 ````
 systemProp.CHATZ_API_URL=http://<IP>:3000
 ````
