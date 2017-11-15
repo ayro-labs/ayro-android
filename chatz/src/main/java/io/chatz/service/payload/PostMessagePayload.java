@@ -1,7 +1,10 @@
 package io.chatz.service.payload;
 
+import com.google.gson.annotations.SerializedName;
+
 public class PostMessagePayload {
 
+  @SerializedName("text")
   private String text;
 
   public PostMessagePayload(String text) {

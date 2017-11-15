@@ -1,15 +1,22 @@
 package io.chatz.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class Device implements Serializable {
 
   private static final long serialVersionUID = -8830545575166750694L;
 
+  @SerializedName("id")
   private String id;
+  @SerializedName("uid")
   private String uid;
+  @SerializedName("platform")
   private String platform;
+  @SerializedName("push_token")
   private String pushToken;
+  @SerializedName("info")
   private DeviceInfo info;
 
   public String getId() {

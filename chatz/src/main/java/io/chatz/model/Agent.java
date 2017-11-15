@@ -1,13 +1,18 @@
 package io.chatz.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class Agent implements Serializable {
 
   private static final long serialVersionUID = 8523803625309951192L;
 
+  @SerializedName("id")
   private String id;
+  @SerializedName("name")
   private String name;
+  @SerializedName("photo_url")
   private String photoUrl;
 
   public String getId() {

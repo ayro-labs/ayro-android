@@ -1,12 +1,17 @@
 package io.chatz.service.payload;
 
+import com.google.gson.annotations.SerializedName;
+
 import io.chatz.model.Device;
 import io.chatz.model.User;
 
 public class LoginPayload {
 
+  @SerializedName("app_token")
   private String appToken;
+  @SerializedName("user")
   private User user;
+  @SerializedName("device")
   private Device device;
 
   public LoginPayload(String appToken, User user, Device device) {

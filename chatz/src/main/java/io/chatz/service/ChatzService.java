@@ -2,6 +2,7 @@ package io.chatz.service;
 
 import java.util.List;
 
+import io.chatz.BuildConfig;
 import io.chatz.model.ChatMessage;
 import io.chatz.model.Device;
 import io.chatz.model.User;
@@ -18,14 +19,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChatzService implements ChatzApi {
 
-  private static final String API_URL = "http://192.168.15.6:3000";
-
   private static ChatzService instance;
 
   private ChatzApi chatzApi;
 
   private ChatzService() {
-    Retrofit retrofit = new Retrofit.Builder().baseUrl(API_URL).addConverterFactory(GsonConverterFactory.create(JsonUtils.getGson())).build();
+    Retrofit retrofit = new Retrofit.Builder().baseUrl(BuildConfig.API_URL).addConverterFactory(GsonConverterFactory.create(JsonUtils.getGson())).build();
     chatzApi = retrofit.create(ChatzApi.class);
   }
 

@@ -1,5 +1,7 @@
 package io.chatz.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 import java.util.Map;
 
@@ -8,11 +10,16 @@ public class Integration {
   public static final String PRIMARY_COLOR_CONFIGURATION = "primary_color";
   public static final String CONVERSATION_COLOR_CONFIGURATION = "conversation_color";
 
+  @SerializedName("id")
   private String id;
+  @SerializedName("type")
   private String type;
+  @SerializedName("channel")
   private String channel;
+  @SerializedName("configuration")
   private Map<String, String> configuration;
-  private Date registration_date;
+  @SerializedName("registration_date")
+  private Date registrationDate;
 
   public String getId() {
     return id;
@@ -46,11 +53,11 @@ public class Integration {
     this.configuration = configuration;
   }
 
-  public Date getRegistration_date() {
-    return registration_date;
+  public Date getRegistrationDate() {
+    return registrationDate;
   }
 
-  public void setRegistration_date(Date registration_date) {
-    this.registration_date = registration_date;
+  public void setRegistrationDate(Date registrationDate) {
+    this.registrationDate = registrationDate;
   }
 }

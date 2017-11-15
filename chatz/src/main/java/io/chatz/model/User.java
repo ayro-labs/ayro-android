@@ -1,5 +1,7 @@
 package io.chatz.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
@@ -8,14 +10,23 @@ public class User implements Serializable {
 
   private static final long serialVersionUID = 8121929561544316347L;
 
+  @SerializedName("id")
   private String id;
+  @SerializedName("uid")
   private String uid;
+  @SerializedName("identified")
   private Boolean identified;
+  @SerializedName("first_name")
   private String firstName;
+  @SerializedName("last_name")
   private String lastName;
+  @SerializedName("photo_url")
   private String photoUrl;
+  @SerializedName("email")
   private String email;
+  @SerializedName("sign_up_date")
   private Date signUpDate;
+  @SerializedName("properties")
   private Map<String, String> properties;
 
   public String getId() {
