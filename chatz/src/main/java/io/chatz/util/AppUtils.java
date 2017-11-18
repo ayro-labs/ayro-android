@@ -39,8 +39,7 @@ public class AppUtils {
 
   public static Device getDevice(Context context) {
     DeviceInfo info = new DeviceInfo();
-    info.setOsName(Constants.OS_NAME);
-    info.setOsVersion(Build.VERSION.RELEASE);
+    info.setOperatingSystem(Constants.OS_NAME + " " + Build.VERSION.RELEASE);
     info.setManufacturer(Build.MANUFACTURER);
     info.setModel(Build.MODEL);
     info.setCarrier(((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getNetworkOperatorName());

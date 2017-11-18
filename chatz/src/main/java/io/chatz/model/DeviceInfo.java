@@ -12,10 +12,8 @@ public class DeviceInfo implements Serializable {
   private String appId;
   @SerializedName("app_version")
   private String appVersion;
-  @SerializedName("os_name")
-  private String osName;
-  @SerializedName("os_version")
-  private String osVersion;
+  @SerializedName("operating_system")
+  private String operatingSystem;
   @SerializedName("manufacturer")
   private String manufacturer;
   @SerializedName("model")
@@ -39,20 +37,12 @@ public class DeviceInfo implements Serializable {
     this.appVersion = appVersion;
   }
 
-  public String getOsName() {
-    return osName;
+  public String getOperatingSystem() {
+    return operatingSystem;
   }
 
-  public void setOsName(String osName) {
-    this.osName = osName;
-  }
-
-  public String getOsVersion() {
-    return osVersion;
-  }
-
-  public void setOsVersion(String osVersion) {
-    this.osVersion = osVersion;
+  public void setOperatingSystem(String operatingSystem) {
+    this.operatingSystem = operatingSystem;
   }
 
   public String getManufacturer() {
