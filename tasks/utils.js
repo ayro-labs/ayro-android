@@ -13,7 +13,7 @@ const writeFileAsync = Promise.promisify(fs.writeFile);
 
 exports.getProjectVersion = () => {
   return Promise.coroutine(function* () {
-    const projectGradle =  yield readFileAsync(GRADLE_FILE, 'utf8');
+    const projectGradle = yield readFileAsync(GRADLE_FILE, 'utf8');
     const match = VERSION_NAME_REGEX.exec(projectGradle);
     if (!match) {
       throw new Error('Could not find the project version in gradle file');
@@ -24,8 +24,9 @@ exports.getProjectVersion = () => {
 
 exports.updateProjectVersion = (version) => {
   return Promise.coroutine(function* () {
-    const projectGradle =  yield readFileAsync(GRADLE_FILE, 'utf8');
-    const updatedProjectGradle = projectGradle.replace(match[0], util.format(VERSION_NAME_FORMAT, version));
+    const currentVersion = yield getProjectVersion();
+    const projectGradle = yield readFileAsync(GRADLE_FILE, 'utf8');
+    const updatedProjectGradle = projectGradle.replace(util.format(VERSION_NAME_FORMAT, currentVersion), util.format(VERSION_NAME_FORMAT, version));
     yield writeFileAsync(GRADLE_FILE, updatedProjectGradle);
   })();
 };
