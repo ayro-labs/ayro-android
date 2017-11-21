@@ -1,7 +1,5 @@
 const utils = require('./utils');
-const fs = require('fs');
 const path = require('path');
-const util = require('util');
 const childProcess = require('child_process');
 const semver = require('semver');
 const Promise = require('bluebird');

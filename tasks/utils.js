@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const util = require('util');
 const Promise = require('bluebird');
 
 const WORKING_DIR = path.resolve(__dirname, '../');
