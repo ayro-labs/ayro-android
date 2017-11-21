@@ -1,19 +1,18 @@
-'use strict';
-
-const projectPackage = require('../package');
-const fs = require('fs');
+const utils = require('./utils');
 const path = require('path');
 const childProcess = require('child_process');
+const propertiesParser = require('properties-parser');
 const GitHubApi = require('github');
 const Promise = require('bluebird');
 
 const REPOSITORY_NAME = 'chatz-android';
 const REPOSITORY_OWNER = 'chatz-io';
 const WORKING_DIR = path.resolve(__dirname, '../');
-const TEMP_DIR = '/tmp';
-const TEMP_REPOSITORY_DIR = `${TEMP_DIR}/${REPOSITORY_NAME}`;
+const GRADLE_PROPERTIES = path.resolve(__dirname, '../gradle.properties');
 
 const execAsync = Promise.promisify(childProcess.exec);
+
+Promise.promisifyAll(propertiesParser);
 
 const gitHubApi = new GitHubApi();
 gitHubApi.authenticate({
@@ -23,6 +22,10 @@ gitHubApi.authenticate({
 
 function exec(command, options) {
   return execAsync(command, options || {cwd: WORKING_DIR});
+}
+
+function getProjectVersion() {
+  return utils.getProjectVersion();
 }
 
 function checkoutTag(version) {
@@ -39,51 +42,22 @@ function buildLibrary() {
   })();
 }
 
-
-function prepareRepository() {
+function editGradleProperties() {
   return Promise.coroutine(function* () {
-    console.log('Preparing Github repository...');
-    yield exec(`rm -rf ${TEMP_REPOSITORY_DIR}`);
-    yield exec(`git clone https://github.com/${REPOSITORY_OWNER}/${REPOSITORY_NAME}.git ${REPOSITORY_NAME}`, {cwd: TEMP_DIR});
-    yield exec('rm -rf *', {cwd: TEMP_REPOSITORY_DIR});
+    const properties = yield propertiesParser.createEditor(GRADLE_PROPERTIES);
+    properties.set('VERSION_NAME', '1.0.0');
+    properties.set('VERSION_CODE', '1');
+    properties.set('POM_ARTIFACT_ID', 'chatz');
+    properties.set('POM_NAME', 'Chatz');
+    properties.set('POM_DESCRIPTION', 'Chatz Android SDK');
+    yield propertiesParser.save();
   })();
 }
 
-function copyFiles(version) {
+function publishMavenCentral() {
   return Promise.coroutine(function* () {
-    console.log('Copying files...');
-    yield exec(`cp dist/${projectPackage.name}.min.js ${TEMP_REPOSITORY_DIR}/${projectPackage.name}-${projectPackage.version}.min.js`)
-  })();
-}
-
-function pushFiles(version) {
-  return Promise.coroutine(function* () {
-    console.log('Committing, tagging and pushing files to Github repository...');
-    yield exec('git add .', {cwd: TEMP_REPOSITORY_DIR});
-    yield exec(`git commit -am 'Release ${version}'`, {cwd: TEMP_REPOSITORY_DIR});
-    yield exec('git push origin master', {cwd: TEMP_REPOSITORY_DIR});
-    yield exec(`git tag ${version}`, {cwd: TEMP_REPOSITORY_DIR});
-    yield exec('git push --tags', {cwd: TEMP_REPOSITORY_DIR});
-  })();
-}
-
-function createRelease(version) {
-  return Promise.coroutine(function* () {
-    console.log('Creating Github release...');
-    const createRelease = Promise.promisify(gitHubApi.repos.createRelease);
-    yield createRelease({
-      owner: REPOSITORY_OWNER,
-      repo: REPOSITORY_NAME,
-      tag_name: version,
-      name: `Release ${version}`,
-    });
-  })();
-}
-
-function publishToNpm() {
-  return Promise.coroutine(function* () {
-    console.log('Publishing to npm...');
-    yield exec('npm publish');
+    console.log('Publishing to Maven central...');
+    // yield exec('./gradlew build clean uploadArchive');
   })();
 }
 
@@ -91,15 +65,12 @@ function publishToNpm() {
 if (require.main === module) {
   Promise.coroutine(function* () {
     try {
-      const version = projectPackage.version;
-      console.log(`Publishing version ${version} to Github and npm...`);
+      const version = yield getProjectVersion();
+      console.log(`Publishing version ${version} to Maven central...`);
       yield checkoutTag(version);
       yield buildLibrary();
-      yield prepareRepository();
-      yield copyFiles(version);
-      yield pushFiles(version);
-      yield createRelease(version);
-      yield publishToNpm();
+      yield editGradleProperties();
+      yield publishToMavenCentral();
       yield checkoutTag('master');
       console.log(`Version ${version} published with success!`);
     } catch (err) {
