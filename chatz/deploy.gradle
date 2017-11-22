@@ -1,0 +1,37 @@
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+afterEvaluate { project ->
+  uploadArchives {
+    repositories {
+      mavenDeployer {
+        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+        repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2') {
+          authentication(userName: project.findProperty('NEXUS_USERNAME'), password: project.findProperty('NEXUS_PASSWORD'))
+        }
+        snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots') {
+          authentication(userName: project.findProperty('NEXUS_USERNAME'), password: project.findProperty('NEXUS_PASSWORD'))
+        }
+        pom.groupId = 'io.chatz'
+        pom.artifactId = 'chatz'
+        pom.version = android.defaultConfig.versionName
+        pom.project {
+          name 'Chatz'
+          packaging 'aar'
+          description 'Chatz Android SDK'
+          url 'https://chatz.io'
+          developers {
+            developer {
+              id 'chatz'
+              name 'Chatz'
+            }
+          }
+        }
+      }
+    }
+  }
+  signing {
+    required { gradle.taskGraph.hasTask('uploadArchives') }
+    sign configurations.archives
+  }
+}
