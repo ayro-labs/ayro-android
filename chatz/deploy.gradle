@@ -17,8 +17,8 @@ afterEvaluate { project ->
         pom.version = android.defaultConfig.versionName
         pom.project {
           name 'Chatz'
-          packaging 'aar'
           description 'Chatz Android SDK'
+          packaging 'aar'
           url 'https://chatz.io'
           developers {
             developer {
