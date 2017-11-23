@@ -13,7 +13,7 @@ public class MessagingService extends FirebaseMessagingService {
     super.onMessageReceived(remoteMessage);
     ChatzApp chatzApp = ChatzApp.getInstance(this);
     if (chatzApp.getSettings().isMessagingServiceEnabled()) {
-      ChatzMessages.receive(this, remoteMessage.getData());
+      ChatzMessages.receive(this, remoteMessage);
     }
   }
 }

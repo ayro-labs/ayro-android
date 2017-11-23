@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import com.google.firebase.messaging.RemoteMessage;
+
 import java.util.Map;
 
 import io.chatz.core.ChatzApp;
@@ -27,12 +29,16 @@ public class ChatzMessages {
   private static final String ORIGIN_CHATZ = "chatz";
   private static final String EVENT_CHAT_MESSAGE = "chat_message";
 
-  public static void receive(Context context, Map<String, String> data) {
+  public static boolean fromChatz(RemoteMessage remoteMessage) {
+    return ORIGIN_CHATZ.equals(remoteMessage.getData().get(KEY_ORIGIN));
+  }
+
+  public static void receive(Context context, RemoteMessage remoteMessage) {
     ChatzApp chatzApp = ChatzApp.getInstance(context);
-    if (UserStatus.LOGGED_IN.equals(chatzApp.getUserStatus()) && ORIGIN_CHATZ.equals(data.get(KEY_ORIGIN))) {
+    if (fromChatz(remoteMessage) && UserStatus.LOGGED_IN.equals(chatzApp.getUserStatus())) {
+      Map<String, String> data = remoteMessage.getData();
       String event = data.get(KEY_EVENT);
       String message = data.get(KEY_MESSAGE);
-      Log.d(Constants.TAG, "Incoming message of event " + event + ": " + message);
       switch (event) {
         case (EVENT_CHAT_MESSAGE):
           ChatMessage chatMessage = JsonUtils.fromJson(message, ChatMessage.class);
