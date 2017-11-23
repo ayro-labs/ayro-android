@@ -9,7 +9,7 @@ import io.chatz.ChatzMessages;
 public class MessagingService extends FirebaseMessagingService {
 
   @Override
-  public void onMessageReceived(final RemoteMessage remoteMessage) {
+  public void onMessageReceived(RemoteMessage remoteMessage) {
     super.onMessageReceived(remoteMessage);
     ChatzApp chatzApp = ChatzApp.getInstance(this);
     if (chatzApp.getSettings().isMessagingServiceEnabled()) {
