@@ -21,12 +21,12 @@ function updateMaster() {
   })();
 }
 
-function updateVersion(versionType) {
+function updateVersion(versionType, versionNumber) {
   return Promise.coroutine(function* () {
     console.log('Updating version...');
-    const version = yield utils.getProjectVersion();
-    console.log(`  Current version is ${version}`);
-    const nextVersion = semver.inc(version, versionType);
+    const currentVersion = yield utils.getProjectVersion();
+    console.log(`  Current version is ${currentVersion}`);
+    const nextVersion = versionNumber || semver.inc(currentVersion, versionType);
     console.log(`  Next version is ${nextVersion}`);
     yield utils.updateProjectVersion(nextVersion);
     return nextVersion;
@@ -87,7 +87,7 @@ if (require.main === module) {
   Promise.coroutine(function* () {
     try {
       yield updateMaster();
-      const version = versionNumber || (yield updateVersion(versionType));
+      const version = yield updateVersion(versionType, versionNumber);
       console.log(`Releasing version ${version} to remote...`);
       yield buildLibrary();
       yield commitFiles(version);
