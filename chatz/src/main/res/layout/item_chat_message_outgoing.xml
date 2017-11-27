@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/retry"
         android:layout_toStartOf="@+id/retry"
-        app:cardBackgroundColor="@color/chatz_primary"
+        app:cardBackgroundColor="@color/ayro_primary"
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="true"
         app:cardElevation="1dp"
@@ -79,6 +79,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/chatz_message_retry"/>
+        android:src="@drawable/ayro_message_retry"/>
 
 </RelativeLayout>

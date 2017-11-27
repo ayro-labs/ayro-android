@@ -1,17 +1,17 @@
-package io.chatz.task.impl;
+package io.ayro.task.impl;
 
 import android.content.Context;
 import android.util.Log;
 
 import java.io.IOException;
 
-import io.chatz.model.User;
-import io.chatz.service.ChatzService;
-import io.chatz.store.Store;
-import io.chatz.task.Task;
-import io.chatz.exception.TaskException;
-import io.chatz.util.Constants;
-import io.chatz.util.MessageUtils;
+import io.ayro.model.User;
+import io.ayro.service.AyroService;
+import io.ayro.store.Store;
+import io.ayro.task.Task;
+import io.ayro.exception.TaskException;
+import io.ayro.util.Constants;
+import io.ayro.util.MessageUtils;
 import retrofit2.Response;
 
 public class UpdateUserTask extends Task<User> {
@@ -24,13 +24,13 @@ public class UpdateUserTask extends Task<User> {
 
   private Context context;
   private User user;
-  private ChatzService chatzService;
+  private AyroService ayroService;
 
   public UpdateUserTask(Context context, User user) {
     super(context, TASK_NAME);
     this.context = context;
     this.user = user;
-    this.chatzService = ChatzService.getInstance();
+    this.ayroService = AyroService.getInstance();
   }
 
   @Override
@@ -41,7 +41,7 @@ public class UpdateUserTask extends Task<User> {
       return null;
     }
     try {
-      Response<User> response = chatzService.updateUser(apiToken, user).execute();
+      Response<User> response = ayroService.updateUser(apiToken, user).execute();
       if (response.isSuccessful()) {
         Log.i(Constants.TAG, String.format("(%s) User updated with success!", TASK_NAME));
         return response.body();

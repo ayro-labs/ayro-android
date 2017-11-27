@@ -1,4 +1,4 @@
-package io.chatz;
+package io.ayro;
 
 public class Settings {
 

@@ -1,4 +1,4 @@
-package io.chatz.ui.adapter;
+package io.ayro.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -20,12 +20,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import io.chatz.R;
-import io.chatz.core.ChatzApp;
-import io.chatz.model.ChatMessage;
-import io.chatz.model.Integration;
-import io.chatz.util.ImageUtils;
-import io.chatz.util.UIUtils;
+import io.ayro.R;
+import io.ayro.core.AyroApp;
+import io.ayro.model.ChatMessage;
+import io.ayro.model.Integration;
+import io.ayro.util.ImageUtils;
+import io.ayro.util.UIUtils;
 
 public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessageHolder> {
 
@@ -44,7 +44,7 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
     pictureDimension = UIUtils.dpToPixels(getContext(), 45);
     errorIconDimension = UIUtils.dpToPixels(getContext(), 36);
     conversationMargin = UIUtils.dpToPixels(getContext(), 5);
-    String colorHex = ChatzApp.getInstance(getContext()).getIntegration().getConfiguration().get(Integration.CONVERSATION_COLOR_CONFIGURATION);
+    String colorHex = AyroApp.getInstance(getContext()).getIntegration().getConfiguration().get(Integration.CONVERSATION_COLOR_CONFIGURATION);
     outgoingCardColor = Color.parseColor(colorHex);
   }
 
@@ -94,13 +94,13 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
       outgoingMessageHolder.cardView.setCardBackgroundColor(outgoingCardColor);
       if (chatMessage.getStatus() == null || ChatMessage.Status.sent.equals(chatMessage.getStatus())) {
         ((RelativeLayout.LayoutParams) outgoingMessageHolder.retryView.getLayoutParams()).width = 0;
-        outgoingMessageHolder.statusView.setImageResource(R.drawable.chatz_message_sent);
+        outgoingMessageHolder.statusView.setImageResource(R.drawable.ayro_message_sent);
       } else if (ChatMessage.Status.sending.equals(chatMessage.getStatus())) {
         ((RelativeLayout.LayoutParams) outgoingMessageHolder.retryView.getLayoutParams()).width = 0;
-        outgoingMessageHolder.statusView.setImageResource(R.drawable.chatz_message_sending);
+        outgoingMessageHolder.statusView.setImageResource(R.drawable.ayro_message_sending);
       } else {
         ((RelativeLayout.LayoutParams) outgoingMessageHolder.retryView.getLayoutParams()).width = errorIconDimension;
-        outgoingMessageHolder.statusView.setImageResource(R.drawable.chatz_message_error);
+        outgoingMessageHolder.statusView.setImageResource(R.drawable.ayro_message_error);
       }
       holder.textView.setText(fromHtml(chatMessage.getText() + " &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;"));
     }

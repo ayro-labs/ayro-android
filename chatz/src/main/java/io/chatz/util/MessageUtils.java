@@ -1,9 +1,9 @@
-package io.chatz.util;
+package io.ayro.util;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import io.chatz.exception.ChatzException;
+import io.ayro.exception.AyroException;
 
 public class MessageUtils {
 
@@ -12,14 +12,14 @@ public class MessageUtils {
   private static final Map<String, String> MESSAGES = new HashMap<>();
 
   static {
-    MESSAGES.put(APP_DOES_NOT_EXIST, "App does not exist, please make sure you initialized Chatz with the correct app token.");
+    MESSAGES.put(APP_DOES_NOT_EXIST, "App does not exist, please make sure you initialized Ayro with the correct app token.");
   }
 
   private MessageUtils() {
 
   }
 
-  public static String get(ChatzException e) {
+  public static String get(AyroException e) {
     return MESSAGES.containsKey(e.getCode()) ? MESSAGES.get(e.getCode()) : e.getMessage();
   }
 }

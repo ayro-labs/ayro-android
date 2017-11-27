@@ -1,72 +1,72 @@
-package io.chatz.service;
+package io.ayro.service;
 
 import java.util.List;
 
-import io.chatz.BuildConfig;
-import io.chatz.model.ChatMessage;
-import io.chatz.model.Device;
-import io.chatz.model.User;
-import io.chatz.service.iface.ChatzApi;
-import io.chatz.service.payload.InitPayload;
-import io.chatz.service.payload.InitResult;
-import io.chatz.service.payload.LoginPayload;
-import io.chatz.service.payload.LoginResult;
-import io.chatz.service.payload.PostMessagePayload;
-import io.chatz.util.JsonUtils;
+import io.ayro.BuildConfig;
+import io.ayro.model.ChatMessage;
+import io.ayro.model.Device;
+import io.ayro.model.User;
+import io.ayro.service.iface.AyroApi;
+import io.ayro.service.payload.InitPayload;
+import io.ayro.service.payload.InitResult;
+import io.ayro.service.payload.LoginPayload;
+import io.ayro.service.payload.LoginResult;
+import io.ayro.service.payload.PostMessagePayload;
+import io.ayro.util.JsonUtils;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ChatzService implements ChatzApi {
+public class AyroService implements AyroApi {
 
-  private static ChatzService instance;
+  private static AyroService instance;
 
-  private ChatzApi chatzApi;
+  private AyroApi ayroApi;
 
-  private ChatzService() {
+  private AyroService() {
     Retrofit retrofit = new Retrofit.Builder().baseUrl(BuildConfig.API_URL).addConverterFactory(GsonConverterFactory.create(JsonUtils.getGson())).build();
-    chatzApi = retrofit.create(ChatzApi.class);
+    ayroApi = retrofit.create(AyroApi.class);
   }
 
-  public static ChatzService getInstance() {
+  public static AyroService getInstance() {
     if (instance == null) {
-      instance = new ChatzService();
+      instance = new AyroService();
     }
     return instance;
   }
 
   @Override
   public Call<InitResult> init(InitPayload payload) {
-    return chatzApi.init(payload);
+    return ayroApi.init(payload);
   }
 
   @Override
   public Call<LoginResult> login(LoginPayload payload) {
-    return chatzApi.login(payload);
+    return ayroApi.login(payload);
   }
 
   @Override
   public Call<Void> logout(String apiToken) {
-    return chatzApi.logout(apiToken);
+    return ayroApi.logout(apiToken);
   }
 
   @Override
   public Call<User> updateUser(String apiToken, User user) {
-    return chatzApi.updateUser(apiToken, user);
+    return ayroApi.updateUser(apiToken, user);
   }
 
   @Override
   public Call<Device> updateDevice(String apiToken, Device device) {
-    return chatzApi.updateDevice(apiToken, device);
+    return ayroApi.updateDevice(apiToken, device);
   }
 
   @Override
   public Call<ChatMessage> postMessage(String apiToken, PostMessagePayload payload) {
-    return chatzApi.postMessage(apiToken, payload);
+    return ayroApi.postMessage(apiToken, payload);
   }
 
   @Override
   public Call<List<ChatMessage>> listMessages(String apiToken) {
-    return chatzApi.listMessages(apiToken);
+    return ayroApi.listMessages(apiToken);
   }
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="chatz_primary">#007bff</color>
-    <color name="chatz_send_button_enabled">#989898</color>
-    <color name="chatz_send_button_disabled">#d8d8d8</color>
+    <color name="ayro_primary">#007bff</color>
+    <color name="ayro_send_button_enabled">#989898</color>
+    <color name="ayro_send_button_disabled">#d8d8d8</color>
 
 </resources>

@@ -1,6 +1,6 @@
-package io.chatz.task;
+package io.ayro.task;
 
-import io.chatz.exception.TaskException;
+import io.ayro.exception.TaskException;
 
 public class TaskCallback<T> {
 

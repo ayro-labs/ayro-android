@@ -1,15 +1,15 @@
-package io.chatz.service.iface;
+package io.ayro.service.iface;
 
 import java.util.List;
 
-import io.chatz.model.ChatMessage;
-import io.chatz.model.Device;
-import io.chatz.model.User;
-import io.chatz.service.payload.InitPayload;
-import io.chatz.service.payload.InitResult;
-import io.chatz.service.payload.LoginPayload;
-import io.chatz.service.payload.LoginResult;
-import io.chatz.service.payload.PostMessagePayload;
+import io.ayro.model.ChatMessage;
+import io.ayro.model.Device;
+import io.ayro.model.User;
+import io.ayro.service.payload.InitPayload;
+import io.ayro.service.payload.InitResult;
+import io.ayro.service.payload.LoginPayload;
+import io.ayro.service.payload.LoginResult;
+import io.ayro.service.payload.PostMessagePayload;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -18,7 +18,7 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 
-public interface ChatzApi {
+public interface AyroApi {
 
   @POST("/apps/integrations/android/init")
   Call<InitResult> init(@Body InitPayload payload);

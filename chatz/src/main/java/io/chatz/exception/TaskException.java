@@ -1,8 +1,8 @@
-package io.chatz.exception;
+package io.ayro.exception;
 
 import retrofit2.Response;
 
-public class TaskException extends ChatzException {
+public class TaskException extends AyroException {
 
   private boolean cancelTask;
 

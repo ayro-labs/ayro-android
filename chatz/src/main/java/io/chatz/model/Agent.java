@@ -1,4 +1,4 @@
-package io.chatz.model;
+package io.ayro.model;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -2,15 +2,15 @@
 ### Project sources ###
 #######################
 
--keep class io.chatz.Chatz { public <methods>; }
--keep class io.chatz.ChatzMessages { public <methods>; }
--keep class io.chatz.Settings { public <methods>; }
--keep class io.chatz.User { public <methods>; }
+-keep class io.ayro.Ayro { public <methods>; }
+-keep class io.ayro.AyroMessages { public <methods>; }
+-keep class io.ayro.Settings { public <methods>; }
+-keep class io.ayro.User { public <methods>; }
 
--keepclassmembers class io.chatz.model.** implements android.os.Parcelable {
+-keepclassmembers class io.ayro.model.** implements android.os.Parcelable {
   static ** CREATOR;
 }
--keepclassmembers class io.chatz.model.** implements java.io.Serializable {
+-keepclassmembers class io.ayro.model.** implements java.io.Serializable {
   static final long serialVersionUID;
   private static final java.io.ObjectStreamField[] serialPersistentFields;
   !static !transient <fields>;

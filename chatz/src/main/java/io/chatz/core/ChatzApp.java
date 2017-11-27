@@ -1,32 +1,32 @@
-package io.chatz.core;
+package io.ayro.core;
 
 import android.content.Context;
 import android.content.Intent;
 
-import io.chatz.Settings;
-import io.chatz.enums.AppStatus;
-import io.chatz.enums.UserStatus;
-import io.chatz.model.App;
-import io.chatz.model.Integration;
-import io.chatz.model.User;
-import io.chatz.service.payload.InitResult;
-import io.chatz.service.payload.LoginResult;
-import io.chatz.store.Store;
-import io.chatz.task.TaskCallback;
-import io.chatz.exception.TaskException;
-import io.chatz.task.TaskManager;
-import io.chatz.task.impl.FirebaseConnectTask;
-import io.chatz.task.impl.FirebaseDisconnectTask;
-import io.chatz.task.impl.InitTask;
-import io.chatz.task.impl.LoginTask;
-import io.chatz.task.impl.LogoutTask;
-import io.chatz.task.impl.UpdateUserTask;
-import io.chatz.ui.activity.ChatzActivity;
-import io.chatz.util.AppUtils;
+import io.ayro.Settings;
+import io.ayro.enums.AppStatus;
+import io.ayro.enums.UserStatus;
+import io.ayro.model.App;
+import io.ayro.model.Integration;
+import io.ayro.model.User;
+import io.ayro.service.payload.InitResult;
+import io.ayro.service.payload.LoginResult;
+import io.ayro.store.Store;
+import io.ayro.task.TaskCallback;
+import io.ayro.exception.TaskException;
+import io.ayro.task.TaskManager;
+import io.ayro.task.impl.FirebaseConnectTask;
+import io.ayro.task.impl.FirebaseDisconnectTask;
+import io.ayro.task.impl.InitTask;
+import io.ayro.task.impl.LoginTask;
+import io.ayro.task.impl.LogoutTask;
+import io.ayro.task.impl.UpdateUserTask;
+import io.ayro.ui.activity.AyroActivity;
+import io.ayro.util.AppUtils;
 
-public class ChatzApp {
+public class AyroApp {
 
-  private static ChatzApp instance;
+  private static AyroApp instance;
 
   private Context context;
   private AppStatus appStatus;
@@ -38,7 +38,7 @@ public class ChatzApp {
   private String apiToken;
   private boolean chatOpened;
 
-  private ChatzApp(Context context) {
+  private AyroApp(Context context) {
     this.context = context;
     this.appStatus = Store.getAppStatus(context);
     this.userStatus = Store.getUserStatus(context);
@@ -49,9 +49,9 @@ public class ChatzApp {
     this.apiToken = Store.getApiToken(context);
   }
 
-  public static ChatzApp getInstance(Context context) {
+  public static AyroApp getInstance(Context context) {
     if (instance == null) {
-      instance = new ChatzApp(context);
+      instance = new AyroApp(context);
     }
     return instance;
   }
@@ -98,9 +98,9 @@ public class ChatzApp {
     task.schedule();
   }
 
-  public void login(io.chatz.User user, final TaskCallback<User> callback) {
-    User chatzUser = AppUtils.getUser(context, user);
-    login(chatzUser, callback);
+  public void login(io.ayro.User user, final TaskCallback<User> callback) {
+    User ayroUser = AppUtils.getUser(context, user);
+    login(ayroUser, callback);
   }
 
   public void login(User user, final TaskCallback<User> callback) {
@@ -146,10 +146,10 @@ public class ChatzApp {
     task.schedule();
   }
 
-  public void updateUser(io.chatz.User user) {
-    User chatzUser = AppUtils.getUser(context, user);
-    setUser(chatzUser);
-    UpdateUserTask task = new UpdateUserTask(context, chatzUser);
+  public void updateUser(io.ayro.User user) {
+    User ayroUser = AppUtils.getUser(context, user);
+    setUser(ayroUser);
+    UpdateUserTask task = new UpdateUserTask(context, ayroUser);
     task.setCallback(new TaskCallback<User>() {
       @Override
       public void onSuccess(User user) {
@@ -174,7 +174,7 @@ public class ChatzApp {
   }
 
   public void openChat() {
-    Intent intent = new Intent(context, ChatzActivity.class);
+    Intent intent = new Intent(context, AyroActivity.class);
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     context.startActivity(intent);
   }

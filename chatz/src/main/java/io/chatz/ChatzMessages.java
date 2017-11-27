@@ -1,4 +1,4 @@
-package io.chatz;
+package io.ayro;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,33 +9,33 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
 
-import io.chatz.core.ChatzApp;
-import io.chatz.enums.UserStatus;
-import io.chatz.model.Agent;
-import io.chatz.model.ChatMessage;
-import io.chatz.ui.activity.ChatzActivity;
-import io.chatz.util.Callback;
-import io.chatz.util.Constants;
-import io.chatz.util.ImageUtils;
-import io.chatz.util.JsonUtils;
-import io.chatz.util.UIUtils;
+import io.ayro.core.AyroApp;
+import io.ayro.enums.UserStatus;
+import io.ayro.model.Agent;
+import io.ayro.model.ChatMessage;
+import io.ayro.ui.activity.AyroActivity;
+import io.ayro.util.Callback;
+import io.ayro.util.Constants;
+import io.ayro.util.ImageUtils;
+import io.ayro.util.JsonUtils;
+import io.ayro.util.UIUtils;
 
-public class ChatzMessages {
+public class AyroMessages {
 
   private static final String KEY_ORIGIN = "origin";
   private static final String KEY_EVENT = "event";
   private static final String KEY_MESSAGE = "message";
 
-  private static final String ORIGIN_CHATZ = "chatz";
+  private static final String ORIGIN_AYRO = "ayro";
   private static final String EVENT_CHAT_MESSAGE = "chat_message";
 
-  public static boolean fromChatz(RemoteMessage remoteMessage) {
-    return ORIGIN_CHATZ.equals(remoteMessage.getData().get(KEY_ORIGIN));
+  public static boolean fromAyro(RemoteMessage remoteMessage) {
+    return ORIGIN_AYRO.equals(remoteMessage.getData().get(KEY_ORIGIN));
   }
 
   public static void receive(Context context, RemoteMessage remoteMessage) {
-    ChatzApp chatzApp = ChatzApp.getInstance(context);
-    if (fromChatz(remoteMessage) && UserStatus.LOGGED_IN.equals(chatzApp.getUserStatus())) {
+    AyroApp ayroApp = AyroApp.getInstance(context);
+    if (fromAyro(remoteMessage) && UserStatus.LOGGED_IN.equals(ayroApp.getUserStatus())) {
       Map<String, String> data = remoteMessage.getData();
       String event = data.get(KEY_EVENT);
       String message = data.get(KEY_MESSAGE);
@@ -51,7 +51,7 @@ public class ChatzMessages {
   private static void notifyMessage(final Context context, final ChatMessage chatMessage) {
     chatMessage.setStatus(ChatMessage.Status.sent);
     chatMessage.setDirection(ChatMessage.Direction.incoming);
-    if (!ChatzApp.getInstance(context).isChatOpened()) {
+    if (!AyroApp.getInstance(context).isChatOpened()) {
       final Agent agent = chatMessage.getAgent();
       ImageUtils.loadPicture(context, agent.getPhotoUrl(), new Callback<Bitmap>() {
         @Override
@@ -73,6 +73,6 @@ public class ChatzMessages {
   }
 
   private static Intent getDefaultNotificationIntent(Context context) {
-    return new Intent(context, ChatzActivity.class);
+    return new Intent(context, AyroActivity.class);
   }
 }

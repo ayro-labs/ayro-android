@@ -4,7 +4,7 @@ const util = require('util');
 const Promise = require('bluebird');
 
 const WORKING_DIR = path.resolve(__dirname, '../');
-const GRADLE_FILE = path.join(WORKING_DIR, 'chatz/build.gradle');
+const GRADLE_FILE = path.join(WORKING_DIR, 'ayro/build.gradle');
 const VERSION_NAME_REGEX = /versionName '(\d+\.\d+\.\d+)'/;
 const VERSION_NAME_FORMAT = 'versionName \'%s\'';
 const VERSION_CODE_REGEX = /versionCode (\d+)/;

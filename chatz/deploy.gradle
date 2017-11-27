@@ -12,18 +12,28 @@ afterEvaluate { project ->
         snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots') {
           authentication(userName: project.findProperty('NEXUS_USERNAME'), password: project.findProperty('NEXUS_PASSWORD'))
         }
-        pom.groupId = 'io.chatz'
-        pom.artifactId = 'chatz'
+        pom.groupId = 'io.ayro'
+        pom.artifactId = 'ayro'
         pom.version = android.defaultConfig.versionName
         pom.project {
-          name 'Chatz'
-          description 'Chatz Android SDK'
+          name 'Ayro'
+          description 'Ayro Android SDK'
           packaging 'aar'
-          url 'https://chatz.io'
+          url 'https://ayro.io'
           developers {
             developer {
-              id 'chatz'
-              name 'Chatz'
+              id 'ayro'
+              name 'Ayro'
+            }
+          }
+          scm {
+            url 'https://bitbucket.org/ayrolabs'
+          }
+          licenses {
+            license {
+              name POM_LICENCE_NAME
+              url POM_LICENCE_URL
+              distribution POM_LICENCE_DIST
             }
           }
         }

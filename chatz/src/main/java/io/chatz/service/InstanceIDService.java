@@ -1,18 +1,18 @@
-package io.chatz.service;
+package io.ayro.service;
 
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
-import io.chatz.core.ChatzApp;
-import io.chatz.enums.UserStatus;
+import io.ayro.core.AyroApp;
+import io.ayro.enums.UserStatus;
 
 public class InstanceIDService extends FirebaseInstanceIdService {
 
   @Override
   public void onTokenRefresh() {
     super.onTokenRefresh();
-    ChatzApp chatzApp = ChatzApp.getInstance(this);
-    if (chatzApp.getSettings().isMessagingServiceEnabled() && UserStatus.LOGGED_IN.equals(chatzApp.getUserStatus())) {
-      ChatzApp.getInstance(this).connectToFirebase();
+    AyroApp ayroApp = AyroApp.getInstance(this);
+    if (ayroApp.getSettings().isMessagingServiceEnabled() && UserStatus.LOGGED_IN.equals(ayroApp.getUserStatus())) {
+      AyroApp.getInstance(this).connectToFirebase();
     }
   }
 }

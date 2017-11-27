@@ -1,13 +1,13 @@
 {
-  "name": "chatz",
-  "description": "Chatz Android SDK",
+  "name": "ayro",
+  "description": "Ayro Android SDK",
   "version": "0.0.0",
   "author": {
-    "name": "Chatz team",
-    "email": "team@chatz.io",
-    "url": "https://chatz.io"
+    "name": "Ayro team",
+    "email": "team@ayro.io",
+    "url": "https://ayro.io"
   },
-  "homepage": "https://chatz.io",
+  "homepage": "https://ayro.io",
   "scripts": {
     "build": "./gradlew clean assembleDebug",
     "build-prod": "./gradlew clean assembleRelease",

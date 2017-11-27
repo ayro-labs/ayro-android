@@ -4,8 +4,8 @@ const childProcess = require('child_process');
 const GitHubApi = require('github');
 const Promise = require('bluebird');
 
-const REPOSITORY_NAME = 'chatz-android';
-const REPOSITORY_OWNER = 'chatz-io';
+const REPOSITORY_NAME = 'ayro-android';
+const REPOSITORY_OWNER = 'ayro-io';
 const WORKING_DIR = path.resolve(__dirname, '../');
 const GRADLE_PROPERTIES = path.resolve(__dirname, '../gradle.properties');
 

@@ -1,4 +1,4 @@
-package io.chatz.util;
+package io.ayro.util;
 
 public interface Callback<T> {
 

@@ -1,4 +1,4 @@
-package io.chatz;
+package io.ayro;
 
 import java.util.Date;
 import java.util.Map;

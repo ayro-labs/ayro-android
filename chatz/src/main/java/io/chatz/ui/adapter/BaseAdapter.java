@@ -1,4 +1,4 @@
-package io.chatz.ui.adapter;
+package io.ayro.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

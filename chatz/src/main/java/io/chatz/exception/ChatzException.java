@@ -1,14 +1,14 @@
-package io.chatz.exception;
+package io.ayro.exception;
 
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.util.Map;
 
-import io.chatz.util.JsonUtils;
+import io.ayro.util.JsonUtils;
 import retrofit2.Response;
 
-public class ChatzException extends RuntimeException {
+public class AyroException extends RuntimeException {
 
   private static final String UNKNOWN_ERROR_STATUS = "999";
   private static final String UNKNOWN_ERROR_CODE = "unknown.error";
@@ -23,26 +23,26 @@ public class ChatzException extends RuntimeException {
   private String message;
 
 
-  public ChatzException(String message) {
+  public AyroException(String message) {
     this(message, null);
   }
 
-  public ChatzException(String message, Throwable cause) {
+  public AyroException(String message, Throwable cause) {
     this(null, null, message, cause);
   }
 
-  public ChatzException(String status, String code, String message) {
+  public AyroException(String status, String code, String message) {
     this(status, code, message, null);
   }
 
-  public ChatzException(String status, String code, String message, Throwable cause) {
+  public AyroException(String status, String code, String message, Throwable cause) {
     super(cause);
     this.status = status;
     this.code = code;
     this.message = message;
   }
 
-  public ChatzException(Response response) {
+  public AyroException(Response response) {
     if (response.errorBody() != null) {
       try {
         Map<String, String> error = JsonUtils.fromJson(response.errorBody().string(), new TypeToken<Map<String, String>>() {

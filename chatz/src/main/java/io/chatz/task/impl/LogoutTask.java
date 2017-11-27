@@ -1,16 +1,16 @@
-package io.chatz.task.impl;
+package io.ayro.task.impl;
 
 import android.content.Context;
 import android.util.Log;
 
 import java.io.IOException;
 
-import io.chatz.service.ChatzService;
-import io.chatz.store.Store;
-import io.chatz.task.Task;
-import io.chatz.exception.TaskException;
-import io.chatz.util.Constants;
-import io.chatz.util.MessageUtils;
+import io.ayro.service.AyroService;
+import io.ayro.store.Store;
+import io.ayro.task.Task;
+import io.ayro.exception.TaskException;
+import io.ayro.util.Constants;
+import io.ayro.util.MessageUtils;
 import retrofit2.Response;
 
 public class LogoutTask extends Task<Void> {
@@ -24,12 +24,12 @@ public class LogoutTask extends Task<Void> {
   private static final String PERMISSION_DENIED_ERROR_CODE = "permission.denied";
 
   private Context context;
-  private ChatzService chatzService;
+  private AyroService ayroService;
 
   public LogoutTask(Context context) {
     super(context, TASK_NAME);
     this.context = context;
-    this.chatzService = ChatzService.getInstance();
+    this.ayroService = AyroService.getInstance();
   }
 
   @Override
@@ -37,7 +37,7 @@ public class LogoutTask extends Task<Void> {
     try {
       Log.i(Constants.TAG, String.format("(%s) Signing out...", TASK_NAME));
       String apiToken = Store.getApiToken(context);
-      Response<Void> response = chatzService.logout(apiToken).execute();
+      Response<Void> response = ayroService.logout(apiToken).execute();
       if (response.isSuccessful()) {
         Log.i(Constants.TAG, String.format("(%s) User signed out with success!", TASK_NAME));
         return null;

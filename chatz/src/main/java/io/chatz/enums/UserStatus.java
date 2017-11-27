@@ -1,4 +1,4 @@
-package io.chatz.enums;
+package io.ayro.enums;
 
 public enum UserStatus {
 

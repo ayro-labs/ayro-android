@@ -1,4 +1,4 @@
-package io.chatz.util;
+package io.ayro.util;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -19,9 +19,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import io.chatz.R;
-import io.chatz.core.ChatzApp;
-import io.chatz.model.Integration;
+import io.ayro.R;
+import io.ayro.core.AyroApp;
+import io.ayro.model.Integration;
 
 public class UIUtils {
 
@@ -33,7 +33,7 @@ public class UIUtils {
     Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
     if (toolbar != null) {
       activity.setSupportActionBar(toolbar);
-      toolbar.setBackgroundColor(color != null ? color : ContextCompat.getColor(activity, R.color.chatz_primary));
+      toolbar.setBackgroundColor(color != null ? color : ContextCompat.getColor(activity, R.color.ayro_primary));
       TypedValue typedValue = new TypedValue();
       activity.getTheme().resolveAttribute(R.attr.homeAsUpIndicator, typedValue, true);
       toolbar.setNavigationIcon(typedValue.resourceId);
@@ -49,7 +49,7 @@ public class UIUtils {
   public static void changeStatusBarColor(AppCompatActivity activity, Integer color) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       if (color == null) {
-        color = ContextCompat.getColor(activity, R.color.chatz_primary);
+        color = ContextCompat.getColor(activity, R.color.ayro_primary);
       }
       float factor = 0.8f;
       int a = Color.alpha(color);
@@ -66,14 +66,14 @@ public class UIUtils {
 
   public static void notify(Context context, int notificationId, Bitmap image, String title, String text, Intent intent) {
     Integer primaryColor = null;
-    Integration integration = ChatzApp.getInstance(context).getIntegration();
+    Integration integration = AyroApp.getInstance(context).getIntegration();
     if (integration != null) {
       String colorHex = integration.getConfiguration().get(Integration.PRIMARY_COLOR_CONFIGURATION);
       primaryColor = Color.parseColor(colorHex);
     }
     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context);
-    notificationBuilder.setSmallIcon(R.drawable.chatz_logo_small);
-    notificationBuilder.setColor(primaryColor != null ? primaryColor : ContextCompat.getColor(context, R.color.chatz_primary));
+    notificationBuilder.setSmallIcon(R.drawable.ayro_logo_small);
+    notificationBuilder.setColor(primaryColor != null ? primaryColor : ContextCompat.getColor(context, R.color.ayro_primary));
     notificationBuilder.setContentTitle(title);
     notificationBuilder.setContentText(text);
     notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(text));

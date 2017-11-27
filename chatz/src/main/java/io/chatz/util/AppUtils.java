@@ -1,4 +1,4 @@
-package io.chatz.util;
+package io.ayro.util;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -8,10 +8,10 @@ import android.telephony.TelephonyManager;
 
 import java.util.UUID;
 
-import io.chatz.model.Device;
-import io.chatz.model.DeviceInfo;
-import io.chatz.model.User;
-import io.chatz.store.Store;
+import io.ayro.model.Device;
+import io.ayro.model.DeviceInfo;
+import io.ayro.model.User;
+import io.ayro.store.Store;
 
 public class AppUtils {
 
@@ -19,22 +19,22 @@ public class AppUtils {
 
   }
 
-  public static User getUser(Context context, io.chatz.User user) {
-    User chatzUser = new User();
-    chatzUser.setUid(user.getUid());
-    chatzUser.setFirstName(user.getFirstName());
-    chatzUser.setLastName(user.getLastName());
-    chatzUser.setEmail(user.getEmail());
-    chatzUser.setPhotoUrl(user.getPhotoUrl());
-    chatzUser.setSignUpDate(user.getSignUpDate());
-    chatzUser.setPhotoUrl(user.getPhotoUrl());
+  public static User getUser(Context context, io.ayro.User user) {
+    User ayroUser = new User();
+    ayroUser.setUid(user.getUid());
+    ayroUser.setFirstName(user.getFirstName());
+    ayroUser.setLastName(user.getLastName());
+    ayroUser.setEmail(user.getEmail());
+    ayroUser.setPhotoUrl(user.getPhotoUrl());
+    ayroUser.setSignUpDate(user.getSignUpDate());
+    ayroUser.setPhotoUrl(user.getPhotoUrl());
     if (user.getUid() == null) {
-      chatzUser.setUid(getUserUid(context));
-      chatzUser.setIdentified(false);
+      ayroUser.setUid(getUserUid(context));
+      ayroUser.setIdentified(false);
     } else {
-      chatzUser.setIdentified(true);
+      ayroUser.setIdentified(true);
     }
-    return chatzUser;
+    return ayroUser;
   }
 
   public static Device getDevice(Context context) {

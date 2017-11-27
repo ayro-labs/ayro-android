@@ -1,19 +1,19 @@
-package io.chatz.store;
+package io.ayro.store;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import io.chatz.enums.AppStatus;
-import io.chatz.Settings;
-import io.chatz.enums.UserStatus;
-import io.chatz.model.App;
-import io.chatz.model.Integration;
-import io.chatz.model.User;
-import io.chatz.util.JsonUtils;
+import io.ayro.enums.AppStatus;
+import io.ayro.Settings;
+import io.ayro.enums.UserStatus;
+import io.ayro.model.App;
+import io.ayro.model.Integration;
+import io.ayro.model.User;
+import io.ayro.util.JsonUtils;
 
 public class Store {
 
-  private static final String PREFERENCES_NAME = "chatz";
+  private static final String PREFERENCES_NAME = "ayro";
   private static final String DEVICE_UID = "device_uid";
   private static final String USER_UID = "user_uid";
   private static final String APP_STATUS = "app_status";

@@ -1,8 +1,8 @@
-package io.chatz.service.payload;
+package io.ayro.service.payload;
 
 import com.google.gson.annotations.SerializedName;
 
-import io.chatz.model.User;
+import io.ayro.model.User;
 
 public class LoginResult {
 

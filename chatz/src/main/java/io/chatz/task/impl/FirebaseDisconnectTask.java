@@ -1,4 +1,4 @@
-package io.chatz.task.impl;
+package io.ayro.task.impl;
 
 import android.content.Context;
 import android.util.Log;
@@ -7,9 +7,9 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.IOException;
 
-import io.chatz.task.Task;
-import io.chatz.exception.TaskException;
-import io.chatz.util.Constants;
+import io.ayro.task.Task;
+import io.ayro.exception.TaskException;
+import io.ayro.util.Constants;
 
 public class FirebaseDisconnectTask extends Task<Void> {
 

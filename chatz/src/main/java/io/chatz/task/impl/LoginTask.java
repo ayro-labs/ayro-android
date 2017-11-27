@@ -1,19 +1,19 @@
-package io.chatz.task.impl;
+package io.ayro.task.impl;
 
 import android.content.Context;
 import android.util.Log;
 
 import java.io.IOException;
 
-import io.chatz.model.Device;
-import io.chatz.model.User;
-import io.chatz.service.ChatzService;
-import io.chatz.service.payload.LoginPayload;
-import io.chatz.service.payload.LoginResult;
-import io.chatz.task.Task;
-import io.chatz.exception.TaskException;
-import io.chatz.util.Constants;
-import io.chatz.util.MessageUtils;
+import io.ayro.model.Device;
+import io.ayro.model.User;
+import io.ayro.service.AyroService;
+import io.ayro.service.payload.LoginPayload;
+import io.ayro.service.payload.LoginResult;
+import io.ayro.task.Task;
+import io.ayro.exception.TaskException;
+import io.ayro.util.Constants;
+import io.ayro.util.MessageUtils;
 import retrofit2.Response;
 
 public class LoginTask extends Task<LoginResult> {
@@ -25,19 +25,19 @@ public class LoginTask extends Task<LoginResult> {
   private static final String GENERIC_ERROR_MESSAGE = "Could not sign in";
 
   private LoginPayload payload;
-  private ChatzService chatzService;
+  private AyroService ayroService;
 
   public LoginTask(Context context, String appToken, User user, Device device) {
     super(context, TASK_NAME);
     this.payload = new LoginPayload(appToken, user, device);
-    this.chatzService = ChatzService.getInstance();
+    this.ayroService = AyroService.getInstance();
   }
 
   @Override
   protected LoginResult executeJob() throws TaskException {
     try {
       Log.i(Constants.TAG, String.format("(%s) Signing in...", TASK_NAME));
-      Response<LoginResult> response = chatzService.login(payload).execute();
+      Response<LoginResult> response = ayroService.login(payload).execute();
       if (response.isSuccessful()) {
         Log.i(Constants.TAG, String.format("(%s) User signed in with success!", TASK_NAME));
         return response.body();

@@ -1,4 +1,4 @@
-package io.chatz.ui.activity;
+package io.ayro.ui.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -25,23 +25,23 @@ import android.widget.TextView;
 import java.util.Date;
 import java.util.List;
 
-import io.chatz.core.ChatzApp;
-import io.chatz.R;
-import io.chatz.enums.UserStatus;
-import io.chatz.model.ChatMessage;
-import io.chatz.model.Integration;
-import io.chatz.model.User;
-import io.chatz.service.ChatzService;
-import io.chatz.service.payload.PostMessagePayload;
-import io.chatz.task.TaskCallback;
-import io.chatz.ui.adapter.ChatAdapter;
-import io.chatz.util.Constants;
-import io.chatz.util.UIUtils;
+import io.ayro.core.AyroApp;
+import io.ayro.R;
+import io.ayro.enums.UserStatus;
+import io.ayro.model.ChatMessage;
+import io.ayro.model.Integration;
+import io.ayro.model.User;
+import io.ayro.service.AyroService;
+import io.ayro.service.payload.PostMessagePayload;
+import io.ayro.task.TaskCallback;
+import io.ayro.ui.adapter.ChatAdapter;
+import io.ayro.util.Constants;
+import io.ayro.util.UIUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ChatzActivity extends AppCompatActivity {
+public class AyroActivity extends AppCompatActivity {
 
   private static final IntentFilter INTENT_FILTER = new IntentFilter();
 
@@ -51,8 +51,8 @@ public class ChatzActivity extends AppCompatActivity {
     INTENT_FILTER.addAction(Constants.INTENT_ACTION_TASKS_CHANGED);
   }
 
-  private ChatzService chatzService;
-  private ChatzApp chatzApp;
+  private AyroService ayroService;
+  private AyroApp ayroApp;
 
   private EditText messageInput;
   private RecyclerView chatMessagesView;
@@ -69,8 +69,8 @@ public class ChatzActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_chat);
 
-    chatzService = ChatzService.getInstance();
-    chatzApp = ChatzApp.getInstance(this);
+    ayroService = AyroService.getInstance();
+    ayroApp = AyroApp.getInstance(this);
 
     setupToolbar();
     setupBroadcastReceiver();
@@ -79,13 +79,13 @@ public class ChatzActivity extends AppCompatActivity {
     setupPostMessageButton();
     loadContent();
 
-    setTitle(getString(R.string.chatz_activity_title));
+    setTitle(getString(R.string.ayro_activity_title));
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    chatzApp.setChatOpened(true);
+    ayroApp.setChatOpened(true);
     registerReceiver(broadcastReceiver, INTENT_FILTER);
     updateConnectionStatus();
   }
@@ -93,13 +93,13 @@ public class ChatzActivity extends AppCompatActivity {
   @Override
   protected void onPause() {
     super.onPause();
-    chatzApp.setChatOpened(false);
+    ayroApp.setChatOpened(false);
     unregisterReceiver(broadcastReceiver);
   }
 
   private void setupToolbar() {
     Integer primaryColor = null;
-    Integration integration = chatzApp.getIntegration();
+    Integration integration = ayroApp.getIntegration();
     if (integration != null) {
       String colorHex = integration.getConfiguration().get(Integration.PRIMARY_COLOR_CONFIGURATION);
       primaryColor = Color.parseColor(colorHex);
@@ -169,16 +169,16 @@ public class ChatzActivity extends AppCompatActivity {
         onPostMessageClick();
       }
     });
-    postMessageEnabledDrawable = ContextCompat.getDrawable(this, R.drawable.chatz_post_message).mutate();
-    DrawableCompat.setTint(postMessageEnabledDrawable, ContextCompat.getColor(this, R.color.chatz_send_button_enabled));
-    postMessageDisabledDrawable = ContextCompat.getDrawable(this, R.drawable.chatz_post_message).mutate();
-    DrawableCompat.setTint(postMessageDisabledDrawable, ContextCompat.getColor(this, R.color.chatz_send_button_disabled));
+    postMessageEnabledDrawable = ContextCompat.getDrawable(this, R.drawable.ayro_post_message).mutate();
+    DrawableCompat.setTint(postMessageEnabledDrawable, ContextCompat.getColor(this, R.color.ayro_send_button_enabled));
+    postMessageDisabledDrawable = ContextCompat.getDrawable(this, R.drawable.ayro_post_message).mutate();
+    DrawableCompat.setTint(postMessageDisabledDrawable, ContextCompat.getColor(this, R.color.ayro_send_button_disabled));
     onMessageChanged("");
   }
 
   private void loadContent() {
-    if (!UserStatus.LOGGED_IN.equals(chatzApp.getUserStatus())) {
-      chatzApp.login(chatzApp.getUser(), new TaskCallback<User>() {
+    if (!UserStatus.LOGGED_IN.equals(ayroApp.getUserStatus())) {
+      ayroApp.login(ayroApp.getUser(), new TaskCallback<User>() {
         @Override
         public void onSuccess(User user) {
           loadMessages();
@@ -190,7 +190,7 @@ public class ChatzActivity extends AppCompatActivity {
   }
 
   private void loadMessages() {
-    chatzService.listMessages(chatzApp.getApiToken()).enqueue(new Callback<List<ChatMessage>>() {
+    ayroService.listMessages(ayroApp.getApiToken()).enqueue(new Callback<List<ChatMessage>>() {
       @Override
       public void onResponse(Call<List<ChatMessage>> call, Response<List<ChatMessage>> response) {
         if (response.isSuccessful()) {
@@ -211,11 +211,11 @@ public class ChatzActivity extends AppCompatActivity {
     if (connectivityManager != null) {
       NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
       if (networkInfo == null || !networkInfo.isConnected() || !networkInfo.isAvailable()) {
-        error = getString(R.string.chatz_activity_status_no_internet_connection);
+        error = getString(R.string.ayro_activity_status_no_internet_connection);
       }
     }
-    if (chatzApp.hasPendingTasks()) {
-      error = getString(R.string.chatz_activity_status_connecting_to_the_servers);
+    if (ayroApp.hasPendingTasks()) {
+      error = getString(R.string.ayro_activity_status_connecting_to_the_servers);
     }
     if (error != null) {
       currentError = error;
@@ -270,7 +270,7 @@ public class ChatzActivity extends AppCompatActivity {
     final int position = chatAdapter.addItem(chatMessage);
     chatMessagesView.scrollToPosition(chatAdapter.lastIndex());
     PostMessagePayload payload = new PostMessagePayload(chatMessage.getText());
-    chatzService.postMessage(chatzApp.getApiToken(), payload).enqueue(new Callback<ChatMessage>() {
+    ayroService.postMessage(ayroApp.getApiToken(), payload).enqueue(new Callback<ChatMessage>() {
       @Override
       public void onResponse(Call<ChatMessage> call, Response<ChatMessage> response) {
         chatMessage.setStatus(response.isSuccessful() ? ChatMessage.Status.sent : ChatMessage.Status.error);

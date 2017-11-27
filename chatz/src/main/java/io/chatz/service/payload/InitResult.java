@@ -1,9 +1,9 @@
-package io.chatz.service.payload;
+package io.ayro.service.payload;
 
 import com.google.gson.annotations.SerializedName;
 
-import io.chatz.model.App;
-import io.chatz.model.Integration;
+import io.ayro.model.App;
+import io.ayro.model.Integration;
 
 public class InitResult {
 

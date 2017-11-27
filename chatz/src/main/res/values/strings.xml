@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="chatz_activity_title">Chat with us</string>
-    <string name="chatz_activity_input_placeholder">Type a message…</string>
-    <string name="chatz_activity_status_no_internet_connection">No internet connection</string>
-    <string name="chatz_activity_status_connecting_to_the_servers">Connecting to the servers…</string>
+    <string name="ayro_activity_title">Chat with us</string>
+    <string name="ayro_activity_input_placeholder">Type a message…</string>
+    <string name="ayro_activity_status_no_internet_connection">No internet connection</string>
+    <string name="ayro_activity_status_connecting_to_the_servers">Connecting to the servers…</string>
 
 </resources>

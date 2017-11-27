@@ -1,4 +1,4 @@
-package io.chatz.util;
+package io.ayro.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;

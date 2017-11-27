@@ -7,7 +7,7 @@
     android:background="#f1f1f1">
 
     <android.support.v7.widget.Toolbar
-        style="@style/ChatzToolbarTheme"
+        style="@style/AyroToolbarTheme"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -44,7 +44,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/chatz_message_bar">
+        android:background="@drawable/ayro_message_bar">
 
         <EditText
             android:id="@+id/message"
@@ -58,7 +58,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginEnd="20dp"
             android:background="@null"
-            android:hint="@string/chatz_activity_input_placeholder"
+            android:hint="@string/ayro_activity_input_placeholder"
             android:textSize="18sp"/>
 
         <ImageView
@@ -68,7 +68,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/chatz_post_message"/>
+            android:src="@drawable/ayro_post_message"/>
 
     </LinearLayout>
 

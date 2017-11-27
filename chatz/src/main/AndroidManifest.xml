@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="io.chatz">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="io.ayro">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application android:allowBackup="true" android:supportsRtl="true">
 
-        <activity android:name=".ui.activity.ChatzActivity" android:launchMode="singleTask"/>
+        <activity android:name=".ui.activity.AyroActivity" android:launchMode="singleTask"/>
 
         <service android:name=".service.InstanceIDService" android:exported="false">
             <intent-filter>

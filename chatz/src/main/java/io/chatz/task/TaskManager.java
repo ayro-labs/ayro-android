@@ -1,4 +1,4 @@
-package io.chatz.task;
+package io.ayro.task;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,13 +8,13 @@ import android.util.Log;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-import io.chatz.exception.TaskException;
-import io.chatz.util.Constants;
+import io.ayro.exception.TaskException;
+import io.ayro.util.Constants;
 
 public class TaskManager {
 
-  private static final String TASKS_THREAD_NAME = "Chatz.tasks";
-  private static final String SCHEDULED_TASKS_THREAD_NAME = "Chatz.tasks.scheduled";
+  private static final String TASKS_THREAD_NAME = "Ayro.tasks";
+  private static final String SCHEDULED_TASKS_THREAD_NAME = "Ayro.tasks.scheduled";
   private static final int SLEEP_TIME = 10000;
 
   private static TaskManager instance;
