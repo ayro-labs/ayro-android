@@ -26,7 +26,7 @@ Just run the following command:
 npm run release-lib -- major|minor|patch|version <version>
 ````
 
-## Publishing the new version ##
+## Publishing the new version to Maven central ##
 ````
 npm run publish-lib
 ````
