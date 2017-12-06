@@ -3,7 +3,6 @@ package io.ayro;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -13,7 +12,7 @@ import io.ayro.core.AyroApp;
 import io.ayro.enums.UserStatus;
 import io.ayro.model.Agent;
 import io.ayro.model.ChatMessage;
-import io.ayro.ui.activity.AyroActivity;
+import io.ayro.ui.activity.ChatActivity;
 import io.ayro.util.Callback;
 import io.ayro.util.Constants;
 import io.ayro.util.ImageUtils;
@@ -73,6 +72,6 @@ public class AyroMessages {
   }
 
   private static Intent getDefaultNotificationIntent(Context context) {
-    return new Intent(context, AyroActivity.class);
+    return new Intent(context, ChatActivity.class);
   }
 }

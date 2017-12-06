@@ -41,7 +41,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AyroActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity {
 
   private static final IntentFilter INTENT_FILTER = new IntentFilter();
 

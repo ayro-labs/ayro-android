@@ -21,7 +21,7 @@ import io.ayro.task.impl.InitTask;
 import io.ayro.task.impl.LoginTask;
 import io.ayro.task.impl.LogoutTask;
 import io.ayro.task.impl.UpdateUserTask;
-import io.ayro.ui.activity.AyroActivity;
+import io.ayro.ui.activity.ChatActivity;
 import io.ayro.util.AppUtils;
 
 public class AyroApp {
@@ -174,9 +174,11 @@ public class AyroApp {
   }
 
   public void openChat() {
-    Intent intent = new Intent(context, AyroActivity.class);
-    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    context.startActivity(intent);
+    if (AppStatus.INITIALIZED.equals(appStatus)) {
+      Intent intent = new Intent(context, ChatActivity.class);
+      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      context.startActivity(intent);
+    }
   }
 
   public boolean isChatOpened() {
