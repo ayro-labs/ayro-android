@@ -60,7 +60,7 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
 
   @Override
   public ChatMessageHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    View view = LayoutInflater.from(getContext()).inflate(viewType == OUTGOING_MESSAGE ? R.layout.item_chat_message_outgoing : R.layout.item_chat_message_incoming, parent, false);
+    View view = LayoutInflater.from(getContext()).inflate(viewType == OUTGOING_MESSAGE ? R.layout.ayro_item_chat_message_outgoing : R.layout.ayro_item_chat_message_incoming, parent, false);
     return viewType == OUTGOING_MESSAGE ? new OutgoingMessageHolder(view) : new IncomingMessageHolder(view);
   }
 

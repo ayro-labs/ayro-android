@@ -67,7 +67,7 @@ public class AyroActivity extends AppCompatActivity {
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_chat);
+    setContentView(R.layout.ayro_activity_chat);
 
     ayroService = AyroService.getInstance();
     ayroApp = AyroApp.getInstance(this);
