@@ -27,7 +27,7 @@ public class FirebaseDisconnectTask extends Task<Void> {
     } catch (IOException e) {
       // Nothing to do...
     }
-    Log.d(Constants.TAG, String.format("(%s) Firebase was disconnected with success", TASK_NAME));
+    Log.d(Constants.TAG, String.format("(%s) Firebase disconnected with success!", TASK_NAME));
     return null;
   }
 }
