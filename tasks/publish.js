@@ -1,4 +1,5 @@
 const utils = require('./utils');
+const {commands} = require('@ayro/commons');
 const path = require('path');
 const childProcess = require('child_process');
 const GitHubApi = require('github');
@@ -16,26 +17,26 @@ gitHubApi.authenticate({
 });
 
 function exec(command, dir) {
-  return utils.exec(command, dir || WORKING_DIR);
+  return commands.exec(command, dir || WORKING_DIR);
 }
 
 function checkoutTag(version) {
   return Promise.coroutine(function* () {
-    utils.log(`Checking out the tag ${version}...`);
+    commands.log(`Checking out the tag ${version}...`);
     yield exec(`git checkout ${version}`);
   })();
 }
 
 function buildLibrary() {
   return Promise.coroutine(function* () {
-    utils.log('Building library...');
+    commands.log('Building library...');
     yield exec('npm run build-prod');
   })();
 }
 
 function publishToMavenCentral() {
   return Promise.coroutine(function* () {
-    utils.log('Publishing to Maven central...');
+    commands.log('Publishing to Maven central...');
     yield exec('./gradlew uploadArchives');
   })();
 }
@@ -46,14 +47,14 @@ if (require.main === module) {
     try {
       const version = yield utils.getProjectVersion();
       const versionCode = yield utils.getProjectVersionCode();
-      utils.log(`Publishing version ${version} to Maven central...`);
+      commands.log(`Publishing version ${version} to Maven central...`);
       yield checkoutTag(version);
       yield buildLibrary();
       yield publishToMavenCentral();
       yield checkoutTag('master');
-      utils.log(`Version ${version} published with success!`);
+      commands.log(`Version ${version} published with success!`);
     } catch (err) {
-      utils.logError(err);
+      commands.logError(err);
       process.exit(1);
     }
   })();
