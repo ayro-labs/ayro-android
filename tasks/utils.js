@@ -16,17 +16,6 @@ const $ = this;
 const readFileAsync = Promise.promisify(fs.readFile);
 const writeFileAsync = Promise.promisify(fs.writeFile);
 
-function logBuffer(data, buffer) {
-  buffer += data.toString();
-  const lines = buffer.split('\n');
-  for (let i = 0; i < lines.length - 1; i += 1) {
-    const line = lines[i];
-    $.log(line, false);
-  }
-  return lines[lines.length - 1];
-}
-
-
 exports.getProjectVersion = () => {
   return Promise.coroutine(function* () {
     const projectGradle = yield readFileAsync(GRADLE_FILE, 'utf8');
