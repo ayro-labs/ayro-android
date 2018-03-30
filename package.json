@@ -1,7 +1,7 @@
 {
-  "name": "ayro",
+  "name": "ayro-android",
   "description": "Ayro Android SDK",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": {
     "name": "Ayro team",
     "email": "team@ayro.io",

@@ -21,7 +21,7 @@ function updateVersion(versionType, versionNumber) {
 function buildLibrary() {
   return Promise.coroutine(function* () {
     commands.log('Building library...');
-    yield commands.exec('npm run build', WORKING_DIR);
+    yield commands.exec('npm run build-prod', WORKING_DIR);
   })();
 }
 

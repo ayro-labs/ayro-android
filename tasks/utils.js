@@ -16,6 +16,15 @@ const $ = this;
 const readFileAsync = Promise.promisify(fs.readFile);
 const writeFileAsync = Promise.promisify(fs.writeFile);
 
+function updatePackageJson(version) {
+  return Promise.coroutine(function* () {
+    const packageFile = path.join(WORKING_DIR, 'package.json');
+    const packageJson = JSON.parse(yield readFileAsync(packageFile, 'utf8'));
+    packageJson.version = version;
+    yield writeFileAsync(packageFile, JSON.stringify(packageJson, null, 2));
+  })();
+}
+
 exports.getProjectVersion = () => {
   return Promise.coroutine(function* () {
     const projectGradle = yield readFileAsync(GRADLE_FILE, 'utf8');
@@ -48,5 +57,6 @@ exports.updateProjectVersion = (version) => {
       .replace(util.format(VERSION_NAME_FORMAT, currentVersion), util.format(VERSION_NAME_FORMAT, version))
       .replace(util.format(VERSION_CODE_FORMAT, currentVersionCode), util.format(VERSION_CODE_FORMAT, nextVersionCode));
     yield writeFileAsync(GRADLE_FILE, updatedProjectGradle);
+    yield updatePackageJson(version);
   })();
 };
