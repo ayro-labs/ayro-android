@@ -9,14 +9,14 @@ AYRO_API_URL=http://<IP>:3000
 
 Just run the following command:
 ````
-./gradlew clean assembleDebug
+npm run build
 ````
 
 ## Building for production environments ##
 
 Just run the following command:
 ````
-./gradlew clean assembleRelease
+npm run build-prod
 ````
 
 ## Releasing a new version ##
