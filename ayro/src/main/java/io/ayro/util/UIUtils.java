@@ -72,7 +72,7 @@ public class UIUtils {
       primaryColor = Color.parseColor(colorHex);
     }
     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context);
-    notificationBuilder.setSmallIcon(R.drawable.ayro_logo_small);
+    notificationBuilder.setSmallIcon(R.drawable.icon_chat);
     notificationBuilder.setColor(primaryColor != null ? primaryColor : ContextCompat.getColor(context, R.color.ayro_primary));
     notificationBuilder.setContentTitle(title);
     notificationBuilder.setContentText(text);

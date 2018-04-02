@@ -54,7 +54,7 @@ public class FirebaseConnectTask extends Task<Device> {
       String apiToken = Store.getApiToken(context);
       Response<Device> response = ayroService.updateDevice(apiToken, device).execute();
       if (response.isSuccessful()) {
-        Log.d(Constants.TAG, String.format("(%s) Firebase connected with success!", TASK_NAME));
+        Log.i(Constants.TAG, String.format("(%s) Firebase connected with success!", TASK_NAME));
         return response.body();
       } else {
         TaskException exception = new TaskException(response, true);

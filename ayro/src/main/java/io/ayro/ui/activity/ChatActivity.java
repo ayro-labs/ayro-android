@@ -44,6 +44,7 @@ import retrofit2.Response;
 public class ChatActivity extends AppCompatActivity {
 
   private static final IntentFilter INTENT_FILTER = new IntentFilter();
+  private static final String DEFAULT_PRIMARY_COLOR = "#5c7382";
 
   static {
     INTENT_FILTER.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -98,12 +99,14 @@ public class ChatActivity extends AppCompatActivity {
   }
 
   private void setupToolbar() {
-    Integer primaryColor = null;
+    String colorHex;
     Integration integration = ayroApp.getIntegration();
     if (integration != null) {
-      String colorHex = integration.getConfiguration().get(Integration.PRIMARY_COLOR_CONFIGURATION);
-      primaryColor = Color.parseColor(colorHex);
+      colorHex = integration.getConfiguration().get(Integration.PRIMARY_COLOR_CONFIGURATION);
+    } else {
+      colorHex = DEFAULT_PRIMARY_COLOR;
     }
+    Integer primaryColor = Color.parseColor(colorHex);
     UIUtils.defaultToolbar(this, primaryColor);
     UIUtils.changeStatusBarColor(this, primaryColor);
   }
@@ -214,7 +217,7 @@ public class ChatActivity extends AppCompatActivity {
         error = getString(R.string.ayro_activity_status_no_internet_connection);
       }
     }
-    if (ayroApp.hasPendingTasks()) {
+    if (error == null && ayroApp.hasPendingTasks()) {
       error = getString(R.string.ayro_activity_status_connecting_to_the_servers);
     }
     if (error != null) {

@@ -32,19 +32,23 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
   private static final int OUTGOING_MESSAGE = 0;
   private static final int INCOMING_MESSAGE = 1;
   private static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm", Locale.getDefault());
+  private static final String DEFAULT_CONVERSATION_COLOR = "#007bff";
 
+  private int pictureDimension = UIUtils.dpToPixels(getContext(), 45);
+  private int errorIconDimension = UIUtils.dpToPixels(getContext(), 36);
+  private int conversationMargin = UIUtils.dpToPixels(getContext(), 5);
   private int outgoingCardColor;
-  private int pictureDimension;
-  private int errorIconDimension;
-  private int conversationMargin;
   private OnRetryMessageClickListener onRetryMessageClickListener;
 
   public ChatAdapter(Context context) {
     super(context, new ArrayList<ChatMessage>());
-    pictureDimension = UIUtils.dpToPixels(getContext(), 45);
-    errorIconDimension = UIUtils.dpToPixels(getContext(), 36);
-    conversationMargin = UIUtils.dpToPixels(getContext(), 5);
-    String colorHex = AyroApp.getInstance(getContext()).getIntegration().getConfiguration().get(Integration.CONVERSATION_COLOR_CONFIGURATION);
+    String colorHex;
+    Integration integration = AyroApp.getInstance(getContext()).getIntegration();
+    if (integration != null) {
+      colorHex = integration.getConfiguration().get(Integration.CONVERSATION_COLOR_CONFIGURATION);
+    } else {
+      colorHex = DEFAULT_CONVERSATION_COLOR;
+    }
     outgoingCardColor = Color.parseColor(colorHex);
   }
 
