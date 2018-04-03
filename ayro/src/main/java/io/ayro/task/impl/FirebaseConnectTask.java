@@ -5,8 +5,6 @@ import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import java.io.IOException;
-
 import io.ayro.model.Device;
 import io.ayro.service.AyroService;
 import io.ayro.store.Store;
@@ -61,7 +59,7 @@ public class FirebaseConnectTask extends Task<Device> {
         Log.e(Constants.TAG, String.format("(%s) Could not connect to Firebase: %s", TASK_NAME, MessageUtils.get(exception)));
         throw exception;
       }
-    } catch (IOException e) {
+    } catch (Exception e) {
       TaskException exception = new TaskException(GENERIC_ERROR_STATUS, GENERIC_ERROR_CODE, GENERIC_ERROR_MESSAGE, e, false);
       Log.e(Constants.TAG, String.format("(%s) %s", TASK_NAME, exception.getMessage()));
       throw exception;

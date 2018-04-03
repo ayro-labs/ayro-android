@@ -4,12 +4,10 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
 
 public class Integration implements Serializable {
 
-  public static final String PRIMARY_COLOR_CONFIGURATION = "primary_color";
-  public static final String CONVERSATION_COLOR_CONFIGURATION = "conversation_color";
+  private static final long serialVersionUID = 7056893270553894515L;
 
   @SerializedName("id")
   private String id;
@@ -18,7 +16,7 @@ public class Integration implements Serializable {
   @SerializedName("channel")
   private String channel;
   @SerializedName("configuration")
-  private Map<String, String> configuration;
+  private Configuration configuration;
   @SerializedName("registration_date")
   private Date registrationDate;
 
@@ -46,11 +44,11 @@ public class Integration implements Serializable {
     this.channel = channel;
   }
 
-  public Map<String, String> getConfiguration() {
+  public Configuration getConfiguration() {
     return configuration;
   }
 
-  public void setConfiguration(Map<String, String> configuration) {
+  public void setConfiguration(Configuration configuration) {
     this.configuration = configuration;
   }
 

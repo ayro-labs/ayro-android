@@ -44,8 +44,8 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
     super(context, new ArrayList<ChatMessage>());
     String colorHex;
     Integration integration = AyroApp.getInstance(getContext()).getIntegration();
-    if (integration != null) {
-      colorHex = integration.getConfiguration().get(Integration.CONVERSATION_COLOR_CONFIGURATION);
+    if (integration != null && integration.getConfiguration() != null) {
+      colorHex = integration.getConfiguration().getConversationColor();
     } else {
       colorHex = DEFAULT_CONVERSATION_COLOR;
     }

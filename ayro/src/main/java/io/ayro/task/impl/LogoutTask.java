@@ -3,8 +3,6 @@ package io.ayro.task.impl;
 import android.content.Context;
 import android.util.Log;
 
-import java.io.IOException;
-
 import io.ayro.service.AyroService;
 import io.ayro.store.Store;
 import io.ayro.task.Task;
@@ -49,7 +47,7 @@ public class LogoutTask extends Task<Void> {
         Log.e(Constants.TAG, String.format("(%s) Could not sign out: %s", TASK_NAME, MessageUtils.get(exception)));
         throw exception;
       }
-    } catch (IOException e) {
+    } catch (Exception e) {
       TaskException exception = new TaskException(GENERIC_ERROR_STATUS, GENERIC_ERROR_CODE, GENERIC_ERROR_MESSAGE, e, false);
       Log.e(Constants.TAG, String.format("(%s) %s", TASK_NAME, exception.getMessage()));
       throw exception;

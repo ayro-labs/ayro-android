@@ -67,8 +67,8 @@ public class UIUtils {
   public static void notify(Context context, int notificationId, Bitmap image, String title, String text, Intent intent) {
     Integer primaryColor = null;
     Integration integration = AyroApp.getInstance(context).getIntegration();
-    if (integration != null) {
-      String colorHex = integration.getConfiguration().get(Integration.PRIMARY_COLOR_CONFIGURATION);
+    if (integration != null && integration.getConfiguration() != null) {
+      String colorHex = integration.getConfiguration().getPrimaryColor();
       primaryColor = Color.parseColor(colorHex);
     }
     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context);

@@ -5,10 +5,8 @@ import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import java.io.IOException;
-
-import io.ayro.task.Task;
 import io.ayro.exception.TaskException;
+import io.ayro.task.Task;
 import io.ayro.util.Constants;
 
 public class FirebaseDisconnectTask extends Task<Void> {
@@ -22,12 +20,12 @@ public class FirebaseDisconnectTask extends Task<Void> {
   @Override
   protected Void executeJob() throws TaskException {
     try {
-      Log.d(Constants.TAG, String.format("(%s) Disconnecting from Firebase...", TASK_NAME));
+      Log.i(Constants.TAG, String.format("(%s) Disconnecting from Firebase...", TASK_NAME));
       FirebaseInstanceId.getInstance().deleteInstanceId();
-    } catch (IOException e) {
-      // Nothing to do...
+      Log.i(Constants.TAG, String.format("(%s) Firebase disconnected with success!", TASK_NAME));
+    } catch (Exception e) {
+      Log.e(Constants.TAG, String.format("(%s) Could not disconnect from Firebase: %s", TASK_NAME, e.getMessage()));
     }
-    Log.d(Constants.TAG, String.format("(%s) Firebase disconnected with success!", TASK_NAME));
     return null;
   }
 }

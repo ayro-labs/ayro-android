@@ -101,8 +101,8 @@ public class ChatActivity extends AppCompatActivity {
   private void setupToolbar() {
     String colorHex;
     Integration integration = ayroApp.getIntegration();
-    if (integration != null) {
-      colorHex = integration.getConfiguration().get(Integration.PRIMARY_COLOR_CONFIGURATION);
+    if (integration != null && integration.getConfiguration() != null) {
+      colorHex = integration.getConfiguration().getPrimaryColor();
     } else {
       colorHex = DEFAULT_PRIMARY_COLOR;
     }
