@@ -59,7 +59,7 @@ function updateProjectVersion(version) {
 // Run this if call directly from command line
 if (require.main === module) {
   releaseTask.withWorkingDir(WORKING_DIR);
-  releaseTask.withVersionUpdatedTask(updateProjectVersion);
+  releaseTask.withAfterVersionUpdateTask(updateProjectVersion);
   releaseTask.withBuildTask(buildLibrary);
   releaseTask.run(process.argv[2], process.argv[3]);
 }
