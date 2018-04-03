@@ -15,7 +15,7 @@
     "publish-lib": "node tasks/publish.js"
   },
   "devDependencies": {
-    "@ayro/commons": "0.0.11",
+    "@ayro/commons": "0.0.12",
     "bluebird": "3.5.1"
   }
 }

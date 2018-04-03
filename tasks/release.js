@@ -56,7 +56,6 @@ function updateProjectVersion(version) {
   })();
 };
 
-
 // Run this if call directly from command line
 if (require.main === module) {
   releaseTask.withWorkingDir(WORKING_DIR);
