@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/photo"
         android:layout_toEndOf="@+id/photo"
+        app:cardBackgroundColor="#ffffff"
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="true"
         app:cardElevation="1dp"
