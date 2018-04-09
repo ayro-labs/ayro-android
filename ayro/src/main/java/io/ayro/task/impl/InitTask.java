@@ -3,11 +3,11 @@ package io.ayro.task.impl;
 import android.content.Context;
 import android.util.Log;
 
+import io.ayro.exception.TaskException;
 import io.ayro.service.AyroService;
 import io.ayro.service.payload.InitPayload;
 import io.ayro.service.payload.InitResult;
 import io.ayro.task.Task;
-import io.ayro.exception.TaskException;
 import io.ayro.util.Constants;
 import io.ayro.util.MessageUtils;
 import retrofit2.Response;

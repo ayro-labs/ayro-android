@@ -3,8 +3,8 @@ package io.ayro.store;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import io.ayro.enums.AppStatus;
 import io.ayro.Settings;
+import io.ayro.enums.AppStatus;
 import io.ayro.enums.UserStatus;
 import io.ayro.model.App;
 import io.ayro.model.Integration;

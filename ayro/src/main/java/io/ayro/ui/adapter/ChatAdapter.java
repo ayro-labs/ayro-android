@@ -1,7 +1,6 @@
 package io.ayro.ui.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -21,9 +20,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import io.ayro.R;
-import io.ayro.core.AyroApp;
 import io.ayro.model.ChatMessage;
-import io.ayro.model.Integration;
+import io.ayro.util.AppUtils;
 import io.ayro.util.ImageUtils;
 import io.ayro.util.UIUtils;
 
@@ -32,7 +30,6 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
   private static final int OUTGOING_MESSAGE = 0;
   private static final int INCOMING_MESSAGE = 1;
   private static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm", Locale.getDefault());
-  private static final String DEFAULT_CONVERSATION_COLOR = "#007bff";
 
   private int pictureDimension = UIUtils.dpToPixels(getContext(), 45);
   private int errorIconDimension = UIUtils.dpToPixels(getContext(), 36);
@@ -42,14 +39,7 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
 
   public ChatAdapter(Context context) {
     super(context, new ArrayList<ChatMessage>());
-    String colorHex;
-    Integration integration = AyroApp.getInstance(getContext()).getIntegration();
-    if (integration != null && integration.getConfiguration() != null) {
-      colorHex = integration.getConfiguration().getConversationColor();
-    } else {
-      colorHex = DEFAULT_CONVERSATION_COLOR;
-    }
-    outgoingCardColor = Color.parseColor(colorHex);
+    outgoingCardColor = AppUtils.getConversationColor(context);
   }
 
   public void setOnRetryMessageClickListener(OnRetryMessageClickListener onRetryMessageClickListener) {

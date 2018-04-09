@@ -71,7 +71,8 @@
             android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ayro_post_message"/>
+            android:src="@drawable/ayro_post_message"
+            android:contentDescription="@string/ayro_content_description_send_message"/>
 
     </LinearLayout>
 

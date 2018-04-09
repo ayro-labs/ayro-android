@@ -15,7 +15,7 @@ public class TaskManager {
 
   private static final String TASKS_THREAD_NAME = "Ayro.tasks";
   private static final String SCHEDULED_TASKS_THREAD_NAME = "Ayro.tasks.scheduled";
-  private static final int SLEEP_TIME = 10000;
+  private static final int SLEEP_TIME = 5000;
 
   private static TaskManager instance;
 

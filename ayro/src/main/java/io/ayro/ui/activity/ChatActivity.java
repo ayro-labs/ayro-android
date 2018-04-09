@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -25,11 +24,10 @@ import android.widget.TextView;
 import java.util.Date;
 import java.util.List;
 
-import io.ayro.core.AyroApp;
 import io.ayro.R;
+import io.ayro.core.AyroApp;
 import io.ayro.enums.UserStatus;
 import io.ayro.model.ChatMessage;
-import io.ayro.model.Integration;
 import io.ayro.model.User;
 import io.ayro.service.AyroService;
 import io.ayro.service.payload.PostMessagePayload;
@@ -44,7 +42,6 @@ import retrofit2.Response;
 public class ChatActivity extends AppCompatActivity {
 
   private static final IntentFilter INTENT_FILTER = new IntentFilter();
-  private static final String DEFAULT_PRIMARY_COLOR = "#5c7382";
 
   static {
     INTENT_FILTER.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -99,16 +96,8 @@ public class ChatActivity extends AppCompatActivity {
   }
 
   private void setupToolbar() {
-    String colorHex;
-    Integration integration = ayroApp.getIntegration();
-    if (integration != null && integration.getConfiguration() != null) {
-      colorHex = integration.getConfiguration().getPrimaryColor();
-    } else {
-      colorHex = DEFAULT_PRIMARY_COLOR;
-    }
-    Integer primaryColor = Color.parseColor(colorHex);
-    UIUtils.defaultToolbar(this, primaryColor);
-    UIUtils.changeStatusBarColor(this, primaryColor);
+    UIUtils.useCustomToolbar(this);
+    UIUtils.changeStatusBarColor(this);
   }
 
   private void setupBroadcastReceiver() {

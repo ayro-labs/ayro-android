@@ -1,6 +1,7 @@
 package io.ayro.util;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -8,11 +9,11 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.RingtoneManager;
 import android.os.Build;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.View;
@@ -20,20 +21,25 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import io.ayro.R;
-import io.ayro.core.AyroApp;
-import io.ayro.model.Integration;
 
 public class UIUtils {
+
+  private static final String NOTIFICATION_CHANNEL = "Ayro";
 
   private UIUtils() {
 
   }
 
-  public static void defaultToolbar(final AppCompatActivity activity, Integer color) {
-    Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
+  public static int dpToPixels(Context context, int dp) {
+    Resources resources = context.getResources();
+    return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.getDisplayMetrics());
+  }
+
+  public static void useCustomToolbar(final AppCompatActivity activity) {
+    Toolbar toolbar = activity.findViewById(R.id.toolbar);
     if (toolbar != null) {
       activity.setSupportActionBar(toolbar);
-      toolbar.setBackgroundColor(color != null ? color : ContextCompat.getColor(activity, R.color.ayro_primary));
+      toolbar.setBackgroundColor(AppUtils.getPrimaryColor(activity));
       TypedValue typedValue = new TypedValue();
       activity.getTheme().resolveAttribute(R.attr.homeAsUpIndicator, typedValue, true);
       toolbar.setNavigationIcon(typedValue.resourceId);
@@ -46,16 +52,14 @@ public class UIUtils {
     }
   }
 
-  public static void changeStatusBarColor(AppCompatActivity activity, Integer color) {
+  public static void changeStatusBarColor(AppCompatActivity activity) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      if (color == null) {
-        color = ContextCompat.getColor(activity, R.color.ayro_primary);
-      }
       float factor = 0.8f;
-      int a = Color.alpha(color);
-      int r = Math.round(Color.red(color) * factor);
-      int g = Math.round(Color.green(color) * factor);
-      int b = Math.round(Color.blue(color) * factor);
+      int primaryColor = AppUtils.getPrimaryColor(activity);
+      int a = Color.alpha(primaryColor);
+      int r = Math.round(Color.red(primaryColor) * factor);
+      int g = Math.round(Color.green(primaryColor) * factor);
+      int b = Math.round(Color.blue(primaryColor) * factor);
       int statusBarColor = Color.argb(a, Math.min(r, 255), Math.min(g, 255), Math.min(b, 255));
       Window window = activity.getWindow();
       window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -65,20 +69,19 @@ public class UIUtils {
   }
 
   public static void notify(Context context, int notificationId, Bitmap image, String title, String text, Intent intent) {
-    Integer primaryColor = null;
-    Integration integration = AyroApp.getInstance(context).getIntegration();
-    if (integration != null && integration.getConfiguration() != null) {
-      String colorHex = integration.getConfiguration().getPrimaryColor();
-      primaryColor = Color.parseColor(colorHex);
-    }
-    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context);
-    notificationBuilder.setSmallIcon(R.drawable.icon_chat);
-    notificationBuilder.setColor(primaryColor != null ? primaryColor : ContextCompat.getColor(context, R.color.ayro_primary));
+    registerNotificationChannel(context);
+    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL);
+    notificationBuilder.setSmallIcon(R.drawable.notification_icon);
+    notificationBuilder.setColor(AppUtils.getPrimaryColor(context));
     notificationBuilder.setContentTitle(title);
     notificationBuilder.setContentText(text);
     notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(text));
     notificationBuilder.setAutoCancel(true);
-    notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+      notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+      notificationBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+      notificationBuilder.setLights(AppUtils.getPrimaryColor(context), 500, 500);
+    }
     if (image != null) {
       notificationBuilder.setLargeIcon(ImageUtils.getCircularBitmap(image));
     }
@@ -92,8 +95,19 @@ public class UIUtils {
     notificationManager.notify(notificationId, notificationBuilder.build());
   }
 
-  public static int dpToPixels(Context context, int dp) {
-    Resources resources = context.getResources();
-    return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.getDisplayMetrics());
+  private static void registerNotificationChannel(Context context) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+      if (notificationManager.getNotificationChannel(NOTIFICATION_CHANNEL) != null) {
+        return;
+      }
+      NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL, NOTIFICATION_CHANNEL, NotificationManager.IMPORTANCE_DEFAULT);
+      notificationChannel.setDescription(NOTIFICATION_CHANNEL);
+      notificationChannel.enableLights(true);
+      notificationChannel.setLightColor(AppUtils.getPrimaryColor(context));
+      notificationChannel.enableVibration(true);
+      notificationChannel.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION), null);
+      notificationManager.createNotificationChannel(notificationChannel);
+    }
   }
 }

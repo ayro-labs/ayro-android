@@ -5,11 +5,11 @@ import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import io.ayro.exception.TaskException;
 import io.ayro.model.Device;
 import io.ayro.service.AyroService;
 import io.ayro.store.Store;
 import io.ayro.task.Task;
-import io.ayro.exception.TaskException;
 import io.ayro.util.AppUtils;
 import io.ayro.util.Constants;
 import io.ayro.util.MessageUtils;
