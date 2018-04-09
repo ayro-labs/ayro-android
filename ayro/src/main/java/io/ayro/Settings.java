@@ -3,7 +3,7 @@ package io.ayro;
 public class Settings {
 
   private String appToken;
-  private boolean messagingServiceEnabled;
+  private boolean messagingServiceEnabled = true;
 
   public Settings(String appToken) {
     this.appToken = appToken;
