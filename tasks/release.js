@@ -14,47 +14,39 @@ const VERSION_CODE_FORMAT = 'versionCode %d';
 const readFileAsync = Promise.promisify(fs.readFile);
 const writeFileAsync = Promise.promisify(fs.writeFile);
 
-function buildLibrary() {
-  return Promise.coroutine(function* () {
-    commands.log('Building library...');
-    yield commands.exec('npm run build-prod', WORKING_DIR);
-  })();
+async function buildLibrary() {
+  commands.log('Building library...');
+  await commands.exec('npm run build-prod', WORKING_DIR);
 }
 
-function getProjectVersion() {
-  return Promise.coroutine(function* () {
-    const projectGradle = yield readFileAsync(GRADLE_FILE, 'utf8');
-    const match = VERSION_NAME_REGEX.exec(projectGradle);
-    if (!match) {
-      throw new Error('Could not find the project version name in gradle file');
-    }
-    return match[1];
-  })();
-};
+async function getProjectVersion() {
+  const projectGradle = await readFileAsync(GRADLE_FILE, 'utf8');
+  const match = VERSION_NAME_REGEX.exec(projectGradle);
+  if (!match) {
+    throw new Error('Could not find the project version name in gradle file');
+  }
+  return match[1];
+}
 
-function getProjectVersionCode() {
-  return Promise.coroutine(function* () {
-    const projectGradle = yield readFileAsync(GRADLE_FILE, 'utf8');
-    const match = VERSION_CODE_REGEX.exec(projectGradle);
-    if (!match) {
-      throw new Error('Could not find the project version code in gradle file');
-    }
-    return match[1];
-  })();
-};
+async function getProjectVersionCode() {
+  const projectGradle = await readFileAsync(GRADLE_FILE, 'utf8');
+  const match = VERSION_CODE_REGEX.exec(projectGradle);
+  if (!match) {
+    throw new Error('Could not find the project version code in gradle file');
+  }
+  return match[1];
+}
 
-function updateProjectVersion(version) {
-  return Promise.coroutine(function* () {
-    const currentVersion = yield getProjectVersion();
-    const currentVersionCode = Number(yield getProjectVersionCode());
-    const nextVersionCode = currentVersionCode + 1;
-    const projectGradle = yield readFileAsync(GRADLE_FILE, 'utf8');
-    const updatedProjectGradle = projectGradle
-      .replace(util.format(VERSION_NAME_FORMAT, currentVersion), util.format(VERSION_NAME_FORMAT, version))
-      .replace(util.format(VERSION_CODE_FORMAT, currentVersionCode), util.format(VERSION_CODE_FORMAT, nextVersionCode));
-    yield writeFileAsync(GRADLE_FILE, updatedProjectGradle);
-  })();
-};
+async function updateProjectVersion(version) {
+  const currentVersion = await getProjectVersion();
+  const currentVersionCode = Number(await getProjectVersionCode());
+  const nextVersionCode = currentVersionCode + 1;
+  const projectGradle = await readFileAsync(GRADLE_FILE, 'utf8');
+  const updatedProjectGradle = projectGradle
+    .replace(util.format(VERSION_NAME_FORMAT, currentVersion), util.format(VERSION_NAME_FORMAT, version))
+    .replace(util.format(VERSION_CODE_FORMAT, currentVersionCode), util.format(VERSION_CODE_FORMAT, nextVersionCode));
+  await writeFileAsync(GRADLE_FILE, updatedProjectGradle);
+}
 
 // Run this if call directly from command line
 if (require.main === module) {
