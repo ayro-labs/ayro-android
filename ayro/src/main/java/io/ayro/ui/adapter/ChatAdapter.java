@@ -127,8 +127,8 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
 
     IncomingMessageHolder(View view) {
       super(view);
-      agentView = (TextView) view.findViewById(R.id.agent);
-      photoView = (ImageView) view.findViewById(R.id.photo);
+      agentView = view.findViewById(R.id.agent);
+      photoView = view.findViewById(R.id.photo);
     }
   }
 
@@ -140,9 +140,9 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
 
     OutgoingMessageHolder(View view) {
       super(view);
-      cardView = (CardView) view.findViewById(R.id.card);
-      statusView = (ImageView) view.findViewById(R.id.status);
-      retryView = (ImageView) view.findViewById(R.id.retry);
+      cardView = view.findViewById(R.id.card);
+      statusView = view.findViewById(R.id.status);
+      retryView = view.findViewById(R.id.retry);
       retryView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -164,8 +164,8 @@ public class ChatAdapter extends BaseAdapter<ChatMessage, ChatAdapter.ChatMessag
     ChatMessageHolder(View view) {
       super(view);
       rootView = view.findViewById(R.id.root);
-      textView = (TextView) view.findViewById(R.id.text);
-      timeView = (TextView) view.findViewById(R.id.time);
+      textView = view.findViewById(R.id.text);
+      timeView = view.findViewById(R.id.time);
     }
   }
 

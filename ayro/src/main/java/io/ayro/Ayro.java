@@ -4,6 +4,8 @@ import android.app.Application;
 import android.util.Log;
 
 import io.ayro.core.AyroApp;
+import io.ayro.enums.AppStatus;
+import io.ayro.enums.UserStatus;
 import io.ayro.exception.AyroException;
 import io.ayro.util.Constants;
 
@@ -15,6 +17,20 @@ public class Ayro {
 
   }
 
+  public static AppStatus getAppStatus() {
+    if (ayroApp == null) {
+      return AppStatus.NOT_INITIALIZED;
+    }
+    return ayroApp.getAppStatus();
+  }
+
+  public static UserStatus getUserStatus() {
+    if (ayroApp == null) {
+      return UserStatus.LOGGED_OUT;
+    }
+    return ayroApp.getUserStatus();
+  }
+
   public static void init(Application application, Settings settings) {
     ayroApp = AyroApp.getInstance(application);
     ayroApp.init(settings);
@@ -22,7 +38,7 @@ public class Ayro {
 
   public static void login(User user) {
     assertInitCalledFirst();
-    ayroApp.login(user, null);
+    ayroApp.login(user);
   }
 
   public static void logout() {

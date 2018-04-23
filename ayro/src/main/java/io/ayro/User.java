@@ -8,8 +8,8 @@ public class User {
   private String uid;
   private String firstName;
   private String lastName;
-  private String photoUrl;
   private String email;
+  private String photoUrl;
   private Date signUpDate;
   private Map<String, String> properties;
 
@@ -37,20 +37,20 @@ public class User {
     this.lastName = lastName;
   }
 
-  public String getPhotoUrl() {
-    return photoUrl;
-  }
-
-  public void setPhotoUrl(String photoUrl) {
-    this.photoUrl = photoUrl;
-  }
-
   public String getEmail() {
     return email;
   }
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public String getPhotoUrl() {
+    return photoUrl;
+  }
+
+  public void setPhotoUrl(String photoUrl) {
+    this.photoUrl = photoUrl;
   }
 
   public Date getSignUpDate() {

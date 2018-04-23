@@ -20,10 +20,10 @@ public class User implements Serializable {
   private String firstName;
   @SerializedName("last_name")
   private String lastName;
-  @SerializedName("photo_url")
-  private String photoUrl;
   @SerializedName("email")
   private String email;
+  @SerializedName("photo_url")
+  private String photoUrl;
   @SerializedName("sign_up_date")
   private Date signUpDate;
   @SerializedName("properties")
@@ -69,20 +69,20 @@ public class User implements Serializable {
     this.lastName = lastName;
   }
 
-  public String getPhotoUrl() {
-    return photoUrl;
-  }
-
-  public void setPhotoUrl(String photoUrl) {
-    this.photoUrl = photoUrl;
-  }
-
   public String getEmail() {
     return email;
   }
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public String getPhotoUrl() {
+    return photoUrl;
+  }
+
+  public void setPhotoUrl(String photoUrl) {
+    this.photoUrl = photoUrl;
   }
 
   public Date getSignUpDate() {

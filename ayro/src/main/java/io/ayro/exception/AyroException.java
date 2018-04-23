@@ -11,7 +11,7 @@ import retrofit2.Response;
 public class AyroException extends RuntimeException {
 
   private static final String UNKNOWN_ERROR_STATUS = "999";
-  private static final String UNKNOWN_ERROR_CODE = "unknown.error";
+  private static final String UNKNOWN_ERROR_CODE = "unknown_error";
   private static final String UNKNOWN_ERROR_MESSAGE = "Unknown error";
 
   private static final String STATUS_KEY = "status";

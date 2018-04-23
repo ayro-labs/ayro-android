@@ -6,20 +6,19 @@ import android.content.Intent;
 import io.ayro.Settings;
 import io.ayro.enums.AppStatus;
 import io.ayro.enums.UserStatus;
-import io.ayro.exception.TaskException;
 import io.ayro.model.App;
 import io.ayro.model.Integration;
 import io.ayro.model.User;
 import io.ayro.service.payload.InitResult;
 import io.ayro.service.payload.LoginResult;
+import io.ayro.service.payload.LogoutResult;
 import io.ayro.store.Store;
 import io.ayro.task.TaskCallback;
 import io.ayro.task.TaskManager;
-import io.ayro.task.impl.FirebaseConnectTask;
-import io.ayro.task.impl.FirebaseDisconnectTask;
 import io.ayro.task.impl.InitTask;
 import io.ayro.task.impl.LoginTask;
 import io.ayro.task.impl.LogoutTask;
+import io.ayro.task.impl.UpdatePushTokenTask;
 import io.ayro.task.impl.UpdateUserTask;
 import io.ayro.ui.activity.ChatActivity;
 import io.ayro.util.AppUtils;
@@ -86,61 +85,42 @@ public class AyroApp {
 
   public void init(Settings settings) {
     setSettings(settings);
-    InitTask task = new InitTask(context, settings.getAppToken());
+    InitTask task = new InitTask(context, settings.getAppToken(), AppUtils.getDevice(context));
     task.setCallback(new TaskCallback<InitResult>() {
       @Override
       public void onSuccess(InitResult result) {
         setAppStatus(AppStatus.INITIALIZED);
         setApp(result.getApp());
         setIntegration(result.getIntegration());
+        setUser(result.getUser());
+        setApiToken(result.getToken());
       }
     });
     task.schedule();
   }
 
-  public void login(io.ayro.User user, final TaskCallback<User> callback) {
+  public void login(io.ayro.User user) {
     User ayroUser = AppUtils.getUser(context, user);
-    login(ayroUser, callback);
-  }
-
-  public void login(User user, final TaskCallback<User> callback) {
-    setUser(user);
-    LoginTask task = new LoginTask(context, settings.getAppToken(), user, AppUtils.getDevice(context));
+    LoginTask task = new LoginTask(context, settings.getAppToken(), ayroUser, AppUtils.getDevice(context));
     task.setCallback(new TaskCallback<LoginResult>() {
       @Override
       public void onSuccess(LoginResult result) {
         setUserStatus(UserStatus.LOGGED_IN);
         setUser(result.getUser());
         setApiToken(result.getToken());
-        connectToFirebase();
-        if (callback != null) {
-          callback.onSuccess(result.getUser());
-        }
-      }
-
-      @Override
-      public void onFail(TaskException exception) {
-        if (callback != null) {
-          callback.onFail(exception);
-        }
       }
     });
-    if (callback != null) {
-      task.execute();
-    } else {
-      task.schedule();
-    }
+    task.schedule();
   }
 
   public void logout() {
     LogoutTask task = new LogoutTask(context);
-    task.setCallback(new TaskCallback<Void>() {
+    task.setCallback(new TaskCallback<LogoutResult>() {
       @Override
-      public void onSuccess(Void result) {
+      public void onSuccess(LogoutResult result) {
         setUserStatus(UserStatus.LOGGED_OUT);
-        unsetUser();
-        unsetApiToken();
-        disconnectFromFirebase();
+        setUser(result.getUser());
+        setApiToken(result.getToken());
       }
     });
     task.schedule();
@@ -148,7 +128,6 @@ public class AyroApp {
 
   public void updateUser(io.ayro.User user) {
     User ayroUser = AppUtils.getUser(context, user);
-    setUser(ayroUser);
     UpdateUserTask task = new UpdateUserTask(context, ayroUser);
     task.setCallback(new TaskCallback<User>() {
       @Override
@@ -159,13 +138,8 @@ public class AyroApp {
     task.schedule();
   }
 
-  public void connectToFirebase() {
-    FirebaseConnectTask task = new FirebaseConnectTask(context);
-    task.schedule();
-  }
-
-  public void disconnectFromFirebase() {
-    FirebaseDisconnectTask task = new FirebaseDisconnectTask(context);
+  public void updatePushToken() {
+    UpdatePushTokenTask task = new UpdatePushTokenTask(context);
     task.schedule();
   }
 
@@ -217,18 +191,8 @@ public class AyroApp {
     Store.setUser(context, user);
   }
 
-  private void unsetUser() {
-    this.user = null;
-    Store.unsetUser(context);
-  }
-
   private void setApiToken(String apiToken) {
     this.apiToken = apiToken;
     Store.setApiToken(context, apiToken);
-  }
-
-  private void unsetApiToken() {
-    this.apiToken = null;
-    Store.unsetApiToken(context);
   }
 }

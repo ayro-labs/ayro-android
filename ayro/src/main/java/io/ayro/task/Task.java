@@ -21,6 +21,10 @@ public abstract class Task<T> {
     return name;
   }
 
+  public Context getContext() {
+    return context;
+  }
+
   public TaskCallback<T> getCallback() {
     return callback;
   }

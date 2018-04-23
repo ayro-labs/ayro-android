@@ -11,8 +11,10 @@ import io.ayro.service.payload.InitPayload;
 import io.ayro.service.payload.InitResult;
 import io.ayro.service.payload.LoginPayload;
 import io.ayro.service.payload.LoginResult;
+import io.ayro.service.payload.LogoutResult;
 import io.ayro.service.payload.PostMessagePayload;
 import io.ayro.util.JsonUtils;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -24,7 +26,8 @@ public class AyroService implements AyroApi {
   private AyroApi ayroApi;
 
   private AyroService() {
-    Retrofit retrofit = new Retrofit.Builder().baseUrl(BuildConfig.API_URL).addConverterFactory(GsonConverterFactory.create(JsonUtils.getGson())).build();
+    OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new AuthorizationInterceptor()).build();
+    Retrofit retrofit = new Retrofit.Builder().client(client).baseUrl(BuildConfig.API_URL).addConverterFactory(GsonConverterFactory.create(JsonUtils.getGson())).build();
     ayroApi = retrofit.create(AyroApi.class);
   }
 
@@ -41,12 +44,12 @@ public class AyroService implements AyroApi {
   }
 
   @Override
-  public Call<LoginResult> login(LoginPayload payload) {
-    return ayroApi.login(payload);
+  public Call<LoginResult> login(String apiToken, LoginPayload payload) {
+    return ayroApi.login(apiToken, payload);
   }
 
   @Override
-  public Call<Void> logout(String apiToken) {
+  public Call<LogoutResult> logout(String apiToken) {
     return ayroApi.logout(apiToken);
   }
 

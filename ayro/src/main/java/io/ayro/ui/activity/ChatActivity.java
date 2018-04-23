@@ -26,12 +26,9 @@ import java.util.List;
 
 import io.ayro.R;
 import io.ayro.core.AyroApp;
-import io.ayro.enums.UserStatus;
 import io.ayro.model.ChatMessage;
-import io.ayro.model.User;
 import io.ayro.service.AyroService;
 import io.ayro.service.payload.PostMessagePayload;
-import io.ayro.task.TaskCallback;
 import io.ayro.ui.adapter.ChatAdapter;
 import io.ayro.util.Constants;
 import io.ayro.util.UIUtils;
@@ -75,7 +72,7 @@ public class ChatActivity extends AppCompatActivity {
     setupAdapter();
     setupMessageInput();
     setupPostMessageButton();
-    loadContent();
+    loadMessages();
 
     setTitle(getString(R.string.ayro_activity_title));
   }
@@ -105,14 +102,16 @@ public class ChatActivity extends AppCompatActivity {
       @Override
       public void onReceive(Context context, Intent intent) {
         Object data = intent.getSerializableExtra(Constants.INTENT_ACTION_EXTRA_DATA);
-        switch (intent.getAction()) {
-          case ConnectivityManager.CONNECTIVITY_ACTION:
-          case Constants.INTENT_ACTION_TASKS_CHANGED:
-            updateConnectionStatus();
-            break;
-          case Constants.INTENT_ACTION_MESSAGE_RECEIVED:
-            onMessageReceived((ChatMessage) data);
-            break;
+        if (intent.getAction() != null) {
+          switch (intent.getAction()) {
+            case ConnectivityManager.CONNECTIVITY_ACTION:
+            case Constants.INTENT_ACTION_TASKS_CHANGED:
+              updateConnectionStatus();
+              break;
+            case Constants.INTENT_ACTION_MESSAGE_RECEIVED:
+              onMessageReceived((ChatMessage) data);
+              break;
+          }
         }
       }
     };
@@ -128,13 +127,13 @@ public class ChatActivity extends AppCompatActivity {
     });
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
     linearLayoutManager.setStackFromEnd(true);
-    chatMessagesView = (RecyclerView) findViewById(R.id.chat_messages);
+    chatMessagesView = findViewById(R.id.chat_messages);
     chatMessagesView.setLayoutManager(linearLayoutManager);
     chatMessagesView.setAdapter(chatAdapter);
   }
 
   private void setupMessageInput() {
-    messageInput = (EditText) findViewById(R.id.message);
+    messageInput = findViewById(R.id.message);
     messageInput.addTextChangedListener(new TextWatcher() {
       @Override
       public void beforeTextChanged(CharSequence text, int start, int count, int after) {
@@ -154,7 +153,7 @@ public class ChatActivity extends AppCompatActivity {
   }
 
   private void setupPostMessageButton() {
-    postMessageView = (ImageView) findViewById(R.id.post_message);
+    postMessageView = findViewById(R.id.post_message);
     postMessageView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -166,19 +165,6 @@ public class ChatActivity extends AppCompatActivity {
     postMessageDisabledDrawable = ContextCompat.getDrawable(this, R.drawable.ayro_post_message).mutate();
     DrawableCompat.setTint(postMessageDisabledDrawable, ContextCompat.getColor(this, R.color.ayro_send_button_disabled));
     onMessageChanged("");
-  }
-
-  private void loadContent() {
-    if (!UserStatus.LOGGED_IN.equals(ayroApp.getUserStatus())) {
-      ayroApp.login(ayroApp.getUser(), new TaskCallback<User>() {
-        @Override
-        public void onSuccess(User user) {
-          loadMessages();
-        }
-      });
-    } else {
-      loadMessages();
-    }
   }
 
   private void loadMessages() {
@@ -235,7 +221,7 @@ public class ChatActivity extends AppCompatActivity {
 
   public void showErrorBar(String text) {
     findViewById(R.id.status).setVisibility(View.VISIBLE);
-    TextView textView = (TextView) findViewById(R.id.status_text);
+    TextView textView = findViewById(R.id.status_text);
     textView.setText(text);
   }
 

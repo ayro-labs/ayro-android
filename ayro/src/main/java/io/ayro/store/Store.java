@@ -15,7 +15,6 @@ public class Store {
 
   private static final String PREFERENCES_NAME = "ayro";
   private static final String DEVICE_UID = "device_uid";
-  private static final String USER_UID = "user_uid";
   private static final String APP_STATUS = "app_status";
   private static final String USER_STATUS = "user_status";
   private static final String SETTINGS = "settings";
@@ -26,18 +25,6 @@ public class Store {
 
   private static SharedPreferences getPreferences(Context context) {
     return context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-  }
-
-  public static String getUserUid(Context context) {
-    SharedPreferences preferences = getPreferences(context);
-    return preferences.getString(USER_UID, null);
-  }
-
-  public static void setUserUid(Context context, String uid) {
-    if (uid != null) {
-      SharedPreferences preferences = getPreferences(context);
-      preferences.edit().putString(USER_UID, uid).apply();
-    }
   }
 
   public static String getDeviceUid(Context context) {
@@ -130,11 +117,6 @@ public class Store {
     }
   }
 
-  public static void unsetUser(Context context) {
-    SharedPreferences preferences = getPreferences(context);
-    preferences.edit().remove(USER).apply();
-  }
-
   public static String getApiToken(Context context) {
     SharedPreferences preferences = getPreferences(context);
     return preferences.getString(API_TOKEN, null);
@@ -145,15 +127,5 @@ public class Store {
       SharedPreferences preferences = getPreferences(context);
       preferences.edit().putString(API_TOKEN, token).apply();
     }
-  }
-
-  public static void unsetApiToken(Context context) {
-    SharedPreferences preferences = getPreferences(context);
-    preferences.edit().remove(API_TOKEN).apply();
-  }
-
-  public static void clear(Context context) {
-    SharedPreferences preferences = getPreferences(context);
-    preferences.edit().remove(APP_STATUS).remove(USER_STATUS).remove(SETTINGS).remove(APP).remove(USER).remove(API_TOKEN).remove(DEVICE_UID).apply();
   }
 }

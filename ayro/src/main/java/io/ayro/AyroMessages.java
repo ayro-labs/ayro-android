@@ -9,7 +9,6 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Map;
 
 import io.ayro.core.AyroApp;
-import io.ayro.enums.UserStatus;
 import io.ayro.model.Agent;
 import io.ayro.model.ChatMessage;
 import io.ayro.ui.activity.ChatActivity;
@@ -22,6 +21,7 @@ import io.ayro.util.UIUtils;
 public class AyroMessages {
 
   private static final String KEY_ORIGIN = "origin";
+  private static final String KEY_USER = "user";
   private static final String KEY_EVENT = "event";
   private static final String KEY_MESSAGE = "message";
 
@@ -34,8 +34,9 @@ public class AyroMessages {
 
   public static void receive(Context context, RemoteMessage remoteMessage) {
     AyroApp ayroApp = AyroApp.getInstance(context);
-    if (fromAyro(remoteMessage) && UserStatus.LOGGED_IN.equals(ayroApp.getUserStatus())) {
-      Map<String, String> data = remoteMessage.getData();
+    Map<String, String> data = remoteMessage.getData();
+    String userId = data.get(KEY_USER);
+    if (fromAyro(remoteMessage) && ayroApp.getUser() != null && ayroApp.getUser().getId().equals(userId)) {
       String event = data.get(KEY_EVENT);
       String message = data.get(KEY_MESSAGE);
       switch (event) {

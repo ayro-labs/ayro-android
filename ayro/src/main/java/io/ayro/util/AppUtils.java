@@ -29,25 +29,23 @@ public class AppUtils {
     ayroUser.setUid(user.getUid());
     ayroUser.setFirstName(user.getFirstName());
     ayroUser.setLastName(user.getLastName());
+    ayroUser.setPhotoUrl(user.getPhotoUrl());
     ayroUser.setEmail(user.getEmail());
-    ayroUser.setPhotoUrl(user.getPhotoUrl());
     ayroUser.setSignUpDate(user.getSignUpDate());
-    ayroUser.setPhotoUrl(user.getPhotoUrl());
-    if (user.getUid() == null) {
-      ayroUser.setUid(getUserUid(context));
-      ayroUser.setIdentified(false);
-    } else {
-      ayroUser.setIdentified(true);
-    }
+    ayroUser.setProperties(user.getProperties());
     return ayroUser;
   }
+
 
   public static Device getDevice(Context context) {
     DeviceInfo info = new DeviceInfo();
     info.setOperatingSystem(Constants.OS_NAME + " " + Build.VERSION.RELEASE);
     info.setManufacturer(Build.MANUFACTURER);
     info.setModel(Build.MODEL);
-    info.setCarrier(((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getNetworkOperatorName());
+    TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+    if (telephonyManager != null) {
+      info.setCarrier(telephonyManager.getNetworkOperatorName());
+    }
     try {
       PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
       info.setAppId(packageInfo.packageName);
@@ -84,15 +82,6 @@ public class AppUtils {
       conversationColor = ContextCompat.getColor(context, R.color.ayro_conversation);
     }
     return conversationColor;
-  }
-
-  private static String getUserUid(Context context) {
-    String uid = Store.getUserUid(context);
-    if (uid == null) {
-      uid = generateUid();
-      Store.setUserUid(context, uid);
-    }
-    return uid;
   }
 
   private static String getDeviceUid(Context context) {
