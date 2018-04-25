@@ -36,9 +36,9 @@ public class Ayro {
     ayroApp.init(settings);
   }
 
-  public static void login(User user) {
+  public static void login(User user, String jwtToken) {
     assertInitCalledFirst();
-    ayroApp.login(user);
+    ayroApp.login(user, jwtToken);
   }
 
   public static void logout() {

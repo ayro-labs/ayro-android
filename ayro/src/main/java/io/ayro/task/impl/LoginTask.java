@@ -26,9 +26,9 @@ public class LoginTask extends Task<LoginResult> {
   private LoginPayload payload;
   private AyroService ayroService;
 
-  public LoginTask(Context context, String appToken, User user, Device device) {
+  public LoginTask(Context context, String appToken, String jwtToken, User user, Device device) {
     super(context, TASK_NAME);
-    this.payload = new LoginPayload(appToken, user, device);
+    this.payload = new LoginPayload(appToken, jwtToken, user, device);
     this.ayroService = AyroService.getInstance();
   }
 

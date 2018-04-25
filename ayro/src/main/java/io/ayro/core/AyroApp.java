@@ -99,9 +99,9 @@ public class AyroApp {
     task.schedule();
   }
 
-  public void login(io.ayro.User user) {
+  public void login(io.ayro.User user, String jwtToken) {
     User ayroUser = AppUtils.getUser(context, user);
-    LoginTask task = new LoginTask(context, settings.getAppToken(), ayroUser, AppUtils.getDevice(context));
+    LoginTask task = new LoginTask(context, settings.getAppToken(), jwtToken, ayroUser, AppUtils.getDevice(context));
     task.setCallback(new TaskCallback<LoginResult>() {
       @Override
       public void onSuccess(LoginResult result) {

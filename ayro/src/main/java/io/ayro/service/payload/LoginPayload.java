@@ -13,9 +13,13 @@ public class LoginPayload {
   private User user;
   @SerializedName("device")
   private Device device;
+  @SerializedName("jwt")
+  private String jwt;
 
-  public LoginPayload(String appToken, User user, Device device) {
+
+  public LoginPayload(String appToken, String jwt, User user, Device device) {
     this.appToken = appToken;
+    this.jwt = jwt;
     this.user = user;
     this.device = device;
   }
@@ -26,6 +30,14 @@ public class LoginPayload {
 
   public void setAppToken(String appToken) {
     this.appToken = appToken;
+  }
+
+  public String getJwt() {
+    return jwt;
+  }
+
+  public void setJwt(String jwt) {
+    this.jwt = jwt;
   }
 
   public User getUser() {
