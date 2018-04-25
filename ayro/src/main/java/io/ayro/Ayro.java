@@ -58,7 +58,7 @@ public class Ayro {
 
   private static void assertInitCalledFirst() {
     if (ayroApp == null) {
-      AyroException exception = new AyroException("Init method should be called first!");
+      AyroException exception = new AyroException("init_not_called", "Init method should be called first!");
       Log.e(Constants.TAG, exception.getMessage());
       throw exception;
     }

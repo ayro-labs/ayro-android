@@ -16,7 +16,6 @@ public class UpdateUserTask extends Task<User> {
 
   private static final String TASK_NAME = "user.update";
 
-  private static final String GENERIC_ERROR_STATUS = "999";
   private static final String GENERIC_ERROR_CODE = "user_update_error";
   private static final String GENERIC_ERROR_MESSAGE = "Could not update user";
 
@@ -41,13 +40,14 @@ public class UpdateUserTask extends Task<User> {
       if (response.isSuccessful()) {
         Log.i(Constants.TAG, String.format("(%s) User updated with success!", TASK_NAME));
         return response.body();
-      } else {
-        TaskException exception = new TaskException(response, true);
-        Log.e(Constants.TAG, String.format("(%s) Could not update user: %s", TASK_NAME, MessageUtils.get(exception)));
-        throw exception;
       }
+      TaskException exception = new TaskException(response, true);
+      Log.e(Constants.TAG, String.format("(%s) Could not update user: %s", TASK_NAME, MessageUtils.get(exception)));
+      throw exception;
+    } catch (TaskException e) {
+      throw e;
     } catch (Exception e) {
-      TaskException exception = new TaskException(GENERIC_ERROR_STATUS, GENERIC_ERROR_CODE, GENERIC_ERROR_MESSAGE, e, false);
+      TaskException exception = new TaskException(GENERIC_ERROR_CODE, GENERIC_ERROR_MESSAGE, e, false);
       Log.e(Constants.TAG, String.format("(%s) %s", TASK_NAME, exception.getMessage()));
       throw exception;
     }

@@ -33,10 +33,6 @@ public abstract class Task<T> {
     this.callback = callback;
   }
 
-  public void execute() {
-    TaskManager.getInstance(context).execute(this);
-  }
-
   public void schedule() {
     TaskManager.getInstance(context).schedule(this);
   }

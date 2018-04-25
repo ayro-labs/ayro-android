@@ -100,8 +100,8 @@ public class AyroApp {
   }
 
   public void login(io.ayro.User user, String jwtToken) {
-    User ayroUser = AppUtils.getUser(context, user);
-    LoginTask task = new LoginTask(context, settings.getAppToken(), jwtToken, ayroUser, AppUtils.getDevice(context));
+    User finalUser = AppUtils.getUser(user);
+    LoginTask task = new LoginTask(context, settings.getAppToken(), jwtToken, finalUser, AppUtils.getDevice(context));
     task.setCallback(new TaskCallback<LoginResult>() {
       @Override
       public void onSuccess(LoginResult result) {
@@ -127,8 +127,8 @@ public class AyroApp {
   }
 
   public void updateUser(io.ayro.User user) {
-    User ayroUser = AppUtils.getUser(context, user);
-    UpdateUserTask task = new UpdateUserTask(context, ayroUser);
+    User finalUser = AppUtils.getUser(user);
+    UpdateUserTask task = new UpdateUserTask(context, finalUser);
     task.setCallback(new TaskCallback<User>() {
       @Override
       public void onSuccess(User user) {

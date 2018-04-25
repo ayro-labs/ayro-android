@@ -19,7 +19,6 @@ public class InitTask extends Task<InitResult> {
 
   private static final String TASK_NAME = "app.init";
 
-  private static final String GENERIC_ERROR_STATUS = "999";
   private static final String GENERIC_ERROR_CODE = "init_error";
   private static final String GENERIC_ERROR_MESSAGE = "Could not initialize the library";
 
@@ -41,13 +40,14 @@ public class InitTask extends Task<InitResult> {
       if (response.isSuccessful()) {
         Log.i(Constants.TAG, String.format("(%s) Ayro was initialized with success!", TASK_NAME));
         return response.body();
-      } else {
-        TaskException exception = new TaskException(response, true);
-        Log.e(Constants.TAG, String.format("(%s) Could not initialize Ayro: %s", TASK_NAME, MessageUtils.get(exception)));
-        throw exception;
       }
+      TaskException exception = new TaskException(response, true);
+      Log.e(Constants.TAG, String.format("(%s) Could not initialize Ayro: %s", TASK_NAME, MessageUtils.get(exception)));
+      throw exception;
+    } catch (TaskException e) {
+      throw e;
     } catch (Exception e) {
-      TaskException exception = new TaskException(GENERIC_ERROR_STATUS, GENERIC_ERROR_CODE, GENERIC_ERROR_MESSAGE, e, false);
+      TaskException exception = new TaskException(GENERIC_ERROR_CODE, GENERIC_ERROR_MESSAGE, e, false);
       Log.e(Constants.TAG, String.format("(%s) %s", TASK_NAME, exception.getMessage()));
       throw exception;
     }

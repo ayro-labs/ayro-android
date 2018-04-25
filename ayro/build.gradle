@@ -43,4 +43,8 @@ dependencies {
   implementation 'com.squareup.retrofit2:retrofit:2.4.0'
   implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
   implementation 'de.hdodenhof:circleimageview:2.2.0'
+
+  // Firebase conflicts
+  implementation 'com.android.support:support-media-compat:27.1.1'
+  implementation 'com.android.support:support-v4:27.1.1'
 }

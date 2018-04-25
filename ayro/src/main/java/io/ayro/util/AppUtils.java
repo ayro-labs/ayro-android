@@ -24,16 +24,16 @@ public class AppUtils {
 
   }
 
-  public static User getUser(Context context, io.ayro.User user) {
-    User ayroUser = new User();
-    ayroUser.setUid(user.getUid());
-    ayroUser.setFirstName(user.getFirstName());
-    ayroUser.setLastName(user.getLastName());
-    ayroUser.setPhotoUrl(user.getPhotoUrl());
-    ayroUser.setEmail(user.getEmail());
-    ayroUser.setSignUpDate(user.getSignUpDate());
-    ayroUser.setProperties(user.getProperties());
-    return ayroUser;
+  public static User getUser(io.ayro.User user) {
+    User finalUser = new User();
+    finalUser.setUid(user.getUid());
+    finalUser.setFirstName(user.getFirstName());
+    finalUser.setLastName(user.getLastName());
+    finalUser.setPhotoUrl(user.getPhotoUrl());
+    finalUser.setEmail(user.getEmail());
+    finalUser.setSignUpDate(user.getSignUpDate());
+    finalUser.setProperties(user.getProperties());
+    return finalUser;
   }
 
 
@@ -72,6 +72,15 @@ public class AppUtils {
     return primaryColor;
   }
 
+  public static String getDeviceUid(Context context) {
+    String uid = Store.getDeviceUid(context);
+    if (uid == null) {
+      uid = generateUid();
+      Store.setDeviceUid(context, uid);
+    }
+    return uid;
+  }
+
   public static int getConversationColor(Context context) {
     Integration integration = AyroApp.getInstance(context).getIntegration();
     int conversationColor;
@@ -82,15 +91,6 @@ public class AppUtils {
       conversationColor = ContextCompat.getColor(context, R.color.ayro_conversation);
     }
     return conversationColor;
-  }
-
-  private static String getDeviceUid(Context context) {
-    String uid = Store.getDeviceUid(context);
-    if (uid == null) {
-      uid = generateUid();
-      Store.setDeviceUid(context, uid);
-    }
-    return uid;
   }
 
   private static String generateUid() {

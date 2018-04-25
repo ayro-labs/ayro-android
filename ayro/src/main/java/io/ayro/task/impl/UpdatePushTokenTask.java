@@ -19,11 +19,9 @@ public class UpdatePushTokenTask extends Task<Device> {
 
   private static final String TASK_NAME = "device.update.pushToken";
 
-  private static final String GENERIC_ERROR_STATUS = "999";
   private static final String GENERIC_ERROR_CODE = "push_token_update_error";
   private static final String GENERIC_ERROR_MESSAGE = "Could not update push token";
 
-  private static final String NO_TOKEN_ERROR_STATUS = "998";
   private static final String NO_TOKEN_ERROR_CODE = "could_not_obtain_push_token";
   private static final String NO_TOKEN_ERROR_MESSAGE = "Could not obtain push token";
 
@@ -38,29 +36,30 @@ public class UpdatePushTokenTask extends Task<Device> {
 
   @Override
   protected Device executeJob() throws TaskException {
-    Log.i(Constants.TAG, String.format("(%s) Updating push token...", TASK_NAME));
-    String token = FirebaseInstanceId.getInstance().getToken();
-    if (token == null) {
-      TaskException exception = new TaskException(NO_TOKEN_ERROR_STATUS, NO_TOKEN_ERROR_CODE, NO_TOKEN_ERROR_MESSAGE, false);
-      Log.e(Constants.TAG, String.format("(%s) %s", TASK_NAME, exception.getMessage()));
-      throw exception;
-    }
-    Device device = new Device();
-    device.setUid(AppUtils.getDevice(context).getUid());
-    device.setPushToken(token);
     try {
+      Log.i(Constants.TAG, String.format("(%s) Updating push token...", TASK_NAME));
+      String token = FirebaseInstanceId.getInstance().getToken();
+      if (token == null) {
+        TaskException exception = new TaskException(NO_TOKEN_ERROR_CODE, NO_TOKEN_ERROR_MESSAGE, false);
+        Log.e(Constants.TAG, String.format("(%s) %s", TASK_NAME, exception.getMessage()));
+        throw exception;
+      }
+      Device device = new Device();
+      device.setUid(AppUtils.getDeviceUid(context));
+      device.setPushToken(token);
       String apiToken = Store.getApiToken(context);
       Response<Device> response = ayroService.updateDevice(apiToken, device).execute();
       if (response.isSuccessful()) {
         Log.i(Constants.TAG, String.format("(%s) Push token updated with success!", TASK_NAME));
         return response.body();
-      } else {
-        TaskException exception = new TaskException(response, true);
-        Log.e(Constants.TAG, String.format("(%s) Could not update push token: %s", TASK_NAME, MessageUtils.get(exception)));
-        throw exception;
       }
+      TaskException exception = new TaskException(response, true);
+      Log.e(Constants.TAG, String.format("(%s) Could not update push token: %s", TASK_NAME, MessageUtils.get(exception)));
+      throw exception;
+    } catch (TaskException e) {
+      throw e;
     } catch (Exception e) {
-      TaskException exception = new TaskException(GENERIC_ERROR_STATUS, GENERIC_ERROR_CODE, GENERIC_ERROR_MESSAGE, e, false);
+      TaskException exception = new TaskException(GENERIC_ERROR_CODE, GENERIC_ERROR_MESSAGE, e, false);
       Log.e(Constants.TAG, String.format("(%s) %s", TASK_NAME, exception.getMessage()));
       throw exception;
     }

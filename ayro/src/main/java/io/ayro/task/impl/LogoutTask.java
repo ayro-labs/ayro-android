@@ -16,16 +16,13 @@ public class LogoutTask extends Task<LogoutResult> {
 
   private static final String TASK_NAME = "user.logout";
 
-  private static final String GENERIC_ERROR_STATUS = "999";
   private static final String GENERIC_ERROR_CODE = "logout_error";
   private static final String GENERIC_ERROR_MESSAGE = "Could not sign out";
 
-  private Context context;
   private AyroService ayroService;
 
   public LogoutTask(Context context) {
     super(context, TASK_NAME);
-    this.context = context;
     this.ayroService = AyroService.getInstance();
   }
 
@@ -41,13 +38,14 @@ public class LogoutTask extends Task<LogoutResult> {
       if (response.isSuccessful()) {
         Log.i(Constants.TAG, String.format("(%s) User signed out with success!", TASK_NAME));
         return response.body();
-      } else {
-        TaskException exception = new TaskException(response, true);
-        Log.e(Constants.TAG, String.format("(%s) Could not sign out: %s", TASK_NAME, MessageUtils.get(exception)));
-        throw exception;
       }
+      TaskException exception = new TaskException(response, true);
+      Log.e(Constants.TAG, String.format("(%s) Could not sign out: %s", TASK_NAME, MessageUtils.get(exception)));
+      throw exception;
+    } catch (TaskException e) {
+      throw e;
     } catch (Exception e) {
-      TaskException exception = new TaskException(GENERIC_ERROR_STATUS, GENERIC_ERROR_CODE, GENERIC_ERROR_MESSAGE, e, false);
+      TaskException exception = new TaskException(GENERIC_ERROR_CODE, GENERIC_ERROR_MESSAGE, e, false);
       Log.e(Constants.TAG, String.format("(%s) %s", TASK_NAME, exception.getMessage()));
       throw exception;
     }

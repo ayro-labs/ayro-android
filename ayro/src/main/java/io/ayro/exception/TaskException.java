@@ -6,13 +6,13 @@ public class TaskException extends AyroException {
 
   private boolean cancelTask;
 
-  public TaskException(String status, String code, String message, boolean cancelTask) {
-    super(status, code, message);
+  public TaskException(String code, String message, boolean cancelTask) {
+    super(code, message);
     this.cancelTask = cancelTask;
   }
 
-  public TaskException(String status, String code, String message, Throwable cause, boolean cancelTask) {
-    super(status, code, message, cause);
+  public TaskException(String code, String message, Throwable cause, boolean cancelTask) {
+    super(code, message, cause);
     this.cancelTask = cancelTask;
   }
 

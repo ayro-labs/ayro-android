@@ -2,7 +2,6 @@ package io.ayro.task;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
 
@@ -16,11 +15,11 @@ public class TaskManager {
   private static final String TASKS_THREAD_NAME = "Ayro.tasks";
   private static final String SCHEDULED_TASKS_THREAD_NAME = "Ayro.tasks.scheduled";
   private static final int SLEEP_TIME = 5000;
+  private static final int RESCHEDULING_LIMIT = 10;
 
   private static TaskManager instance;
 
   private Context context;
-  private Handler taskHandler;
   private LinkedBlockingQueue<Task> tasksQueue;
   private LinkedBlockingQueue<Task> failedTasksQueue;
   private boolean runScheduledTasks;
@@ -30,7 +29,6 @@ public class TaskManager {
     this.context = context;
     HandlerThread taskThread = new HandlerThread(TASKS_THREAD_NAME);
     taskThread.start();
-    this.taskHandler = new Handler(taskThread.getLooper());
     this.tasksQueue = new LinkedBlockingQueue<>();
     this.failedTasksQueue = new LinkedBlockingQueue<>();
     this.runScheduledTasks = true;
@@ -66,7 +64,7 @@ public class TaskManager {
             } catch (TaskException exception) {
               emitFail(task, exception);
               if (!exception.shouldCancelTask()) {
-                if (scheduledTaskExecution > 16) {
+                if (scheduledTaskExecution > RESCHEDULING_LIMIT) {
                   scheduledTaskExecution = 0;
                 }
                 scheduledTaskExecution++;
@@ -84,20 +82,6 @@ public class TaskManager {
         }
       }
     }, SCHEDULED_TASKS_THREAD_NAME).start();
-  }
-
-  <T> void execute(final Task<T> task) {
-    taskHandler.post(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          T result = task.executeJob();
-          emitSuccess(task, result);
-        } catch (TaskException exception) {
-          emitFail(task, exception);
-        }
-      }
-    });
   }
 
   void schedule(Task task) {

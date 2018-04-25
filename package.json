@@ -9,7 +9,7 @@
   },
   "homepage": "https://ayro.io",
   "scripts": {
-    "lint": "eslint '**/*.js'",
+    "lint": "eslint '**/*.js' && ./gradlew lint",
     "build": "./gradlew clean assembleDebug",
     "build-prod": "./gradlew clean assembleRelease",
     "release-lib": "node tasks/release.js",
