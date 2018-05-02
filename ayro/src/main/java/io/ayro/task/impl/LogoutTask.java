@@ -19,11 +19,11 @@ public class LogoutTask extends Task<LogoutResult> {
   private static final String GENERIC_ERROR_CODE = "logout_error";
   private static final String GENERIC_ERROR_MESSAGE = "Could not sign out";
 
-  private AyroService ayroService;
+  private AyroService service;
 
   public LogoutTask(Context context) {
     super(context, TASK_NAME);
-    this.ayroService = AyroService.getInstance();
+    this.service = AyroService.getInstance();
   }
 
   @Override
@@ -34,7 +34,7 @@ public class LogoutTask extends Task<LogoutResult> {
       if (apiToken == null) {
         return null;
       }
-      Response<LogoutResult> response = ayroService.logout(apiToken).execute();
+      Response<LogoutResult> response = service.logout(apiToken).execute();
       if (response.isSuccessful()) {
         Log.i(Constants.TAG, String.format("(%s) User signed out with success!", TASK_NAME));
         return response.body();

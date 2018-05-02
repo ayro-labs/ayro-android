@@ -5,6 +5,7 @@
     <string name="ayro_activity_input_placeholder">Type a message…</string>
     <string name="ayro_activity_status_no_internet_connection">No internet connection</string>
     <string name="ayro_activity_status_connecting_to_the_servers">Connecting to the servers…</string>
+    <string name="ayro_activity_could_not_load_messages">Could not load messages</string>
     <string name="ayro_content_description_send_message">Send message</string>
     <string name="ayro_content_description_message_status">Message status</string>
     <string name="ayro_content_description_retry_message">Retry message</string>

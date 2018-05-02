@@ -26,12 +26,12 @@ public class UpdatePushTokenTask extends Task<Device> {
   private static final String NO_TOKEN_ERROR_MESSAGE = "Could not obtain push token";
 
   private Context context;
-  private AyroService ayroService;
+  private AyroService service;
 
   public UpdatePushTokenTask(Context context) {
     super(context, TASK_NAME);
     this.context = context;
-    this.ayroService = AyroService.getInstance();
+    this.service = AyroService.getInstance();
   }
 
   @Override
@@ -48,7 +48,7 @@ public class UpdatePushTokenTask extends Task<Device> {
       device.setUid(AppUtils.getDeviceUid(context));
       device.setPushToken(token);
       String apiToken = Store.getApiToken(context);
-      Response<Device> response = ayroService.updateDevice(apiToken, device).execute();
+      Response<Device> response = service.updateDevice(apiToken, device).execute();
       if (response.isSuccessful()) {
         Log.i(Constants.TAG, String.format("(%s) Push token updated with success!", TASK_NAME));
         return response.body();

@@ -2,6 +2,7 @@ package io.ayro.task;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
 
@@ -20,6 +21,7 @@ public class TaskManager {
   private static TaskManager instance;
 
   private Context context;
+  private HandlerThread taskThread;
   private LinkedBlockingQueue<Task> tasksQueue;
   private LinkedBlockingQueue<Task> failedTasksQueue;
   private boolean runScheduledTasks;
@@ -27,8 +29,8 @@ public class TaskManager {
 
   private TaskManager(Context context) {
     this.context = context;
-    HandlerThread taskThread = new HandlerThread(TASKS_THREAD_NAME);
-    taskThread.start();
+    this.taskThread = new HandlerThread(TASKS_THREAD_NAME);
+    this.taskThread.start();
     this.tasksQueue = new LinkedBlockingQueue<>();
     this.failedTasksQueue = new LinkedBlockingQueue<>();
     this.runScheduledTasks = true;
@@ -84,13 +86,17 @@ public class TaskManager {
     }, SCHEDULED_TASKS_THREAD_NAME).start();
   }
 
-  void schedule(Task task) {
+  public void schedule(Task task) {
     try {
       tasksQueue.put(task);
       broadcastTasksChanged();
     } catch (InterruptedException e) {
       // Nothing to do...
     }
+  }
+
+  public void postDelayed(Runnable runnable, long delay) {
+    new Handler(taskThread.getLooper()).postDelayed(runnable, delay);
   }
 
   private <T> void emitSuccess(Task<T> task, T result) {

@@ -23,12 +23,12 @@ public class InitTask extends Task<InitResult> {
   private static final String GENERIC_ERROR_MESSAGE = "Could not initialize the library";
 
   private InitPayload payload;
-  private AyroService ayroService;
+  private AyroService service;
 
   public InitTask(Context context, String appToken, Device device) {
     super(context, TASK_NAME);
     this.payload = new InitPayload(appToken, device);
-    this.ayroService = AyroService.getInstance();
+    this.service = AyroService.getInstance();
   }
 
   @Override
@@ -36,7 +36,7 @@ public class InitTask extends Task<InitResult> {
     try {
       Log.i(Constants.TAG, String.format("(%s) Initializing Ayro...", TASK_NAME));
       payload.getDevice().setPushToken(FirebaseInstanceId.getInstance().getToken());
-      Response<InitResult> response = ayroService.init(payload).execute();
+      Response<InitResult> response = service.init(payload).execute();
       if (response.isSuccessful()) {
         Log.i(Constants.TAG, String.format("(%s) Ayro was initialized with success!", TASK_NAME));
         return response.body();

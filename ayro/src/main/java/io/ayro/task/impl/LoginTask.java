@@ -23,12 +23,12 @@ public class LoginTask extends Task<LoginResult> {
   private static final String GENERIC_ERROR_MESSAGE = "Could not sign in";
 
   private LoginPayload payload;
-  private AyroService ayroService;
+  private AyroService service;
 
   public LoginTask(Context context, String appToken, String jwtToken, User user, Device device) {
     super(context, TASK_NAME);
     this.payload = new LoginPayload(appToken, jwtToken, user, device);
-    this.ayroService = AyroService.getInstance();
+    this.service = AyroService.getInstance();
   }
 
   @Override
@@ -39,7 +39,7 @@ public class LoginTask extends Task<LoginResult> {
       if (apiToken == null) {
         return null;
       }
-      Response<LoginResult> response = ayroService.login(apiToken, payload).execute();
+      Response<LoginResult> response = service.login(apiToken, payload).execute();
       if (response.isSuccessful()) {
         Log.i(Constants.TAG, String.format("(%s) User signed in with success!", TASK_NAME));
         return response.body();

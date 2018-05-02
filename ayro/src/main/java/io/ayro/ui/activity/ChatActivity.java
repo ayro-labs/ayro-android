@@ -46,8 +46,8 @@ public class ChatActivity extends AppCompatActivity {
     INTENT_FILTER.addAction(Constants.INTENT_ACTION_TASKS_CHANGED);
   }
 
-  private AyroService ayroService;
-  private AyroApp ayroApp;
+  private AyroService service;
+  private AyroApp app;
 
   private EditText messageInput;
   private RecyclerView chatMessagesView;
@@ -64,8 +64,8 @@ public class ChatActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.ayro_activity_chat);
 
-    ayroService = AyroService.getInstance();
-    ayroApp = AyroApp.getInstance(this);
+    service = AyroService.getInstance();
+    app = AyroApp.getInstance(this);
 
     setupToolbar();
     setupBroadcastReceiver();
@@ -80,7 +80,7 @@ public class ChatActivity extends AppCompatActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    ayroApp.setChatOpened(true);
+    app.setChatOpened(true);
     registerReceiver(broadcastReceiver, INTENT_FILTER);
     updateConnectionStatus();
   }
@@ -88,7 +88,7 @@ public class ChatActivity extends AppCompatActivity {
   @Override
   protected void onPause() {
     super.onPause();
-    ayroApp.setChatOpened(false);
+    app.setChatOpened(false);
     unregisterReceiver(broadcastReceiver);
   }
 
@@ -168,7 +168,7 @@ public class ChatActivity extends AppCompatActivity {
   }
 
   private void loadMessages() {
-    ayroService.listMessages(ayroApp.getApiToken()).enqueue(new Callback<List<ChatMessage>>() {
+    service.listMessages(app.getApiToken()).enqueue(new Callback<List<ChatMessage>>() {
       @Override
       public void onResponse(Call<List<ChatMessage>> call, Response<List<ChatMessage>> response) {
         if (response.isSuccessful()) {
@@ -178,7 +178,7 @@ public class ChatActivity extends AppCompatActivity {
 
       @Override
       public void onFailure(Call<List<ChatMessage>> call, Throwable throwable) {
-
+        showErrorBar(getString(R.string.ayro_activity_could_not_load_messages));
       }
     });
   }
@@ -192,7 +192,7 @@ public class ChatActivity extends AppCompatActivity {
         error = getString(R.string.ayro_activity_status_no_internet_connection);
       }
     }
-    if (error == null && ayroApp.hasPendingTasks()) {
+    if (error == null && app.hasPendingTasks()) {
       error = getString(R.string.ayro_activity_status_connecting_to_the_servers);
     }
     if (error != null) {
@@ -248,7 +248,7 @@ public class ChatActivity extends AppCompatActivity {
     final int position = chatAdapter.addItem(chatMessage);
     chatMessagesView.scrollToPosition(chatAdapter.lastIndex());
     PostMessagePayload payload = new PostMessagePayload(chatMessage.getText());
-    ayroService.postMessage(ayroApp.getApiToken(), payload).enqueue(new Callback<ChatMessage>() {
+    service.postMessage(app.getApiToken(), payload).enqueue(new Callback<ChatMessage>() {
       @Override
       public void onResponse(Call<ChatMessage> call, Response<ChatMessage> response) {
         chatMessage.setStatus(response.isSuccessful() ? ChatMessage.Status.sent : ChatMessage.Status.error);

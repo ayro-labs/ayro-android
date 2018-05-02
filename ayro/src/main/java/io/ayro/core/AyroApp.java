@@ -3,15 +3,19 @@ package io.ayro.core;
 import android.content.Context;
 import android.content.Intent;
 
+import java.io.IOException;
+
 import io.ayro.Settings;
 import io.ayro.enums.AppStatus;
 import io.ayro.enums.UserStatus;
 import io.ayro.model.App;
 import io.ayro.model.Integration;
 import io.ayro.model.User;
+import io.ayro.service.AyroService;
 import io.ayro.service.payload.InitResult;
 import io.ayro.service.payload.LoginResult;
 import io.ayro.service.payload.LogoutResult;
+import io.ayro.service.payload.TrackViewChatPayload;
 import io.ayro.store.Store;
 import io.ayro.task.TaskCallback;
 import io.ayro.task.TaskManager;
@@ -22,12 +26,15 @@ import io.ayro.task.impl.UpdatePushTokenTask;
 import io.ayro.task.impl.UpdateUserTask;
 import io.ayro.ui.activity.ChatActivity;
 import io.ayro.util.AppUtils;
+import io.ayro.util.Constants;
 
 public class AyroApp {
 
   private static AyroApp instance;
 
   private Context context;
+  private AyroService service;
+
   private AppStatus appStatus;
   private UserStatus userStatus;
   private Settings settings;
@@ -39,6 +46,7 @@ public class AyroApp {
 
   private AyroApp(Context context) {
     this.context = context;
+    this.service = AyroService.getInstance();
     this.appStatus = Store.getAppStatus(context);
     this.userStatus = Store.getUserStatus(context);
     this.settings = Store.getSettings(context);
@@ -151,6 +159,17 @@ public class AyroApp {
     Intent intent = new Intent(context, ChatActivity.class);
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     context.startActivity(intent);
+    TaskManager.getInstance(context).postDelayed(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          TrackViewChatPayload payload = new TrackViewChatPayload(Constants.PLATFORM);
+          service.trackViewChat(apiToken, payload).execute();
+        } catch (IOException e) {
+          // Nothing to do...
+        }
+      }
+    }, 300);
   }
 
   public boolean isChatOpened() {

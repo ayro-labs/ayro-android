@@ -20,12 +20,12 @@ public class UpdateUserTask extends Task<User> {
   private static final String GENERIC_ERROR_MESSAGE = "Could not update user";
 
   private User user;
-  private AyroService ayroService;
+  private AyroService service;
 
   public UpdateUserTask(Context context, User user) {
     super(context, TASK_NAME);
     this.user = user;
-    this.ayroService = AyroService.getInstance();
+    this.service = AyroService.getInstance();
   }
 
   @Override
@@ -36,7 +36,7 @@ public class UpdateUserTask extends Task<User> {
       if (apiToken == null) {
         return null;
       }
-      Response<User> response = ayroService.updateUser(apiToken, user).execute();
+      Response<User> response = service.updateUser(apiToken, user).execute();
       if (response.isSuccessful()) {
         Log.i(Constants.TAG, String.format("(%s) User updated with success!", TASK_NAME));
         return response.body();
