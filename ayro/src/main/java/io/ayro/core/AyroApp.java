@@ -15,7 +15,6 @@ import io.ayro.service.AyroService;
 import io.ayro.service.payload.InitResult;
 import io.ayro.service.payload.LoginResult;
 import io.ayro.service.payload.LogoutResult;
-import io.ayro.service.payload.TrackViewChatPayload;
 import io.ayro.store.Store;
 import io.ayro.task.TaskCallback;
 import io.ayro.task.TaskManager;
@@ -26,7 +25,6 @@ import io.ayro.task.impl.UpdatePushTokenTask;
 import io.ayro.task.impl.UpdateUserTask;
 import io.ayro.ui.activity.ChatActivity;
 import io.ayro.util.AppUtils;
-import io.ayro.util.Constants;
 
 public class AyroApp {
 
@@ -163,8 +161,7 @@ public class AyroApp {
       @Override
       public void run() {
         try {
-          TrackViewChatPayload payload = new TrackViewChatPayload(Constants.PLATFORM);
-          service.trackViewChat(apiToken, payload).execute();
+          service.trackViewChat(apiToken).execute();
         } catch (IOException e) {
           // Nothing to do...
         }

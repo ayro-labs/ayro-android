@@ -11,7 +11,6 @@ import io.ayro.service.payload.LoginPayload;
 import io.ayro.service.payload.LoginResult;
 import io.ayro.service.payload.LogoutResult;
 import io.ayro.service.payload.PostMessagePayload;
-import io.ayro.service.payload.TrackViewChatPayload;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -36,13 +35,13 @@ public interface AyroApi {
   @PUT("/users/devices")
   Call<Device> updateDevice(@Header("Authorization") String apiToken, @Body Device device);
 
-  @POST("/chat/android")
+  @POST("/chat")
   Call<ChatMessage> postMessage(@Header("Authorization") String apiToken, @Body PostMessagePayload payload);
 
   @GET("/chat")
   Call<List<ChatMessage>> listMessages(@Header("Authorization") String apiToken);
 
   @POST("/events/view_chat")
-  Call<Void> trackViewChat(@Header("Authorization") String apiToken, @Body TrackViewChatPayload payload);
+  Call<Void> trackViewChat(@Header("Authorization") String apiToken);
 
 }

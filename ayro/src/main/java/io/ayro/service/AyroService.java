@@ -13,7 +13,6 @@ import io.ayro.service.payload.LoginPayload;
 import io.ayro.service.payload.LoginResult;
 import io.ayro.service.payload.LogoutResult;
 import io.ayro.service.payload.PostMessagePayload;
-import io.ayro.service.payload.TrackViewChatPayload;
 import io.ayro.util.JsonUtils;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -75,7 +74,7 @@ public class AyroService implements AyroApi {
   }
 
   @Override
-  public Call<Void> trackViewChat(String apiToken, TrackViewChatPayload payload) {
-    return ayroApi.trackViewChat(apiToken, payload);
+  public Call<Void> trackViewChat(String apiToken) {
+    return ayroApi.trackViewChat(apiToken);
   }
 }

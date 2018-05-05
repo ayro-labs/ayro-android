@@ -3,8 +3,6 @@ package io.ayro.task.impl;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.firebase.iid.FirebaseInstanceId;
-
 import io.ayro.exception.TaskException;
 import io.ayro.model.Device;
 import io.ayro.service.AyroService;
@@ -35,7 +33,6 @@ public class InitTask extends Task<InitResult> {
   protected InitResult executeJob() throws TaskException {
     try {
       Log.i(Constants.TAG, String.format("(%s) Initializing Ayro...", TASK_NAME));
-      payload.getDevice().setPushToken(FirebaseInstanceId.getInstance().getToken());
       Response<InitResult> response = service.init(payload).execute();
       if (response.isSuccessful()) {
         Log.i(Constants.TAG, String.format("(%s) Ayro was initialized with success!", TASK_NAME));

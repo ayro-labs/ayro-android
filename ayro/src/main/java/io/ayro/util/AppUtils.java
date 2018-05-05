@@ -8,6 +8,8 @@ import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import java.util.UUID;
 
 import io.ayro.R;
@@ -57,6 +59,7 @@ public class AppUtils {
     device.setUid(getDeviceUid(context));
     device.setPlatform(Constants.PLATFORM);
     device.setInfo(info);
+    device.setPushToken(FirebaseInstanceId.getInstance().getToken());
     return device;
   }
 
