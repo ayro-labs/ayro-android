@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@ayro/commons": "0.0.24",
+    "@octokit/rest": "15.2.7",
     "bluebird": "3.5.1",
     "eslint": "4.19.1",
     "eslint-config-airbnb-base": "12.1.0",

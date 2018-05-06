@@ -6,12 +6,7 @@ afterEvaluate { project ->
     repositories {
       mavenDeployer {
         beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-        repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2') {
-          authentication(userName: project.findProperty('NEXUS_USERNAME'), password: project.findProperty('NEXUS_PASSWORD'))
-        }
-        snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots') {
-          authentication(userName: project.findProperty('NEXUS_USERNAME'), password: project.findProperty('NEXUS_PASSWORD'))
-        }
+        repository(url: "file:///tmp/ayro-android")
         pom.groupId = 'io.ayro'
         pom.artifactId = 'ayro'
         pom.version = android.defaultConfig.versionName
@@ -20,22 +15,6 @@ afterEvaluate { project ->
           description 'Ayro Android SDK'
           packaging 'aar'
           url 'https://ayro.io'
-          developers {
-            developer {
-              id 'ayro'
-              name 'Ayro'
-            }
-          }
-          scm {
-            url 'https://bitbucket.org/ayrolabs'
-          }
-          licenses {
-            license {
-              name ''
-              url ''
-              distribution ''
-            }
-          }
         }
       }
     }
