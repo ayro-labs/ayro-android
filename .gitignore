@@ -1,11 +1,11 @@
+*.iml
 .idea
 .gradle
 gradle
 gradlew
 gradlew.bat
-gradle.properties
 build
-node_modules
-npm-debug.log
 local.properties
-*.iml
+/node_modules
+/npm-debug.log
+/gradle.properties
