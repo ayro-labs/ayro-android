@@ -1,10 +1,11 @@
+/* eslint-disable import/no-extraneous-dependencies */
+
 'use strict';
 
 const packageJson = require('../package');
 const {publishTask, commands} = require('@ayro/commons');
 const path = require('path');
 const GitHubApi = require('@octokit/rest');
-const Promise = require('bluebird');
 
 const WORKING_DIR = path.resolve(__dirname, '../');
 const GITHUB_REPOSITORY_NAME = 'ayro-android';
