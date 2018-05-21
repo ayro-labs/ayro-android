@@ -26,7 +26,7 @@ npm run build-prod
 ## Releasing a new version ##
 
 ````
-npm run release-lib -- major|minor|patch|version <version>
+npm run release-lib -- major|minor|patch|version
 ````
 
 ## Publishing the new version to Maven repository ##
