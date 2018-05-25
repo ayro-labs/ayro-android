@@ -2,13 +2,13 @@
 
 'use strict';
 
-const {releaseTask, commands} = require('@ayro/commons');
+const {commands, release} = require('@ayro/commons');
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
 const Promise = require('bluebird');
 
-const WORKING_DIR = path.resolve(__dirname, '../');
+const WORKING_DIR = path.resolve();
 const GRADLE_FILE = path.join(WORKING_DIR, 'ayro/build.gradle');
 const VERSION_NAME_REGEX = /versionName '(\d+\.\d+\.\d+)'/;
 const VERSION_NAME_FORMAT = 'versionName \'%s\'';
@@ -54,8 +54,8 @@ async function updateProjectVersion(version) {
 
 // Run this if call directly from command line
 if (require.main === module) {
-  releaseTask.withWorkingDir(WORKING_DIR);
-  releaseTask.withAfterVersionUpdateTask(updateProjectVersion);
-  releaseTask.withBuildTask(buildLibrary);
-  releaseTask.run(process.argv[2], process.argv[3]);
+  release.withWorkingDir(WORKING_DIR);
+  release.withAfterVersionUpdateTask(updateProjectVersion);
+  release.withBuildTask(buildLibrary);
+  release.run(process.argv[2], process.argv[3]);
 }

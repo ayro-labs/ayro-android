@@ -3,11 +3,11 @@
 'use strict';
 
 const packageJson = require('../package');
-const {publishTask, commands} = require('@ayro/commons');
+const {commands, publish} = require('@ayro/commons');
 const path = require('path');
 const GitHubApi = require('@octokit/rest');
 
-const WORKING_DIR = path.resolve(__dirname, '../');
+const WORKING_DIR = path.resolve();
 const GITHUB_REPOSITORY_NAME = 'ayro-android';
 const GITHUB_REPOSITORY_OWNER = 'ayrolabs';
 const TEMP_DIR = '/tmp';
@@ -50,8 +50,8 @@ async function publishLibrary() {
 
 // Run this if call directly from command line
 if (require.main === module) {
-  publishTask.withWorkingDir(WORKING_DIR);
-  publishTask.withBuildTask(buildLibrary);
-  publishTask.withPublishTask(publishLibrary);
-  publishTask.run();
+  publish.withWorkingDir(WORKING_DIR);
+  publish.withBuildTask(buildLibrary);
+  publish.withPublishTask(publishLibrary);
+  publish.run();
 }
