@@ -1,9 +1,9 @@
 /.gradle
 /.idea
 /gradle
+/gradle.properties
 /gradlew
 /gradlew.bat
-/gradle.properties
 /local.properties
 /node_modules
 /npm-debug.log
