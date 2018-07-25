@@ -3,7 +3,7 @@
 'use strict';
 
 const packageJson = require('../package');
-const {commands, publish} = require('@ayro/commons');
+const {commands, publish} = require('release-n-publish');
 const path = require('path');
 const GitHubApi = require('@octokit/rest');
 
@@ -50,8 +50,8 @@ async function publishLibrary() {
 
 // Run this if call directly from command line
 if (require.main === module) {
-  publish.withWorkingDir(WORKING_DIR);
-  publish.withBuildTask(buildLibrary);
-  publish.withPublishTask(publishLibrary);
+  publish.setWorkingDir(WORKING_DIR);
+  publish.setBuildTask(buildLibrary);
+  publish.setPublishTask(publishLibrary);
   publish.run();
 }
